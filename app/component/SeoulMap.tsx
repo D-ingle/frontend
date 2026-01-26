@@ -3,29 +3,43 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-interface GeoFeatureCollection {
-  type: "FeatureCollection";
-  features: any[];
+interface GeoFeature {
+  type: "Feature";
+  properties: {
+    SIG_KOR_NM: string;
+    [key: string]: any;
+  };
+  geometry: any;
 }
 
-export default function SeoulMap() {
+interface GeoFeatureCollection {
+  type: "FeatureCollection";
+  features: GeoFeature[];
+}
+
+interface SeoulMapProps {
+  selectedRegions: string[];
+  onRegionClick: (regionName: string) => void;
+}
+
+export default function SeoulMap({
+  selectedRegions,
+  onRegionClick,
+}: SeoulMapProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
-    const width = 600;
-    const height = 600;
+    const width = 776;
+    const height = 776;
 
     const svg = d3
       .select(svgRef.current)
-      .attr("width", width)
-      .attr("height", height)
-      .style("border", "1px solid black"); // SVG 경계 확인용
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .attr("width", "100%")
+      .attr("height", "100%");
 
-    // 기존 렌더 제거 (리렌더 대비)
     svg.selectAll("*").remove();
-
-    // 배경색 추가 (SVG 렌더링 확인용) -> 흰색 배경 명시
-    svg.append("rect").attr("width", width).attr("height", height);
 
     fetch("/data/seoul_map/seoul-sig.geojson")
       .then((res) => {
@@ -37,8 +51,6 @@ export default function SeoulMap() {
         return res.json();
       })
       .then((geojson: GeoFeatureCollection) => {
-        // GeoJSON Winding Order Fix (CW -> CCW)
-        // D3 expects Counter-Clockwise for exterior rings.
         geojson.features.forEach((feature) => {
           if (feature.geometry.type === "Polygon") {
             feature.geometry.coordinates.forEach((ring: any[]) =>
@@ -51,41 +63,85 @@ export default function SeoulMap() {
           }
         });
 
-        // 1️⃣ projection 설정
-        // fitExtent를 사용하여 여백을 두고 자동으로 맞춤
         const projection = d3.geoMercator().fitExtent(
           [
-            [20, 20],
-            [width - 20, height - 20],
+            [40, 40],
+            [width - 40, height - 40],
           ],
           geojson as any,
         );
 
-        // 2️⃣ path generator
         const pathGenerator = d3.geoPath().projection(projection);
 
-        // 3️⃣ 폴리곤 그리기
-        svg
+        // Create groups to manage layering: paths first, then labels
+        const gPaths = svg.append("g").attr("class", "regions");
+        const gLabels = svg.append("g").attr("class", "labels");
+
+        // Draw Polygons
+        gPaths
           .selectAll("path")
           .data(geojson.features)
           .enter()
           .append("path")
           .attr("d", (d) => pathGenerator(d as any) || "")
-          .attr("fill", "#e5e7eb")
-          .attr("stroke", "white") // 배경색과 같은 색으로 설정하여 간격(gap) 효과
-          .attr("stroke-width", 5) // 간격 크기 조절
-          .on("mouseenter", function () {
-            d3.select(this).attr("fill", "#60a5fa");
-            d3.select(this).raise(); // 마우스 오버시 위로 올려서 선명하게
+          .attr("fill", (d) =>
+            selectedRegions.includes(d.properties.SIG_KOR_NM)
+              ? "#DEFAF2"
+              : "#FFFFFF",
+          )
+          .attr("stroke", (d) =>
+            selectedRegions.includes(d.properties.SIG_KOR_NM)
+              ? "#30CEA1"
+              : "#D9D9D9",
+          )
+          .attr("stroke-width", 2)
+          .attr("cursor", "pointer")
+          .style("transition", "all 0.3s ease")
+          .on("click", (_event, d) => {
+            onRegionClick(d.properties.SIG_KOR_NM);
           })
-          .on("mouseleave", function () {
-            d3.select(this).attr("fill", "#e5e7eb");
+          .on("mouseenter", function () {
+            d3.select(this)
+              .attr("stroke", "#30CEA1")
+              .attr("stroke-width", 3)
+              .raise();
+          })
+          .on("mouseleave", function (_event, d) {
+            const isSelected = selectedRegions.includes(
+              d.properties.SIG_KOR_NM,
+            );
+            d3.select(this)
+              .attr("stroke", isSelected ? "#30CEA1" : "#D9D9D9")
+              .attr("stroke-width", 2);
           });
+
+        // Draw Labels
+        gLabels
+          .selectAll("text")
+          .data(geojson.features)
+          .enter()
+          .append("text")
+          .attr("x", (d) => pathGenerator.centroid(d as any)[0])
+          .attr("y", (d) => pathGenerator.centroid(d as any)[1])
+          .attr("text-anchor", "middle")
+          .attr("alignment-baseline", "middle")
+          .attr("font-size", "12px")
+          .attr("font-weight", (d) =>
+            selectedRegions.includes(d.properties.SIG_KOR_NM) ? "700" : "500",
+          )
+          .attr("fill", (d) =>
+            selectedRegions.includes(d.properties.SIG_KOR_NM)
+              ? "#2EA98C"
+              : "#7B7B7B",
+          )
+          .attr("pointer-events", "none")
+          .style("font-family", "Pretendard Variable, sans-serif")
+          .text((d) => d.properties.SIG_KOR_NM);
       })
       .catch((err) => {
         console.error("Error loading map data:", err);
       });
-  }, []);
+  }, [selectedRegions, onRegionClick]);
 
-  return <svg ref={svgRef} />;
+  return <svg ref={svgRef} className="w-full h-full" />;
 }

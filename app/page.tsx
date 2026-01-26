@@ -1,9 +1,10 @@
 import SeoulMap from "./component/SeoulMap";
+import Navbar from "./component/Navbar";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <p className="font-bold text-white">Test</p>
-    </div>
+    <main className="flex min-h-screen flex-col bg-zinc-50 font-sans dark:bg-black">
+      <Navbar />
+    </main>
   );
 }

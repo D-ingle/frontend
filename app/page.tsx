@@ -1,9 +1,17 @@
-import SeoulMap from "./component/SeoulMap";
+"use client";
+
+import Curation from "./components/Curation";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <p className="font-bold text-white">Test</p>
-    </div>
+    <main>
+      <Curation
+        content="반가워요!"
+        description="몇 가지 질문에 대답해주시면 최적의 매물을 찾는데 도움을 드릴게요."
+        buttonLabel="시작하기"
+        buttonLink="/onboarding"
+        isLoading={false}
+      />
+    </main>
   );
 }

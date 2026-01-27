@@ -7,4 +7,13 @@
     system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
     "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", sans-serif;
+
+  --color-main-400: #30cea1;
+  --color-main-500: #2ea98c;
+  --color-main-100: #defaf2;
+  --color-navy: #063152;
+  --color-gray-100: #e5e5e5;
+  --color-gray-400: #9d9d9d;
+  --color-gray-500: #7b7b7b;
+  --color-border-1: #d9d9d9;
 }

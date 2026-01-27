@@ -8,8 +8,8 @@ interface CurationProps {
   content: string;
   description: string;
   isLoading: boolean;
-  buttonLabel: string;
-  buttonLink: string;
+  buttonLabel?: string;
+  buttonLink?: string;
 }
 
 const Curation = ({

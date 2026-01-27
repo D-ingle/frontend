@@ -84,7 +84,7 @@ export const AtmosphereSelectionStep = ({
   };
 
   return (
-    <div className="flex flex-col w-full max-w-360 mx-auto pt-20 pb-10 px-10">
+    <div className="flex flex-col w-full max-w-360 mx-auto pt-20 px-10 mt-12">
       {/* Header */}
       <button
         onClick={onBack}
@@ -94,9 +94,7 @@ export const AtmosphereSelectionStep = ({
         뒤로가기
       </button>
 
-      <div className="flex items-center gap-4 mb-2">
-        <OnboardingProgress currentStep={3} totalSteps={3} />
-      </div>
+      <OnboardingProgress currentStep={3} totalSteps={3} />
 
       <h1 className="text-[32px] font-bold text-navy mt-4 mb-8 leading-[1.3]">
         집을 구하실 때 꼭<br />
@@ -137,7 +135,7 @@ export const AtmosphereSelectionStep = ({
       </motion.div>
 
       {/* Actions */}
-      <div className="flex justify-end items-center gap-8 mt-20">
+      <div className="flex justify-end items-center gap-8 mt-10">
         <button className="text-gray-400 hover:text-navy font-medium transition-colors">
           다음에 할래요
         </button>

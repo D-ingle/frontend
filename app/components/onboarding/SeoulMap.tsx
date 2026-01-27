@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 interface GeoFeature {
@@ -27,30 +27,25 @@ export default function SeoulMap({
   onRegionClick,
 }: SeoulMapProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const [geoData, setGeoData] = useState<GeoFeatureCollection | null>(null);
+  const onRegionClickRef = useRef(onRegionClick);
+  const selectedRegionsRef = useRef(selectedRegions);
 
+  // Update refs for callbacks and state to avoid re-binding issues in D3
   useEffect(() => {
-    const width = 776;
-    const height = 776;
+    onRegionClickRef.current = onRegionClick;
+    selectedRegionsRef.current = selectedRegions;
+  }, [onRegionClick, selectedRegions]);
 
-    const svg = d3
-      .select(svgRef.current)
-      .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("preserveAspectRatio", "xMidYMid meet")
-      .attr("width", "100%")
-      .attr("height", "100%");
-
-    svg.selectAll("*").remove();
-
+  // Phase 1: Data Fetching and Initialization
+  useEffect(() => {
     fetch("/data/seoul_map/seoul-sig.geojson")
       .then((res) => {
-        if (!res.ok) {
-          throw new Error(
-            `Failed to fetch GeoJSON: ${res.status} ${res.statusText}`,
-          );
-        }
+        if (!res.ok) throw new Error("Failed to fetch GeoJSON");
         return res.json();
       })
       .then((geojson: GeoFeatureCollection) => {
+        // Reverse coordinates if necessary (D3 orientation)
         geojson.features.forEach((feature) => {
           if (feature.geometry.type === "Polygon") {
             feature.geometry.coordinates.forEach((ring: any[]) =>
@@ -62,86 +57,110 @@ export default function SeoulMap({
             });
           }
         });
-
-        const projection = d3.geoMercator().fitExtent(
-          [
-            [40, 40],
-            [width - 40, height - 40],
-          ],
-          geojson as any,
-        );
-
-        const pathGenerator = d3.geoPath().projection(projection);
-
-        // Create groups to manage layering: paths first, then labels
-        const gPaths = svg.append("g").attr("class", "regions");
-        const gLabels = svg.append("g").attr("class", "labels");
-
-        // Draw Polygons
-        gPaths
-          .selectAll("path")
-          .data(geojson.features)
-          .enter()
-          .append("path")
-          .attr("d", (d) => pathGenerator(d as any) || "")
-          .attr("fill", (d) =>
-            selectedRegions.includes(d.properties.SIG_KOR_NM)
-              ? "#DEFAF2"
-              : "#FFFFFF",
-          )
-          .attr("stroke", (d) =>
-            selectedRegions.includes(d.properties.SIG_KOR_NM)
-              ? "#30CEA1"
-              : "#D9D9D9",
-          )
-          .attr("stroke-width", 1)
-          .attr("cursor", "pointer")
-          .style("transition", "all 0.3s ease")
-          .on("click", (_event, d) => {
-            onRegionClick(d.properties.SIG_KOR_NM);
-          })
-          .on("mouseenter", function () {
-            d3.select(this)
-              .attr("stroke", "#30CEA1")
-              .attr("stroke-width", 3)
-              .raise();
-          })
-          .on("mouseleave", function (_event, d) {
-            const isSelected = selectedRegions.includes(
-              d.properties.SIG_KOR_NM,
-            );
-            d3.select(this)
-              .attr("stroke", isSelected ? "#30CEA1" : "#D9D9D9")
-              .attr("stroke-width", 2);
-          });
-
-        // Draw Labels
-        gLabels
-          .selectAll("text")
-          .data(geojson.features)
-          .enter()
-          .append("text")
-          .attr("x", (d) => pathGenerator.centroid(d as any)[0])
-          .attr("y", (d) => pathGenerator.centroid(d as any)[1])
-          .attr("text-anchor", "middle")
-          .attr("alignment-baseline", "middle")
-          .attr("font-size", "12px")
-          .attr("font-weight", (d) =>
-            selectedRegions.includes(d.properties.SIG_KOR_NM) ? "700" : "500",
-          )
-          .attr("fill", (d) =>
-            selectedRegions.includes(d.properties.SIG_KOR_NM)
-              ? "#2EA98C"
-              : "#7B7B7B",
-          )
-          .attr("pointer-events", "none")
-          .style("font-family", "Pretendard Variable, sans-serif")
-          .text((d) => d.properties.SIG_KOR_NM);
+        setGeoData(geojson);
       })
-      .catch((err) => {
-        console.error("Error loading map data:", err);
-      });
-  }, [selectedRegions, onRegionClick]);
+      .catch((err) => console.error("Error loading map data:", err));
+  }, []);
+
+  // Phase 2: Render and Update
+  useEffect(() => {
+    if (!geoData || !svgRef.current) return;
+
+    const width = 776;
+    const height = 776;
+
+    const svg = d3.select(svgRef.current);
+
+    // Initial SVG Setup (only runs once after data is loaded)
+    if (svg.selectAll("g").empty()) {
+      svg
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .attr("width", "100%")
+        .attr("height", "100%");
+
+      const projection = d3.geoMercator().fitExtent(
+        [
+          [5, 5],
+          [width - 5, height - 5],
+        ],
+        geoData as any,
+      );
+
+      const pathGenerator = d3.geoPath().projection(projection);
+
+      const gPaths = svg.append("g").attr("class", "regions");
+      const gLabels = svg.append("g").attr("class", "labels");
+
+      // Draw Regions (Static part)
+      gPaths
+        .selectAll("path")
+        .data(geoData.features)
+        .enter()
+        .append("path")
+        .attr("d", (d) => pathGenerator(d as any) || "")
+        .attr("cursor", "pointer")
+        .style("transition", "all 0.3s ease")
+        .on("click", (_event, d) => {
+          onRegionClickRef.current(d.properties.SIG_KOR_NM);
+        })
+        .on("mouseenter", function (_event, d) {
+          const isSelected = selectedRegionsRef.current.includes(
+            d.properties.SIG_KOR_NM,
+          );
+          d3.select(this)
+            .attr("fill", isSelected ? "#DEFAF2" : "#F2F2F2")
+            .attr("stroke", "#30CEA1")
+            .attr("stroke-width", 4)
+            .raise();
+        })
+        .on("mouseleave", function (_event, d) {
+          updateStyles();
+        });
+
+      // Draw Labels (Static part)
+      gLabels
+        .selectAll("text")
+        .data(geoData.features)
+        .enter()
+        .append("text")
+        .attr("x", (d) => pathGenerator.centroid(d as any)[0])
+        .attr("y", (d) => pathGenerator.centroid(d as any)[1])
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("font-size", "14px")
+        .attr("pointer-events", "none")
+        .style("font-family", "Pretendard Variable, sans-serif")
+        .text((d) => d.properties.SIG_KOR_NM);
+    }
+
+    // Phase 3: Update Styles Based on selectedRegions
+    const updateStyles = () => {
+      const currentSelected = selectedRegionsRef.current;
+      svg
+        .selectAll<SVGPathElement, GeoFeature>("path")
+        .attr("fill", (d) =>
+          currentSelected.includes(d.properties.SIG_KOR_NM)
+            ? "#DEFAF2"
+            : "#F7F7F7",
+        )
+        .attr("stroke", "#FFFFFF")
+        .attr("stroke-width", 4);
+
+      svg
+        .selectAll<SVGTextElement, GeoFeature>("text")
+        .attr("font-weight", (d) =>
+          currentSelected.includes(d.properties.SIG_KOR_NM) ? "700" : "500",
+        )
+        .attr("fill", (d) =>
+          currentSelected.includes(d.properties.SIG_KOR_NM)
+            ? "#2EA98C"
+            : "#7B7B7B",
+        );
+    };
+
+    updateStyles();
+  }, [geoData, selectedRegions]);
 
   return <svg ref={svgRef} className="w-full h-full" />;
 }

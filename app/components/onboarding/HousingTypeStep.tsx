@@ -43,7 +43,7 @@ export const HousingTypeStep = ({ onNext, onBack }: HousingTypeStepProps) => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-col w-full max-w-350 mx-auto pt-20 pb-10">
+    <div className="flex flex-col w-full max-w-350 mx-auto pt-20 pb-10 mt-15">
       {/* Header */}
       <button
         onClick={onBack}
@@ -55,7 +55,7 @@ export const HousingTypeStep = ({ onNext, onBack }: HousingTypeStepProps) => {
 
       <OnboardingProgress currentStep={1} totalSteps={3} />
 
-      <h1 className="text-[32px] font-bold text-navy mt-10 mb-16 leading-[1.3]">
+      <h1 className="text-[32px] font-bold text-navy mt-4 mb-16 leading-[1.3]">
         찾으시는 주거 형태를
         <br />
         알려주세요

@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { RegionSelectionStep } from "@/app/components/onboarding/RegionSelectionStep";
 import { AtmosphereSelectionStep } from "@/app/components/onboarding/AtmosphereSelectionStep";
+import Curation from "../components/Curation";
 
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -15,6 +16,7 @@ export default function OnboardingPage() {
     atmospheres: [] as string[],
   });
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
@@ -34,6 +36,12 @@ export default function OnboardingPage() {
     setIsCompleted(true);
   };
 
+  if (currentStep === 3) {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+  }
+
   return (
     <main className="min-h-screen bg-white relative overflow-hidden">
       {/* Background Radial Gradient */}
@@ -45,7 +53,7 @@ export default function OnboardingPage() {
         }}
       />
 
-      <div className="relative z-10 mt-16">
+      <div className="relative z-10">
         <AnimatePresence mode="wait">
           {!isCompleted ? (
             <>
@@ -92,48 +100,20 @@ export default function OnboardingPage() {
                 </motion.div>
               )}
             </>
+          ) : isLoading ? (
+            <Curation
+              content="큐레이션 중"
+              description="선택하신 조건에 맞는 최고의 매물들을 찾아드릴게요"
+              isLoading={true}
+            />
           ) : (
-            <motion.div
-              key="completed"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center justify-center min-h-screen p-4 text-center"
-            >
-              <div className="w-20 h-20 bg-main-400 rounded-full flex items-center justify-center text-white mb-8 shadow-lg">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </div>
-              <h2 className="text-4xl font-bold text-navy mb-4">
-                설문 참여가 완료되었습니다!
-              </h2>
-              <p className="text-gray-500 mb-12 text-lg">
-                입력하신 정보를 바탕으로 최고의 동네를 찾아드릴게요.
-              </p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setIsCompleted(false)}
-                  className="px-8 py-4 border-2 border-gray-100 rounded-2xl font-bold text-gray-500 hover:bg-gray-50 transition-all"
-                >
-                  수정하기
-                </button>
-                <button
-                  onClick={() => (window.location.href = "/dashboard")}
-                  className="px-10 py-4 bg-navy text-white rounded-2xl font-bold shadow-xl hover:bg-navy/90 transition-all"
-                >
-                  결과 확인하기
-                </button>
-              </div>
-            </motion.div>
+            <Curation
+              content="큐레이션을 위한 단계가 모두 끝났어요!"
+              description="시작하기 버튼을 누르시고 가장 잘 맞는 집을 함께 찾아봐요"
+              isLoading={false}
+              buttonLabel="D.HOME 시작하기"
+              buttonLink="/"
+            />
           )}
         </AnimatePresence>
       </div>

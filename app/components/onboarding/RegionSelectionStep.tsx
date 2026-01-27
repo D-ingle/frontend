@@ -34,11 +34,11 @@ export const RegionSelectionStep = ({
   };
 
   return (
-    <div className="flex flex-col w-full max-w-280 mx-auto pt-20 pb-10">
+    <div className="flex flex-col w-full max-w-350 mx-auto mt-12">
       {/* Header */}
       <button
         onClick={onBack}
-        className="flex items-center gap-1 text-gray-400 hover:text-navy transition-colors mb-10 text-sm"
+        className="flex items-center text-gray-400 hover:text-navy transition-colors mt-12 mb-10 text-sm"
       >
         <ChevronLeft size={16} />
         뒤로가기
@@ -46,8 +46,9 @@ export const RegionSelectionStep = ({
 
       <OnboardingProgress currentStep={2} totalSteps={3} />
 
-      <div className="flex flex-col lg:flex-row mt-10">
-        <div className="flex-1">
+      <div className="flex mt-4 relative">
+        {/* Content */}
+        <div className="w-118 shrink-0 relative z-10">
           <h1 className="text-[32px] font-bold text-navy mb-4 leading-[1.3]">
             선호하시는 지역구를
             <br />
@@ -57,7 +58,7 @@ export const RegionSelectionStep = ({
             </span>
           </h1>
 
-          <div className="flex flex-wrap gap-3 mt-10 min-h-12">
+          <div className="flex flex-wrap gap-3 min-h-12">
             <AnimatePresence>
               {selectedRegions.map((region) => (
                 <RegionBadge
@@ -70,7 +71,8 @@ export const RegionSelectionStep = ({
           </div>
         </div>
 
-        <div className="flex-1 flex items-center justify-center relative overflow-hidden ">
+        {/* Map Container - Moved left using negative margin */}
+        <div className="flex relative w-180 h-180 -ml-30">
           <SeoulMap
             selectedRegions={selectedRegions}
             onRegionClick={handleRegionClick}
@@ -78,16 +80,16 @@ export const RegionSelectionStep = ({
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex justify-end items-center gap-8 mt-20">
-        <button className="text-gray-400 hover:text-navy font-medium transition-colors">
+      {/* Actions - Separated from the map flex container to stay at bottom right */}
+      <div className="flex justify-end items-end gap-6 mb-10">
+        <button className="text-gray-400 hover:text-navy font-medium transition-colors py-4 text-[18px]">
           다음에 할래요
         </button>
         <button
           disabled={selectedRegions.length === 0}
           onClick={() => onNext(selectedRegions)}
           className={cn(
-            "px-10 py-4 rounded-xl font-bold transition-all duration-300",
+            "px-10 py-4 rounded-xl font-bold transition-all duration-300 text-[18px]",
             selectedRegions.length > 0
               ? "bg-navy text-white hover:bg-navy/90 shadow-lg"
               : "bg-gray-100 text-gray-400 cursor-not-allowed",

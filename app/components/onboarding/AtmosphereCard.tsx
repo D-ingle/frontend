@@ -4,8 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 
-const rankBadgeImg =
-  "http://localhost:3845/assets/8537a5d1a92518c0e6ad6ee9a2dbe22dde7f7eef.svg";
+const rankBadgeImg = "/rankBadge.svg";
 
 interface AtmosphereCardProps {
   title: string;

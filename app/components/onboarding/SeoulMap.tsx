@@ -94,7 +94,7 @@ export default function SeoulMap({
               ? "#30CEA1"
               : "#D9D9D9",
           )
-          .attr("stroke-width", 2)
+          .attr("stroke-width", 1)
           .attr("cursor", "pointer")
           .style("transition", "all 0.3s ease")
           .on("click", (_event, d) => {

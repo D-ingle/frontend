@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { OnboardingProgress } from "./OnboardingProgress";
 import { RegionBadge } from "./RegionBadge";
-import SeoulMap from "@/app/component/SeoulMap";
+import SeoulMap from "@/app/components/onboarding/SeoulMap";
 import { AnimatePresence } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 

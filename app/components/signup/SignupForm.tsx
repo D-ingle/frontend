@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignupFormValues } from "@/app/types/signup";
@@ -38,6 +38,10 @@ export const SignupForm = () => {
     setValue,
     register,
   } = methods;
+
+  useEffect(() => {
+    console.log("watch", watch());
+  }, [watch()]);
 
   const [isDomainManual, setIsDomainManual] = useState(true);
 

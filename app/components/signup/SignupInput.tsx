@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import Image from "next/image";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,7 +15,6 @@ interface SignupInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   required?: boolean;
   error?: string;
-  description?: string;
   rightElement?: React.ReactNode;
 }
 
@@ -23,11 +23,12 @@ export const SignupInput = ({
   label,
   required = false,
   error,
-  description,
   rightElement,
   ...props
 }: SignupInputProps) => {
-  const { register } = useFormContext();
+  const { register, getFieldState, watch } = useFormContext();
+
+  const { invalid, isDirty } = getFieldState(name);
 
   return (
     <div className="grid grid-cols-4 w-232.5 relative">
@@ -52,7 +53,15 @@ export const SignupInput = ({
           )}
         </div>
         {error && (
-          <p className="absolute text-sm text-[#FF0000] mt-1">{error}</p>
+          <p className="absolute text-[16px] text-[#FF0000] mt-2">{error}</p>
+        )}
+        {!error && isDirty && label !== "비밀번호 확인" && (
+          <div className="flex flex-row items-center mt-2 absolute gap-2">
+            <Image src="/check.svg" alt="check" width={16} height={12} />
+            <p className="text-[16px] text-[#569CFF]">
+              사용 가능한 {label} 입니다!
+            </p>
+          </div>
         )}
       </div>
     </div>

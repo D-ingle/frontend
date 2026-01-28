@@ -7,9 +7,11 @@ import { signupSchema, type SignupFormValues } from "@/app/types/signup";
 import { SignupInput } from "./SignupInput";
 import SignupEmailInput from "./SignupEmailInput";
 import { TermsCheckbox } from "./TermsCheckbox";
+import { useRouter } from "next/navigation";
 import { LucideEye, LucideEyeOff } from "lucide-react";
 
 export const SignupForm = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
@@ -53,6 +55,7 @@ export const SignupForm = () => {
   const onSubmit = (data: SignupFormValues) => {
     console.log("Form Data:", data);
     // Handle signup logic here
+    router.push("/signup/complete");
   };
 
   const termsService = watch("termsService");

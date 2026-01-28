@@ -14,7 +14,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="flex bg-white w-full items-center justify-between box-border h-20 px-32.5 fixed top-0 z-100 border-b border-[#c4c4c4]/30">
+    <nav className="flex bg-white w-full items-center justify-between box-border h-20 px-10 fixed top-0 z-100 border-b border-[#c4c4c4]/30">
       <div className="flex items-center gap-18">
         {/* Logo */}
         <Link href="/" className="flex shrink-0">
@@ -57,9 +57,12 @@ export default function Navbar() {
         <div className="bg-border-1 h-5.5 w-px" />
 
         {/* Log in / Sign in */}
-        <button className="font-semibold text-[#434343] leading-[1.1] uppercase text-[16px] hover:text-black transition-colors">
+        <Link
+          href="/signup"
+          className="font-semibold text-[#434343] leading-[1.1] uppercase text-[16px] hover:text-black transition-colors"
+        >
           Log in / Sign in
-        </button>
+        </Link>
       </div>
     </nav>
   );

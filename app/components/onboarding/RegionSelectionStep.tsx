@@ -34,11 +34,11 @@ export const RegionSelectionStep = ({
   };
 
   return (
-    <div className="flex flex-col w-full max-w-350 mx-auto mt-12">
+    <div className="flex flex-col w-350 mx-auto pt-20 pb-10 mt-15">
       {/* Header */}
       <button
         onClick={onBack}
-        className="flex items-center text-gray-400 hover:text-navy transition-colors mt-12 mb-10 text-sm"
+        className="flex items-center text-gray-400 hover:text-navy transition-colors mb-10 text-sm gap-1"
       >
         <ChevronLeft size={16} />
         뒤로가기
@@ -49,11 +49,11 @@ export const RegionSelectionStep = ({
       <div className="flex mt-4 relative">
         {/* Content */}
         <div className="w-118 shrink-0 relative z-10">
-          <h1 className="text-[32px] font-bold text-navy mb-4 leading-[1.3]">
+          <h1 className="text-[32px] font-extrabold text-navy mb-4 leading-[1.3]">
             선호하시는 지역구를
             <br />
             선택해주세요
-            <span className="text-[18px] font-normal text-gray-400 ml-4">
+            <span className="text-[18px] font-semibold text-gray-400 ml-4">
               최대 3개 선택 가능
             </span>
           </h1>
@@ -72,7 +72,7 @@ export const RegionSelectionStep = ({
         </div>
 
         {/* Map Container - Moved left using negative margin */}
-        <div className="flex relative w-180 h-180 -ml-30">
+        <div className="flex relative w-180 h-180 -ml-40 -mt-20 z-50">
           <SeoulMap
             selectedRegions={selectedRegions}
             onRegionClick={handleRegionClick}
@@ -81,7 +81,7 @@ export const RegionSelectionStep = ({
       </div>
 
       {/* Actions - Separated from the map flex container to stay at bottom right */}
-      <div className="flex justify-end items-end gap-6 mb-10">
+      <div className="flex justify-end items-end gap-6 mb-10  -mt-20 relative z-20">
         <button className="text-gray-400 hover:text-navy font-medium transition-colors py-4 text-[18px]">
           다음에 할래요
         </button>

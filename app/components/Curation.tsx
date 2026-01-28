@@ -25,7 +25,7 @@ const Curation = ({
         className="absolute inset-0 opacity-60"
         style={{
           background:
-            "radial-gradient(circle at center, #ACEBD9 0%, #D6F5EC 50%, #FFFFFF 100%)",
+            "radial-gradient(50% 50% at 50% 50%, rgba(172, 235, 217, 0.60) 0%, rgba(255, 255, 255, 0.60) 100%), #FFF",
         }}
       />
 
@@ -35,32 +35,36 @@ const Curation = ({
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="absolute w-181 h-181 rounded-full border-4 border-white/80"
+          className="absolute w-181 h-181 rounded-full border-4 border-white/60"
+          style={{
+            background: "rgba(255, 255, 255, 0.06)",
+            boxShadow: "0 2px 24.4px 0 rgba(255, 255, 255, 0.70)",
+          }}
         >
-          <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full" />
-          <div className="absolute bottom-1/2 right-[-18] -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full" />
+          <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full drop-shadow-[0_2px_24.4px_rgba(48,203,159,0.20)]" />
+          <div className="absolute bottom-1/2 right-[-18] -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full drop-shadow-[0_2px_24.4px_rgba(48,203,159,0.20)]" />
         </motion.div>
 
         {/* Middle Circle */}
         <motion.div
           animate={{ rotate: -360 }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          className="absolute w-151 h-151 rounded-full border-4 border-white/60"
+          className="absolute w-151 h-151 rounded-full border-4 border-white/60 bg-white/25 shadow-[0_2px_24.4px_0_rgba(255,255,255,0.70)]"
         >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full drop-shadow-[0_2px_24.4px_rgba(48,203,159,0.20)]" />
         </motion.div>
 
         {/* Inner Circle */}
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute w-86.5 h-86.5 rounded-full border-4 border-white/40"
+          className="absolute w-86.5 h-86.5 rounded-full border-4 border-white/40 bg-white/6 shadow-[0_2px_24.4px_0_rgba(255,255,255,0.70)]"
         ></motion.div>
 
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute w-75.5 h-75.5 rounded-full border-4 border-white/40"
+          className="absolute w-75.5 h-75.5 rounded-full border-4 border-white/40 shadow-[0_2px_24.4px_0_rgba(255,255,255,0.70)"
         ></motion.div>
       </div>
 
@@ -74,7 +78,7 @@ const Curation = ({
             transition={{ duration: 0.6 }}
             className="mb-2 px-8 py-4"
           >
-            <h1 className="text-[32px] font-bold text-[#30CEA1] uppercase tracking-tight">
+            <h1 className="text-[32px] font-extrabold text-transparent bg-clip-text bg-linear-to-l from-[#2ea98c] to-[#30cea1] leading-normal">
               {content}
             </h1>
           </motion.div>
@@ -84,7 +88,7 @@ const Curation = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-[20px] font-medium text-[#262626] max-w-200 rounded-[60px] bg-white/50 shadow-[0_3px_10.5px_rgba(104,191,166,0.36)] px-5 py-4"
+            className="text-[20px] font-medium text-[#262626] max-w-200 rounded-[60px] bg-white/50 shadow-[0_3px_10.5px_rgba(104,191,166,0.36)] px-5 py-4 backdrop-blur-[10px] border-4 border-white"
           >
             {description}
           </motion.p>

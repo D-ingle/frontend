@@ -67,3 +67,23 @@ When converting designs from Figma to code via MCP, you must follow these steps:
 
 - Do not blindly convert every Figma `Frame` to a `<div>`.
 - Analyze the context and use semantic tags (`<section>`, `<header>`, `<button>`, `<ul>`, `<article>`).
+
+5. **Package Manager Policy**
+
+- When a package manager is required, Yarn must be used as the default package manager
+- Do not use npm or pnpm unless there is a clear and explicit reason
+- Ensure that all dependency installations, script executions, and lockfile management are handled using Yarn.
+- This rule exists to maintain consistency across the codebase, avoid lockfile conflicts, and ensure predictable dependency resolution.
+- If an exception is unavoidable, it must be explicitly stated and justified before using a different package manager.
+
+6. **Figma MCP Usage Policy**
+
+- When using Figma MCP, all values and measurements must be transferred exactly as provided.
+- Do not modify, round, reinterpret, or optimize any numerical values from Figma.
+- This includes (but is not limited to): spacing, padding, margin, width, height, font size, line height, border radius, opacity, and positioning values.
+- The purpose of this rule is to ensure pixel-perfect consistency between design and implementation.
+- Any intentional deviation from Figma values must be clearly documented and approved in advance.
+
+7. **Code Comment Language Policy**
+
+- All code comments must be written in Korean.

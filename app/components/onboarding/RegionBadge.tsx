@@ -20,9 +20,9 @@ export const RegionBadge = ({ name, onRemove }: RegionBadgeProps) => {
       <span className="text-[18px]">{name}</span>
       <button
         onClick={onRemove}
-        className="hover:bg-main-100 rounded-full p-0.5 transition-colors"
+        className="hover:bg-main-100 rounded-full p-0.5 transition-colors text-gray-400 font-semibold"
       >
-        <X size={14} />
+        <X size={20} />
       </button>
     </motion.div>
   );

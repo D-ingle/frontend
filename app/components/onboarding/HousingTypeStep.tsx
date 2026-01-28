@@ -43,7 +43,7 @@ export const HousingTypeStep = ({ onNext, onBack }: HousingTypeStepProps) => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-col w-full max-w-350 mx-auto pt-20 pb-10 mt-15">
+    <div className="flex flex-col w-350 mx-auto pt-20 pb-10 mt-15">
       {/* Header */}
       <button
         onClick={onBack}

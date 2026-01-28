@@ -17,7 +17,7 @@ export const OnboardingProgress = ({
       <div className="flex items-center gap-2">
         {Array.from({ length: totalSteps }).map((_, index) => {
           const step = index + 1;
-          const isActive = step <= currentStep;
+          const isActive = step == currentStep;
           return (
             <div
               key={step}

@@ -43,15 +43,15 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white relative overflow-hidden">
+    <main
+      className="min-h-screen bg-white relative overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(50% 50% at 50% 50%, #E2F6F6 0%, #FFF 100%), #FFF",
+      }}
+    >
       {/* Background Radial Gradient */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-50"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, #E2F6F6 0%, #FFFFFF 100%)",
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none opacity-50" />
 
       <div className="relative z-10">
         <AnimatePresence mode="wait">

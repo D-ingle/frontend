@@ -109,9 +109,8 @@ export default function SeoulMap({
             d.properties.SIG_KOR_NM,
           );
           d3.select(this)
-            .attr("fill", isSelected ? "#DEFAF2" : "#F2F2F2")
-            .attr("stroke", "#30CEA1")
-            .attr("stroke-width", 4)
+            .attr("fill", isSelected ? "#30CEA1" : "#DEFAF2")
+            .attr("stroke", "#F3F4F6")
             .raise();
         })
         .on("mouseleave", function (_event, d) {
@@ -126,7 +125,13 @@ export default function SeoulMap({
         .append("text")
         .attr("x", (d) => pathGenerator.centroid(d as any)[0])
         .attr("y", (d) => pathGenerator.centroid(d as any)[1])
-        .attr("text-anchor", "middle")
+        .attr("text-anchor", (d) => {
+          if (d.properties.SIG_KOR_NM == "종로구") {
+            return "end";
+          } else {
+            return "middle";
+          }
+        })
         .attr("alignment-baseline", "middle")
         .attr("font-size", "14px")
         .attr("pointer-events", "none")
@@ -141,11 +146,11 @@ export default function SeoulMap({
         .selectAll<SVGPathElement, GeoFeature>("path")
         .attr("fill", (d) =>
           currentSelected.includes(d.properties.SIG_KOR_NM)
-            ? "#DEFAF2"
-            : "#F7F7F7",
+            ? "#30CEA1"
+            : "#FFFFFF",
         )
-        .attr("stroke", "#FFFFFF")
-        .attr("stroke-width", 4);
+        .attr("stroke", "#F3F4F6")
+        .attr("stroke-width", 1);
 
       svg
         .selectAll<SVGTextElement, GeoFeature>("text")
@@ -154,8 +159,8 @@ export default function SeoulMap({
         )
         .attr("fill", (d) =>
           currentSelected.includes(d.properties.SIG_KOR_NM)
-            ? "#2EA98C"
-            : "#7B7B7B",
+            ? "#FFFFFF"
+            : "#9D9D9D",
         );
     };
 

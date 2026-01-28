@@ -95,14 +95,14 @@ export const HousingTypeStep = ({ onNext, onBack }: HousingTypeStepProps) => {
 
       {/* Actions */}
       <div className="flex justify-end items-center gap-8 mt-20">
-        <button className="text-gray-400 hover:text-navy font-medium transition-colors">
+        <button className="text-gray-400 hover:text-navy font-medium transition-colors text-[18px]">
           다음에 할래요
         </button>
         <button
           disabled={!selectedType}
           onClick={() => selectedType && onNext(selectedType)}
           className={cn(
-            "px-10 py-4 rounded-xl font-bold transition-all duration-300",
+            "px-10 py-4 rounded-xl font-bold transition-all duration-300 text-[18px]",
             selectedType
               ? "bg-navy text-white hover:bg-navy/90 shadow-lg"
               : "bg-gray-100 text-gray-400 cursor-not-allowed",

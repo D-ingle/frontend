@@ -81,7 +81,7 @@ export const RegionSelectionStep = ({
       </div>
 
       {/* Actions - Separated from the map flex container to stay at bottom right */}
-      <div className="flex justify-end items-end gap-6 mb-10  -mt-20 relative z-20">
+      <div className="flex justify-end items-end gap-8 mb-10  -mt-20 relative z-20">
         <button className="text-gray-400 hover:text-navy font-medium transition-colors py-4 text-[18px]">
           다음에 할래요
         </button>

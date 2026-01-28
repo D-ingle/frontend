@@ -57,9 +57,12 @@ export default function Navbar() {
         <div className="bg-border-1 h-5.5 w-px" />
 
         {/* Log in / Sign in */}
-        <button className="font-semibold text-[#434343] leading-[1.1] uppercase text-[16px] hover:text-black transition-colors">
+        <Link
+          href="/signup"
+          className="font-semibold text-[#434343] leading-[1.1] uppercase text-[16px] hover:text-black transition-colors"
+        >
           Log in / Sign in
-        </button>
+        </Link>
       </div>
     </nav>
   );

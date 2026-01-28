@@ -25,7 +25,7 @@ const SignupEmailInput = ({
       <input
         {...(register || {})}
         className={cn(
-          "w-full h-full px-5 py-[5px] rounded-[6px] border border-gray-300 outline-none transition-colors",
+          "w-full h-full px-5 py-1.25 rounded-md border border-gray-300 outline-none transition-colors",
           "placeholder:text-[#9D9D9D] text-[18px] font-medium text-[#222222]",
           "focus:border-[#2EA98C]",
           error && "border-[#FF0000] focus:border-[#FF0000]",

@@ -84,7 +84,7 @@ export const AtmosphereSelectionStep = ({
   };
 
   return (
-    <div className="flex flex-col w-full max-w-360 mx-auto pt-20 px-10 mt-12">
+    <div className="flex flex-col w-370 mx-auto pt-20 px-10 mt-15">
       {/* Header */}
       <button
         onClick={onBack}
@@ -111,7 +111,7 @@ export const AtmosphereSelectionStep = ({
         variants={{
           visible: { transition: { staggerChildren: 0.1 } },
         }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-20 gap-y-5 mt-8"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5 mt-8"
       >
         {ATMOSPHERES.map((item) => (
           <motion.div

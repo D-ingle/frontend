@@ -9,7 +9,7 @@ const SignupCompletePage = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="w-233 mx-auto py-10 md:py-20">
-        <div className="flex flex-col gap-6 mb-10 w-full mt-20">
+        <div className="flex flex-col gap-6 mb-10 w-full mt-10">
           <Link
             href="/login"
             className="flex items-center gap-1 text-[#9D9D9D] text-sm hover:text-[#555555] transition-colors"

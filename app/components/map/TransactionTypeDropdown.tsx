@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import * as Slider from "@radix-ui/react-slider";
+import React from "react";
+import Checkbox from "./Checkbox";
+import RangeSlider from "./RangeSlider";
 
 interface TransactionTypeDropdownProps {
   selectedTypes: string[];
@@ -117,100 +118,5 @@ export default function TransactionTypeDropdown({
         )}
       </div>
     </div>
-  );
-}
-
-/**
- * Reusable RangeSlider Sub-component
- */
-function RangeSlider({
-  title,
-  range,
-  setRange,
-  max,
-  formatValue,
-}: {
-  title: string;
-  range: [number, number];
-  setRange: React.Dispatch<React.SetStateAction<[number, number]>>;
-  max: number;
-  formatValue: (val: number) => string;
-}) {
-  return (
-    <div className="flex flex-col">
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-[14px] font-medium text-black">{title}</span>
-        <span className="text-[16px] font-bold text-[#30CEA1]">
-          {formatValue(range[0])}
-          {title === "매매가" ? "" : "원"} ~ {formatValue(range[1])}
-        </span>
-      </div>
-
-      <Slider.Root
-        className="relative flex items-center select-none touch-none w-full h-5 mb-1"
-        value={[range[0], range[1]]}
-        max={max}
-        step={max / 100}
-        minStepsBetweenThumbs={1}
-        onValueChange={(value) => setRange(value as [number, number])}
-      >
-        <Slider.Track className="bg-[#E4E4E4] relative grow rounded-full h-1">
-          <Slider.Range className="absolute bg-[#30CEA1] rounded-full h-full" />
-        </Slider.Track>
-        <Slider.Thumb
-          className="block w-5 h-5 bg-white border-2 border-[#30CEA1] rounded-full shadow-sm cursor-pointer hover:scale-110 transition-transform focus:outline-none"
-          aria-label={`${title} min`}
-        />
-        <Slider.Thumb
-          className="block w-5 h-5 bg-white border-2 border-[#30CEA1] rounded-full shadow-sm cursor-pointer hover:scale-110 transition-transform focus:outline-none"
-          aria-label={`${title} max`}
-        />
-      </Slider.Root>
-
-      <div className="flex justify-between text-[12px] text-[#C4C4C4]">
-        <span>0</span>
-        <span>{formatValue(max / 2)}</span>
-        <span>{formatValue(max)}</span>
-      </div>
-    </div>
-  );
-}
-
-function Checkbox({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string;
-  checked: boolean;
-  onChange: () => void;
-}) {
-  return (
-    <label className="flex items-center gap-2 cursor-pointer select-none">
-      <div
-        onClick={onChange}
-        className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
-          checked
-            ? "bg-[#30CEA1] border-[#30CEA1]"
-            : "border-[#D9D9D9] bg-white"
-        }`}
-      >
-        {checked && (
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        )}
-      </div>
-      <span className="text-[16px] font-medium text-[#434343]">{label}</span>
-    </label>
   );
 }

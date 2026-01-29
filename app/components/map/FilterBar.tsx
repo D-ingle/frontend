@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import TransactionTypeDropdown from "./TransactionTypeDropdown";
+import ResidenceTypeDropdown from "./ResidenceTypeDropdown";
+import SpaceDropdown from "./SpaceDropdown";
 import { useEffect } from "react";
 import { useRef } from "react";
 
@@ -14,7 +16,7 @@ export default function FilterBar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [openFilter, setOpenFilter] = useState<string | null>(null);
 
-  // Lifted States (거래 유형 드랍박스 상태값들)
+  //(거래 유형 드랍박스 상태값들)
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [depositRange, setDepositRange] = useState<[number, number]>([0, 0]); // in 10k KRW (만원)
   const [monthlyRentRange, setMonthlyRentRange] = useState<[number, number]>([
@@ -23,6 +25,14 @@ export default function FilterBar() {
   const [salePriceRange, setSalePriceRange] = useState<[number, number]>([
     0, 0,
   ]);
+
+  //(주거 형태 드랍박스 상태값)
+  const [selectedResidenceTypes, setSelectedResidenceTypes] = useState<
+    string[]
+  >([]);
+
+  //(평수 드랍박스 상태값)
+  const [spaceRange, setSpaceRange] = useState<[number, number]>([0, 60]);
 
   const toggleFilter = (filterName: string) => {
     setOpenFilter(openFilter === filterName ? null : filterName);
@@ -85,14 +95,47 @@ export default function FilterBar() {
     return `${baseLabel}${priceLabel}`;
   };
 
+  /**
+   * 주거 형태 버튼 라벨 생성 함수
+   */
+  const getResidenceTypeLabel = () => {
+    if (selectedResidenceTypes.length === 0) return "주거 형태";
+    return selectedResidenceTypes.join(", ");
+  };
+
+  /**
+   * 평수 버튼 라벨 생성 함수
+   */
+  const getSpaceLabel = () => {
+    if (spaceRange[0] === 0 && spaceRange[1] === 60) return "평수";
+
+    const format = (val: number) => {
+      if (val >= 60) return "60평 이상";
+      if (val <= 10) return "10평 미만";
+      return `${val}평`;
+    };
+
+    return `${format(spaceRange[0])}~${format(spaceRange[1])}`;
+  };
+
+  const handleReset = () => {
+    setSelectedTypes([]);
+    setDepositRange([0, 0]);
+    setMonthlyRentRange([0, 0]);
+    setSalePriceRange([0, 0]);
+    setSelectedResidenceTypes([]);
+    setSpaceRange([0, 60]);
+    setOpenFilter(null);
+  };
+
   return (
-    <div className="flex items-center gap-4 bg-white w-full h-20 px-5 py-4 border-b border-[#E4E4E4]">
+    <div className="flex items-center gap-6 bg-white w-full h-20 px-5 py-4 border-b border-[#E4E4E4]">
       {/* 검색 입력 영역 */}
-      <div className="relative flex items-center w-100">
+      <div className="relative flex items-center w-[366px]">
         <input
           type="text"
           placeholder="지역, 단지, 지하철역 등을 입력하세요"
-          className="w-full h-12 pl-5 pr-12 bg-[#F8FAFB] border border-[#E4E4E4] rounded-lg text-[16px] text-[#707070] placeholder:text-[#C4C4C4] focus:outline-none focus:border-[#30CEA1] transition-colors"
+          className="w-[366px] h-12 pl-5 pr-12 bg-[#F8FAFB] border border-[#E4E4E4] rounded-lg text-[16px] text-[#707070] placeholder:text-[#C4C4C4] focus:outline-none focus:border-[#30CEA1] transition-colors"
         />
         <div className="absolute right-4 flex items-center justify-center pointer-events-none">
           <Image
@@ -105,11 +148,12 @@ export default function FilterBar() {
       </div>
 
       {/* 필터 버튼들 */}
-      <div ref={dropdownRef} className="flex items-center gap-2">
-        <div className="relative">
+      <div ref={dropdownRef} className="flex items-center gap-2.5">
+        <div className="relative min-w-28">
           <FilterButton
             label={getTransactionTypeLabel()}
-            active={openFilter === "거래 유형" || selectedTypes.length > 0}
+            focus={openFilter === "거래 유형"}
+            active={selectedTypes.length > 0}
             onClick={() => toggleFilter("거래 유형")}
           />
           {openFilter === "거래 유형" && (
@@ -125,20 +169,38 @@ export default function FilterBar() {
             />
           )}
         </div>
-        <FilterButton
-          label="주거 형태"
-          active={openFilter === "주거 형태"}
-          onClick={() => toggleFilter("주거 형태")}
-        />
-        <FilterButton
-          label="평수"
-          active={openFilter === "평수"}
-          onClick={() => toggleFilter("평수")}
-        />
+        <div className="relative min-w-28">
+          <FilterButton
+            label={getResidenceTypeLabel()}
+            focus={openFilter === "주거 형태"}
+            active={selectedResidenceTypes.length > 0}
+            onClick={() => toggleFilter("주거 형태")}
+          />
+          {openFilter === "주거 형태" && (
+            <ResidenceTypeDropdown
+              selectedTypes={selectedResidenceTypes}
+              setSelectedTypes={setSelectedResidenceTypes}
+            />
+          )}
+        </div>
+        <div className="relative min-w-20">
+          <FilterButton
+            label={getSpaceLabel()}
+            focus={openFilter === "평수"}
+            active={spaceRange[0] !== 0 || spaceRange[1] !== 60}
+            onClick={() => toggleFilter("평수")}
+          />
+          {openFilter === "평수" && (
+            <SpaceDropdown range={spaceRange} setRange={setSpaceRange} />
+          )}
+        </div>
       </div>
 
       {/* 필터 초기화 */}
-      <button className="flex items-center gap-1.5 ml-auto hover:opacity-70 transition-opacity">
+      <button
+        onClick={handleReset}
+        className="flex items-center gap-1.5 hover:opacity-70 transition-opacity"
+      >
         <Image src="/icon/rotate_icon.svg" alt="Reset" width={20} height={20} />
         <span className="text-[16px] text-[#707070]">필터 초기화</span>
       </button>
@@ -152,21 +214,25 @@ export default function FilterBar() {
  */
 function FilterButton({
   label,
+  focus,
   active,
   onClick,
 }: {
   label: string;
+  focus?: boolean;
   active?: boolean;
   onClick?: () => void;
 }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-between min-w-31 h-12 px-4 border rounded-lg transition-colors group ${
+      className={`flex items-center justify-center w-full h-12 px-2 border rounded-lg transition-colors group  ${
         active
           ? "border-[#30CEA1] bg-[#E8FBF6]"
-          : "border-[#E4E4E4] bg-[#F8FAFB] hover:border-[#30CEA1]"
-      }`}
+          : focus
+            ? "border-[#30CEA1]"
+            : "border-[#E5E5E5] bg-[#FFFFFF] hover:border-[#30CEA1]"
+      } hover:bg-[#f5f5f5]`}
     >
       <span
         className={`text-[16px] font-medium ${
@@ -176,10 +242,8 @@ function FilterButton({
         {label}
       </span>
       <ChevronDownIcon
-        className={`ml-2 transition-transform duration-200 ${
-          active
-            ? "text-[#30CEA1] rotate-180"
-            : "text-[#707070] group-hover:text-[#30CEA1]"
+        className={`ml-2 transition-transform duration-200 text-gray-400 ${
+          focus && "rotate-180"
         }`}
       />
     </button>

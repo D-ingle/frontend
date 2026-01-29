@@ -174,7 +174,7 @@ export const SignupForm = () => {
                   <option value="nate.com">nate.com</option>
                   <option value="yahoo.co.kr">yahoo.co.kr</option>
                 </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                <div className="absolute right-[-20] top-1/2 -translate-y-1/2 pointer-events-none">
                   <svg
                     width="12"
                     height="8"
@@ -235,21 +235,6 @@ export const SignupForm = () => {
           }`}
         >
           가입하기
-          <svg
-            width="8"
-            height="14"
-            viewBox="0 0 8 14"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 1L7 7L1 13"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </button>
       </form>
     </FormProvider>

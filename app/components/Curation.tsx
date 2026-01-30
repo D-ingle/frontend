@@ -5,11 +5,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 interface CurationProps {
-  content: string;
-  description: string;
-  isLoading: boolean;
+  content?: string;
+  description?: string;
+  isLoading?: boolean;
   buttonLabel?: string;
   buttonLink?: string;
+  isSubComponent?: boolean;
+  showButton?: boolean;
 }
 
 const Curation = ({
@@ -18,16 +20,22 @@ const Curation = ({
   isLoading,
   buttonLabel,
   buttonLink,
+  isSubComponent = false,
+  showButton = true,
 }: CurationProps) => {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-white">
-      <div
-        className="absolute inset-0 opacity-60"
-        style={{
-          background:
-            "radial-gradient(50% 50% at 50% 50%, rgba(172, 235, 217, 0.60) 0%, rgba(255, 255, 255, 0.60) 100%), #FFF",
-        }}
-      />
+    <main
+      className={`relative flex flex-col items-center justify-center overflow-hidden bg-transparent ${isSubComponent ? "w-full h-full" : "min-h-screen bg-white"}`}
+    >
+      {!isSubComponent && (
+        <div
+          className="absolute inset-0 opacity-60"
+          style={{
+            background:
+              "radial-gradient(50% 50% at 50% 50%, rgba(172, 235, 217, 0.60) 0%, rgba(255, 255, 255, 0.60) 100%), #FFF",
+          }}
+        />
+      )}
 
       {/* Rotating Background Circles */}
       <div className="absolute flex items-center justify-center pointer-events-none">
@@ -69,32 +77,39 @@ const Curation = ({
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center gap-20">
+      <div
+        className={`relative z-10 flex flex-col items-center text-center ${isSubComponent ? "gap-10" : "gap-20"}`}
+      >
         {/* Title Tag */}
-        <div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-2 px-8 py-4"
-          >
-            <h1 className="text-[32px] font-extrabold text-transparent bg-clip-text bg-linear-to-l from-[#2ea98c] to-[#30cea1] leading-normal">
-              {content}
-            </h1>
-          </motion.div>
+        {content && (
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-2 px-8 py-4"
+            >
+              <h1 className="text-[32px] font-extrabold text-transparent bg-clip-text bg-linear-to-l from-[#2ea98c] to-[#30cea1] leading-normal">
+                {content}
+              </h1>
+            </motion.div>
+          </div>
+        )}
 
-          {/* Description */}
+        {/* Description */}
+        {description && (
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-[20px] font-medium text-[#262626] max-w-200 rounded-[60px] bg-white/50 shadow-[0_3px_10.5px_rgba(104,191,166,0.36)] px-5 py-4 backdrop-blur-[10px] border-4 border-white"
+            className="text-[20px] font-medium text-[#262626] max-w-200 rounded-[60px] bg-white/50 shadow-[0_3px_10.5px_rgba(104,191,166,0.36)] px-8 py-3 backdrop-blur-[10px] border-4 border-white"
           >
             {description}
           </motion.p>
-        </div>
+        )}
+
         {/* Mascot */}
-        <div className="relative w-45 h-45 mb-20 flex items-center justify-center">
+        <div className="relative w-45 h-45 mb-10 flex items-center justify-center">
           {/* Mascot Glow Background */}
           <div className="absolute inset-0 bg-[#30CEA1]/10 rounded-full blur-3xl" />
 
@@ -131,15 +146,18 @@ const Curation = ({
             />
           </motion.div>
         </div>
+
         {/* Start Button */}
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Link
-            href={buttonLink || "/"}
-            className={`inline-flex items-center justify-center px-15 py-4 rounded-lg bg-navy text-white text-[20px] font-bold shadow-lg hover:bg-navy/90 transition-all duration-300 z-50 ${isLoading ? "cursor-not-allowed opacity-0" : ""}`}
-          >
-            {buttonLabel}
-          </Link>
-        </motion.div>
+        {showButton && (
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href={buttonLink || "/"}
+              className={`inline-flex items-center justify-center px-15 py-4 rounded-lg bg-navy text-white text-[20px] font-bold shadow-lg hover:bg-navy/90 transition-all duration-300 z-50 ${isLoading ? "cursor-not-allowed opacity-0" : ""}`}
+            >
+              {buttonLabel}
+            </Link>
+          </motion.div>
+        )}
       </div>
     </main>
   );

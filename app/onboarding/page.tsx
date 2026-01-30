@@ -112,7 +112,7 @@ export default function OnboardingPage() {
               description="시작하기 버튼을 누르시고 가장 잘 맞는 집을 함께 찾아봐요"
               isLoading={false}
               buttonLabel="D.HOME 시작하기"
-              buttonLink="/"
+              buttonLink="/map"
             />
           )}
         </AnimatePresence>

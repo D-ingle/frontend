@@ -129,7 +129,7 @@ export default function FilterBar() {
   };
 
   return (
-    <div className="flex items-center gap-6 bg-white w-full h-20 px-5 py-4 border-b border-[#E4E4E4]">
+    <div className="flex items-center gap-6 bg-white w-full h-20 px-5 py-4 border-b border-[#E4E4E4] mt-20">
       {/* 검색 입력 영역 */}
       <div className="relative flex items-center w-[366px]">
         <input

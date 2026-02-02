@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import SummarySection from "./section/SummarySection";
 import CurationSection from "./section/CurationSection";
 import DetailInfoSection from "./section/DetailInfoSection";
@@ -9,6 +10,7 @@ import FacilitiesSection from "./section/FacilitiesSection";
 import SchoolSection from "./section/SchoolSection";
 import AgencySection from "./section/AgencySection";
 import ReviewSection from "./section/ReviewSection";
+import SchoolDetail from "./SchoolDetail";
 import Image from "next/image";
 
 const sections = [
@@ -28,6 +30,9 @@ const ListDetail = ({
   onOpenContact?: () => void;
 }) => {
   const [activeTab, setActiveTab] = useState("curation");
+  const [selectedSchoolName, setSelectedSchoolName] = useState<string | null>(
+    null,
+  );
 
   const scrollToSection = (id: string) => {
     setActiveTab(id);
@@ -94,16 +99,17 @@ const ListDetail = ({
         <FacilitiesSection />
         <div className="h-4 bg-[#F4F4F4]" />
 
-        <SchoolSection />
+        <SchoolSection
+          onOpenSchoolDetail={(name) => setSelectedSchoolName(name)}
+        />
         <div className="h-4 bg-[#F4F4F4]" />
 
         <AgencySection />
-
         <div className="h-4 bg-[#F4F4F4]" />
 
         <ReviewSection />
-
-        {/* Extra padding for bottom fixed bar */}
+        {/* Footer padding */}
+        <div className="h-8" />
       </main>
 
       {/* Bottom Contact Bar (Fixed) */}
@@ -123,6 +129,28 @@ const ListDetail = ({
           연락처 보기
         </button>
       </footer>
+
+      {/* School Detail Overlay */}
+      <AnimatePresence>
+        {selectedSchoolName && (
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="absolute inset-0 z-60 bg-white"
+          >
+            <SchoolDetail
+              schoolName={selectedSchoolName}
+              onBack={() => setSelectedSchoolName(null)}
+              onClose={() => {
+                setSelectedSchoolName(null);
+                onClose?.();
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 };

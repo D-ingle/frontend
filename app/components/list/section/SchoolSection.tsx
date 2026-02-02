@@ -1,9 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import SchoolItem from "./SchoolItem";
 
-const SchoolSection = () => {
+const SchoolSection = ({
+  onOpenSchoolDetail,
+}: {
+  onOpenSchoolDetail?: (name: string) => void;
+}) => {
   const [activeTab, setActiveTab] = useState("elementary");
 
   const tabs = [
@@ -72,119 +76,46 @@ const SchoolSection = () => {
 
         <div className="flex flex-col gap-8 px-1">
           {currentSchools.map((school, idx) => (
-            <div key={idx} className="group cursor-pointer relative">
-              <div className="flex justify-between items-start mb-2">
-                <div className="flex items-center gap-1.5 pt-0.5">
-                  <span className="text-[18px] font-bold text-[#000000]">
-                    {school.name}
-                  </span>
-                  <span className="text-[13px] text-[#9D9D9D]">
-                    {school.type}/공학
-                  </span>
-                </div>
-                <Image
-                  src="/list_detail/thumbnail/arrow.svg"
-                  alt="Arrow"
-                  width={20}
-                  height={20}
-                  className="mt-1"
-                />
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[16px] text-[#9D9D9D]">
-                  학교까지 거리
-                </span>
-                <div className="flex items-center gap-1 ml-1 pt-0.5">
-                  <Image
-                    src="/list_detail/school/mappin.svg"
-                    alt="Marker"
-                    width={18}
-                    height={18}
-                  />
-                  <span className="text-[18px] font-bold text-[#2EA98C]">
-                    902m
-                  </span>
-                </div>
-              </div>
-            </div>
+            <>
+              <SchoolItem
+                key={idx}
+                name={school.name}
+                type={school.type}
+                distance={school.distance}
+                onClick={() => onOpenSchoolDetail?.(school.name)}
+              />
+              {idx !== currentSchools.length - 1 && (
+                <div className="w-full h-px bg-[#F4F4F4]" />
+              )}
+            </>
           ))}
         </div>
       </div>
 
       {/* Exception School Section */}
       <div>
-        <div className="flex items-center px-3 py-2 bg-[#F8FAFB] rounded-lg mb-6">
+        <div className="flex items-center px-3 py-2 bg-[#F8FAFB] rounded-lg mb-6 bg-">
           <span className="text-[14px] font-bold text-navy">
             학군배정 예외학교
           </span>
         </div>
         <div className="flex flex-col gap-8 px-1">
           {/* Mocked for demonstration mirroring Figma */}
-          <div className="group cursor-pointer relative">
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center gap-1.5 pt-0.5">
-                <span className="text-[18px] font-bold text-[#000000]">
-                  서울청구초등학교
-                </span>
-                <span className="text-[13px] text-[#9D9D9D]">공립/공학</span>
-              </div>
-              <Image
-                src="/list_detail/thumbnail/arrow.svg"
-                alt="Arrow"
-                width={20}
-                height={20}
-                className="mt-1"
-              />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[16px] text-[#9D9D9D]">학교까지 거리</span>
-              <div className="flex items-center gap-1 ml-1 pt-0.5">
-                <Image
-                  src="/list_detail/school/mappin.svg"
-                  alt="Marker"
-                  width={18}
-                  height={18}
-                />
-                <span className="text-[18px] font-bold text-[#2EA98C]">
-                  902m
-                </span>
-              </div>
-            </div>
-          </div>
+          <SchoolItem
+            name="서울청구초등학교"
+            type="공립"
+            distance="902m"
+            onClick={() => onOpenSchoolDetail?.("서울청구초등학교")}
+          />
 
           <div className="w-full h-px bg-[#F4F4F4]" />
 
-          <div className="group cursor-pointer relative">
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center gap-1.5 pt-0.5">
-                <span className="text-[18px] font-bold text-[#000000]">
-                  서울청구초등학교
-                </span>
-                <span className="text-[13px] text-[#9D9D9D]">사립/공학</span>
-              </div>
-              <Image
-                src="/list_detail/thumbnail/arrow.svg"
-                alt="Arrow"
-                width={20}
-                height={20}
-                className="mt-1"
-              />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[16px] text-[#9D9D9D]">학교까지 거리</span>
-              <div className="flex items-center gap-1 ml-1 pt-0.5">
-                <Image
-                  src="/list_detail/school/mappin.svg"
-                  alt="Marker"
-                  width={18}
-                  height={18}
-                />
-                <span className="text-[18px] font-bold text-[#2EA98C]">
-                  902m
-                </span>
-              </div>
-            </div>
-          </div>
+          <SchoolItem
+            name="서울청구초등학교"
+            type="사립"
+            distance="902m"
+            onClick={() => onOpenSchoolDetail?.("서울청구초등학교")}
+          />
         </div>
       </div>
     </section>

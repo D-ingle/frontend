@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import ListItem from "./ListItem";
 import ListDetail from "./ListDetail";
+import ContactModal from "./ContactModal";
 
 const properties = [
   {
@@ -91,6 +92,7 @@ const priorityStyles: Record<
 
 const List = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   return (
     <div className="relative flex h-full no-scrollbar">
@@ -195,10 +197,19 @@ const List = () => {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="absolute top-0 left-100 w-100 h-full bg-white z-10 border-r border-[#E5E5E5]"
           >
-            <ListDetail onClose={() => setSelectedId(null)} />
+            <ListDetail
+              onClose={() => setSelectedId(null)}
+              onOpenContact={() => setIsContactModalOpen(true)}
+            />
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Contact Modal (Global level to avoid transform issues) */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </div>
   );
 };

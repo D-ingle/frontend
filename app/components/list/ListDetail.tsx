@@ -20,7 +20,13 @@ const sections = [
   { id: "agency", label: "중개사무소 정보" },
 ];
 
-const ListDetail = ({ onClose }: { onClose?: () => void }) => {
+const ListDetail = ({
+  onClose,
+  onOpenContact,
+}: {
+  onClose?: () => void;
+  onOpenContact?: () => void;
+}) => {
   const [activeTab, setActiveTab] = useState("curation");
 
   const scrollToSection = (id: string) => {
@@ -102,7 +108,7 @@ const ListDetail = ({ onClose }: { onClose?: () => void }) => {
 
       {/* Bottom Contact Bar (Fixed) */}
       <footer className="sticky bottom-0 z-50 flex items-center gap-3 w-full h-20 px-5 bg-white border-t border-[#E5E5E5] pb-safe flex-none">
-        <button className="flex items-center justify-center w-12 h-12 border border-[#D9D9D9] rounded-lg text-[#434343]">
+        <button className="flex items-center justify-center w-12 h-12 border border-[#D9D9D9] rounded-lg text-[#434343] cursor-pointer">
           <Image
             src="/list_detail/contact/contact.svg"
             width={20}
@@ -110,7 +116,10 @@ const ListDetail = ({ onClose }: { onClose?: () => void }) => {
             alt="Contact"
           />
         </button>
-        <button className="flex-1 h-12 bg-navy text-white font-bold rounded-lg hover:bg-[#052844] transition-colors">
+        <button
+          onClick={onOpenContact}
+          className="flex-1 h-12 bg-navy text-white font-bold rounded-lg hover:bg-[#052844] transition-colors cursor-pointer"
+        >
           연락처 보기
         </button>
       </footer>

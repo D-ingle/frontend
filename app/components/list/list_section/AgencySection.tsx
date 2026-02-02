@@ -14,7 +14,7 @@ const AgencySection = () => {
         <div className="flex gap-3 items-center w-full">
           <div className="relative size-20 shrink-0 bg-white rounded overflow-hidden">
             <Image
-              src="/mockup/item.png"
+              src="/images/mockup/item.png"
               alt="Agency Office"
               fill
               className="object-cover"

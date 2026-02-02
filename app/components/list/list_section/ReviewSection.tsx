@@ -15,7 +15,7 @@ const ReviewSection = () => {
       {/* Main Image View */}
       <div className="relative w-full h-56 overflow-hidden flex flex-col items-center justify-end">
         <Image
-          src="/mockup/item.png"
+          src="/images/mockup/item.png"
           alt="Review Photo"
           fill
           className="object-cover"

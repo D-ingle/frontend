@@ -22,7 +22,7 @@ const DetailInfoSection = () => {
       {/* Floor Plan Image */}
       <div className="relative w-full aspect-401/300 bg-white border border-[#E5E5E5] rounded-xl mb-8 overflow-hidden flex items-center justify-center p-4">
         <Image
-          src="/mockup/cad.png" // Placeholder SVG link from context or similar
+          src="/images/mockup/cad.png" // Placeholder SVG link from context or similar
           alt="Floor Plan"
           width={360}
           height={260}

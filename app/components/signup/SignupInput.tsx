@@ -57,7 +57,12 @@ export const SignupInput = ({
         )}
         {!error && isDirty && label !== "비밀번호 확인" && (
           <div className="flex flex-row items-center mt-2 absolute gap-2">
-            <Image src="/check.svg" alt="check" width={16} height={12} />
+            <Image
+              src="/icons/common/check.svg"
+              alt="check"
+              width={16}
+              height={12}
+            />
             <p className="text-[16px] text-[#569CFF]">
               사용 가능한 {label} 입니다!
             </p>

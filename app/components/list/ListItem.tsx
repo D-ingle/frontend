@@ -40,7 +40,7 @@ const ListItem = ({ property, onClick }: ListItemProps) => {
           <div className="absolute bottom-0 left-2 w-12 h-16 pointer-events-none">
             <div className="relative w-full h-20 flex flex-col items-center pt-8">
               <Image
-                src="/list/rank_badge.svg"
+                src="/icons/feature/list/rank_badge.svg"
                 alt="Rank Badge"
                 fill
                 className="object-contain"

@@ -34,7 +34,7 @@ const SchoolItem = ({
             <span className="text-[16px] text-[#9D9D9D]">학교까지 거리</span>
             <div className="flex items-center gap-1 ml-1 pt-0.5">
               <Image
-                src="/list_detail/school/mappin.svg"
+                src="/icons/feature/list_detail/school/mappin.svg"
                 alt="Marker"
                 width={14}
                 height={14}
@@ -47,7 +47,7 @@ const SchoolItem = ({
         </div>
         <div>
           <Image
-            src="/list_detail/thumbnail/arrow2.svg"
+            src="/icons/feature/list_detail/arrow2.svg"
             alt="Arrow"
             width={8}
             height={8}

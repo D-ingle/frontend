@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Checkbox from "./Checkbox";
+import Checkbox from "../../ui/Checkbox";
 
 interface ResidenceTypeDropdownProps {
   selectedTypes: string[];

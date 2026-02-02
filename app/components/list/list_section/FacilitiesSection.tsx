@@ -5,32 +5,32 @@ import Image from "next/image";
 
 const FacilitiesSection = () => {
   const options = [
-    { label: "냉장고", icon: "/list_detail/option/refrigerator.svg" },
-    { label: "에어컨", icon: "/list_detail/option/airconditioner.svg" },
-    { label: "책상", icon: "/list_detail/option/desk.svg" },
-    { label: "신발장", icon: "/list_detail/option/shoe.svg" },
-    { label: "세탁기", icon: "/list_detail/option/washingmachine.svg" },
-    { label: "싱크대", icon: "/list_detail/option/sink.svg" },
-    { label: "옷장", icon: "/list_detail/option/closet.svg" },
-    { label: "인덕션", icon: "/list_detail/option/induction.svg" },
-    { label: "전자레인지", icon: "/list_detail/option/microwave.svg" },
+    { label: "냉장고", icon: "/icons/option/refrigerator.svg" },
+    { label: "에어컨", icon: "/icons/option/airconditioner.svg" },
+    { label: "책상", icon: "/icons/option/desk.svg" },
+    { label: "신발장", icon: "/icons/option/shoe.svg" },
+    { label: "세탁기", icon: "/icons/option/washingmachine.svg" },
+    { label: "싱크대", icon: "/icons/option/sink.svg" },
+    { label: "옷장", icon: "/icons/option/closet.svg" },
+    { label: "인덕션", icon: "/icons/option/induction.svg" },
+    { label: "전자레인지", icon: "/icons/option/microwave.svg" },
   ];
 
   const buildingFacilities = [
-    { label: "헬스장", icon: "/list_detail/option/gym.svg" },
-    { label: "세탁방", icon: "/list_detail/option/laudryshop.svg" },
-    { label: "주차장", icon: "/list_detail/option/parking.svg" },
-    { label: "커뮤니티", icon: "/list_detail/option/community.svg" },
-    { label: "관리사무소", icon: "/list_detail/option/maintenance.svg" },
+    { label: "헬스장", icon: "/icons/option/gym.svg" },
+    { label: "세탁방", icon: "/icons/option/laudryshop.svg" },
+    { label: "주차장", icon: "/icons/option/parking.svg" },
+    { label: "커뮤니티", icon: "/icons/option/community.svg" },
+    { label: "관리사무소", icon: "/icons/option/maintenance.svg" },
     {
       label: "주민공동시설",
-      icon: "/list_detail/option/residencefacilities.svg",
+      icon: "/icons/option/residencefacilities.svg",
     },
-    { label: "어린이놀이터", icon: "/list_detail/option/playground.svg" },
-    { label: "문고", icon: "/list_detail/option/stationary.svg" },
-    { label: "자전거보관소", icon: "/list_detail/option/bicycle.svg" },
-    { label: "보육시설", icon: "/list_detail/option/kindergarden.svg" },
-    { label: "휴게시설", icon: "/list_detail/option/cafe.svg" },
+    { label: "어린이놀이터", icon: "/icons/option/playground.svg" },
+    { label: "문고", icon: "/icons/option/stationary.svg" },
+    { label: "자전거보관소", icon: "/icons/option/bicycle.svg" },
+    { label: "보육시설", icon: "/icons/option/kindergarden.svg" },
+    { label: "휴게시설", icon: "/icons/option/cafe.svg" },
   ];
 
   return (

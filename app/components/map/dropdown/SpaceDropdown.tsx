@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import RangeSlider from "./RangeSlider";
+import RangeSlider from "../../ui/RangeSlider";
 
 interface SpaceDropdownProps {
   range: [number, number];

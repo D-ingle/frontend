@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import SummarySection from "./section/SummarySection";
-import CurationSection from "./section/CurationSection";
-import DetailInfoSection from "./section/DetailInfoSection";
-import FacilitiesSection from "./section/FacilitiesSection";
-import SchoolSection from "./section/SchoolSection";
-import AgencySection from "./section/AgencySection";
-import ReviewSection from "./section/ReviewSection";
-import SchoolDetail from "./SchoolDetail";
+import SummarySection from "./list_section/SummarySection";
+import CurationSection from "./list_section/CurationSection";
+import DetailInfoSection from "./list_section/DetailInfoSection";
+import FacilitiesSection from "./list_section/FacilitiesSection";
+import SchoolSection from "./list_section/SchoolSection";
+import AgencySection from "./list_section/AgencySection";
+import ReviewSection from "./list_section/ReviewSection";
+import SchoolDetail from "./list_section/detail/SchoolDetail";
 import Image from "next/image";
 
 const sections = [
@@ -116,7 +116,7 @@ const ListDetail = ({
       <footer className="sticky bottom-0 z-50 flex items-center gap-3 w-full h-20 px-5 bg-white border-t border-[#E5E5E5] pb-safe flex-none">
         <button className="flex items-center justify-center w-12 h-12 border border-[#D9D9D9] rounded-lg text-[#434343] cursor-pointer">
           <Image
-            src="/list_detail/contact/contact.svg"
+            src="/icons/feature/list_detail/contact/contact.svg"
             width={20}
             height={18}
             alt="Contact"

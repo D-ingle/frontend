@@ -183,7 +183,7 @@ const SchoolDetail = ({ schoolName, onClose, onBack }: SchoolDetailProps) => {
               >
                 <div className="relative w-25 h-18.75 rounded-lg overflow-hidden shrink-0">
                   <Image
-                    src="/mockup/item.png"
+                    src="/images/mockup/item.png"
                     alt={complex.name}
                     fill
                     className="object-cover"

@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import TransactionTypeDropdown from "./TransactionTypeDropdown";
-import ResidenceTypeDropdown from "./ResidenceTypeDropdown";
-import SpaceDropdown from "./SpaceDropdown";
+import TransactionTypeDropdown from "./dropdown/TransactionTypeDropdown";
+import ResidenceTypeDropdown from "./dropdown/ResidenceTypeDropdown";
+import SpaceDropdown from "./dropdown/SpaceDropdown";
 import { useEffect } from "react";
 import { useRef } from "react";
 
@@ -139,7 +139,7 @@ export default function FilterBar() {
         />
         <div className="absolute right-4 flex items-center justify-center pointer-events-none">
           <Image
-            src="/icon/search_icon.svg"
+            src="/icons/common/search.svg"
             alt="Search"
             width={24}
             height={24}
@@ -201,7 +201,12 @@ export default function FilterBar() {
         onClick={handleReset}
         className="flex items-center gap-1.5 hover:opacity-70 transition-opacity"
       >
-        <Image src="/icon/rotate_icon.svg" alt="Reset" width={20} height={20} />
+        <Image
+          src="/icons/common/rotate.svg"
+          alt="Reset"
+          width={20}
+          height={20}
+        />
         <span className="text-[16px] text-[#707070]">필터 초기화</span>
       </button>
     </div>

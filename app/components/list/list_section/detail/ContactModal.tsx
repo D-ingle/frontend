@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { X, Phone } from "lucide-react";
-import Portal from "../ui/Portal";
+import Portal from "@/app/components/ui/Portal";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -47,7 +47,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
               <button className="w-full h-28 bg-[#F8FAFB] rounded-md p-4 flex items-center gap-3 text-left hover:bg-[#F2F5F7] transition-colors group">
                 <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden">
                   <Image
-                    src="/mockup/item.png"
+                    src="/images/mockup/item.png"
                     alt="Agency"
                     fill
                     className="object-cover"

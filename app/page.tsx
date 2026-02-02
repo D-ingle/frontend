@@ -1,6 +1,6 @@
 "use client";
 
-import Curation from "./components/Curation";
+import Curation from "./components/curation/Curation";
 
 export default function Home() {
   return (

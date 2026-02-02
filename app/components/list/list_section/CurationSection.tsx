@@ -25,7 +25,7 @@ const CurationSection = () => {
       <div className="mb-6">
         <div className="flex items-center gap-1 mb-2">
           <Image
-            src="/list/curation.svg"
+            src="/icons/feature/list/curation.svg"
             width={16}
             height={16}
             alt="curation"

@@ -2,17 +2,17 @@
 
 import React, { useState } from "react";
 import { ChevronLeft } from "lucide-react";
-import { OnboardingProgress } from "./OnboardingProgress";
+import { OnboardingProgress } from "../OnboardingProgress";
 import { AtmosphereCard } from "./AtmosphereCard";
 import { motion } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 
 const ICONS = {
-  safety: "/icon/cctv_icon.svg",
-  convenience: "/icon/hospital_icon.svg",
-  accessibility: "/icon/subway_icon.svg",
-  noise: "/icon/home_sound.svg",
-  environment: "/icon/tree_icon.svg",
+  safety: "/icons/priority/safety.svg",
+  convenience: "/icons/priority/convenience.svg",
+  accessibility: "/icons/priority/accessibility.svg",
+  noise: "/icons/priority/noise.svg",
+  environment: "/icons/priority/environment.svg",
 };
 
 const ATMOSPHERES = [

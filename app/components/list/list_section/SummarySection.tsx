@@ -11,7 +11,7 @@ const SummarySection = () => {
       {/* Image Section */}
       <div className="relative w-full aspect-401/260 bg-gray-200">
         <Image
-          src="/mockup/item.png"
+          src="/images/mockup/item.png"
           alt="Property Image"
           fill
           className="object-cover"
@@ -45,7 +45,7 @@ const SummarySection = () => {
         <div className="grid grid-cols-2 gap-y-2 mb-6">
           <div className="flex items-center gap-2">
             <Image
-              src="/list_detail/thumbnail/area.svg"
+              src="/icons/feature/list_detail/area.svg"
               alt="Area"
               width={12}
               height={12}
@@ -57,7 +57,7 @@ const SummarySection = () => {
           </div>
           <div className="flex items-center gap-2">
             <Image
-              src="/list_detail/thumbnail/roombathroom.svg"
+              src="/icons/feature/list_detail/roombathroom.svg"
               alt="Area"
               width={12}
               height={12}
@@ -71,7 +71,7 @@ const SummarySection = () => {
           </div>
           <div className="flex items-center gap-2">
             <Image
-              src="/list_detail/thumbnail/floor.svg"
+              src="/icons/feature/list_detail/floor.svg"
               alt="Area"
               width={12}
               height={12}
@@ -83,7 +83,7 @@ const SummarySection = () => {
           </div>
           <div className="flex items-center gap-1.5">
             <Image
-              src="/list_detail/thumbnail/direction.svg"
+              src="/icons/feature/list_detail/direction.svg"
               alt="Area"
               width={14}
               height={12}
@@ -96,7 +96,7 @@ const SummarySection = () => {
         <div className="px-5 py-4 border-[#F4F4F4] w-full h-30 bg-[#F8FAFB]">
           <div className="flex items-center gap-1 mb-1">
             <Image
-              src="/list_detail/thumbnail/curation.svg"
+              src="/icons/feature/list_detail/curation.svg"
               alt="Area"
               width={15}
               height={15}

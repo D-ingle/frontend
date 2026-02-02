@@ -5,13 +5,13 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import ListItem from "./ListItem";
 import ListDetail from "./ListDetail";
-import ContactModal from "./ContactModal";
+import ContactModal from "./list_section/detail/ContactModal";
 
 const properties = [
   {
     id: 1,
     rank: 1,
-    image: "/mockup/item.png",
+    image: "/images/mockup/item.png",
     price: "전세 6억 9,000",
     name: "약수하이츠 104동",
     type: "아파트",
@@ -23,7 +23,7 @@ const properties = [
   {
     id: 2,
     rank: 2,
-    image: "/mockup/item.png",
+    image: "/images/mockup/item.png",
     price: "전세 6억 9,000",
     name: "약수하이츠 104동",
     type: "아파트",
@@ -35,7 +35,7 @@ const properties = [
   {
     id: 3,
     rank: 3,
-    image: "/mockup/item.png",
+    image: "/images/mockup/item.png",
     price: "전세 6억 9,000",
     name: "약수하이츠 104동",
     type: "아파트",
@@ -46,7 +46,7 @@ const properties = [
   },
   {
     id: 4,
-    image: "/mockup/item.png",
+    image: "/images/mockup/item.png",
     price: "전세 6억 9,000",
     name: "약수하이츠 104동",
     type: "아파트",
@@ -64,27 +64,27 @@ const priorityStyles: Record<
   { icon: string; color: string; bgColor: string }
 > = {
   안전: {
-    icon: "/list/security.svg",
+    icon: "/icons/priority/safety_badge.svg",
     color: "#F48787",
     bgColor: "#FFF7F7",
   },
   접근성: {
-    icon: "/list/publictransportation.svg",
+    icon: "/icons/priority/accessibility_badge.svg",
     color: "#7CB7CD",
     bgColor: "#F7FCFE",
   },
   편의: {
-    icon: "/list/infrasturcture.svg",
+    icon: "/icons/priority/convenience_badge.svg",
     color: "#AB9FD5",
     bgColor: "#FAF9FD",
   },
   환경: {
-    icon: "/list/environment.svg",
+    icon: "/icons/priority/environment_badge.svg",
     color: "#82AA82",
     bgColor: "#F8FCF8",
   },
   소음: {
-    icon: "/list/noise.svg",
+    icon: "/icons/priority/noise_badge.svg",
     color: "#FBBA78",
     bgColor: "#FFFCF6",
   },
@@ -103,7 +103,7 @@ const List = () => {
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-2">
               <Image
-                src="/list/curation.svg"
+                src="/icons/feature/list/curation.svg"
                 alt="Sparkle"
                 width={24}
                 height={24}
@@ -116,7 +116,12 @@ const List = () => {
               </h2>
             </div>
             <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Image src="/list/reset.svg" alt="Reset" width={20} height={20} />
+              <Image
+                src="/icons/common/reset.svg"
+                alt="Reset"
+                width={20}
+                height={20}
+              />
             </button>
           </div>
 
@@ -163,7 +168,7 @@ const List = () => {
           {/* Tip Card */}
           <div className="flex items-center gap-2 p-4 bg-[#F8FAFB] rounded-xl">
             <Image
-              src="/list/quotation.svg"
+              src="/icons/feature/list/quotation.svg"
               alt="Quotation"
               width={20}
               height={20}

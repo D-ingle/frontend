@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { HousingTypeStep } from "@/app/components/onboarding/HousingTypeStep";
+import { HousingTypeStep } from "@/app/components/onboarding/step1/HousingTypeStep";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { RegionSelectionStep } from "@/app/components/onboarding/RegionSelectionStep";
-import { AtmosphereSelectionStep } from "@/app/components/onboarding/AtmosphereSelectionStep";
-import Curation from "../components/Curation";
+import { RegionSelectionStep } from "@/app/components/onboarding/step2/RegionSelectionStep";
+import { AtmosphereSelectionStep } from "@/app/components/onboarding/step3/AtmosphereSelectionStep";
+import Curation from "../components/curation/Curation";
 
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(1);

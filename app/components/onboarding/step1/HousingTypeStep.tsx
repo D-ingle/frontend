@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { HousingTypeCard } from "./HousingTypeCard";
-import { OnboardingProgress } from "./OnboardingProgress";
+import { OnboardingProgress } from "../OnboardingProgress";
 import { motion } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 
@@ -12,25 +12,25 @@ const HOUSING_TYPES = [
     id: "one-room",
     title: "원룸",
     description: "부담 없는 첫 독립을 위해서!",
-    icon: "/icon/oneroom.svg",
+    icon: "/icons/navigation/room.svg",
   },
   {
     id: "villa",
     title: "빌라 · 투룸",
     description: "공간 분리가 필요하다면?",
-    icon: "/icon/tworoom.svg",
+    icon: "/icons/navigation/room_two.svg",
   },
   {
     id: "officetel",
     title: "오피스텔",
     description: "보안과 편의시설이 우선",
-    icon: "/icon/office.svg",
+    icon: "/icons/navigation/officetel.svg",
   },
   {
     id: "apartment",
     title: "아파트",
     description: "쾌적한 인프라를 원한다면?",
-    icon: "/icon/apt.svg",
+    icon: "/icons/navigation/apt.svg",
   },
 ];
 

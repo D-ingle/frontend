@@ -128,7 +128,7 @@ const Curation = ({
             {/* Mascot BG */}
             <div className="absolute flex items-center justify-center w-70 h-70">
               <Image
-                src="/mascot_bg.svg"
+                src="/images/mascot/mascot_bg.svg"
                 alt="Mascot Background"
                 width={500}
                 height={500}
@@ -137,7 +137,7 @@ const Curation = ({
 
             {/* Mascot Main */}
             <Image
-              src="/mascot.svg"
+              src="/images/mascot/mascot.svg"
               alt="Mascot"
               width={128}
               height={128}

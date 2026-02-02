@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Checkbox from "./Checkbox";
-import RangeSlider from "./RangeSlider";
+import Checkbox from "../../ui/Checkbox";
+import RangeSlider from "../../ui/RangeSlider";
 
 interface TransactionTypeDropdownProps {
   selectedTypes: string[];

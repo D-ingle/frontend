@@ -5,6 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import Curation from "../components/Curation";
 import { Check } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginFormValues } from "../types/login";
+import { loginAction } from "./actions";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 /**
  * 로그인 페이지
@@ -12,7 +18,37 @@ import { Check } from "lucide-react";
  * - 오른쪽: 로그인 폼 카드
  */
 const LoginPage = () => {
+  const router = useRouter();
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    mode: "onChange",
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: loginAction,
+    onSuccess: (res) => {
+      if (res.success) {
+        // 로그인 성공 시 메인 또는 지도 페이지로 이동
+        router.push("/map");
+        router.refresh();
+      } else {
+        alert(res.message);
+      }
+    },
+    onError: () => {
+      alert("네트워크 오류가 발생했습니다.");
+    },
+  });
+
+  const onSubmit = (data: LoginFormValues) => {
+    mutate(data);
+  };
 
   return (
     <div className="flex h-screen bg-[#E5F7F2] pt-20 overflow-hidden">
@@ -40,51 +76,86 @@ const LoginPage = () => {
           </div>
 
           {/* Form Area */}
-          <div className="w-full flex flex-col gap-3 mb-4">
-            <input
-              type="text"
-              placeholder="아이디"
-              className="w-full h-14 px-5 rounded-lg border border-[#D9D9D9] text-[16px] text-[#262626] placeholder-[#C4C4C4] focus:outline-none focus:border-[#2EA98C] transition-colors"
-            />
-            <input
-              type="password"
-              placeholder="비밀번호"
-              className="w-full h-14 px-5 rounded-lg border border-[#D9D9D9] text-[16px] text-[#262626] placeholder-[#C4C4C4] focus:outline-none focus:border-[#2EA98C] transition-colors"
-            />
-          </div>
-
-          {/* Options Area */}
-          <div className="w-full flex items-center justify-between mb-10">
-            <label
-              className="flex items-center gap-2 cursor-pointer group"
-              onClick={() => setStayLoggedIn(!stayLoggedIn)}
-            >
-              <div
-                className={`w-5 h-5 rounded flex items-center justify-center border transition-all ${
-                  stayLoggedIn
-                    ? "bg-[#2EA98C] border-[#2EA98C]"
-                    : "border-[#D9D9D9] bg-white"
-                }`}
-              >
-                {stayLoggedIn && <Check className="w-4 h-4 text-white" />}
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full flex flex-col items-center"
+          >
+            <div className="w-full flex flex-col gap-5 mb-4">
+              <div className="relative">
+                <input
+                  {...register("userId")}
+                  type="text"
+                  placeholder="아이디"
+                  className={`w-full h-14 px-5 rounded-lg border text-[16px] text-[#262626] placeholder-[#C4C4C4] focus:outline-none transition-colors ${
+                    errors.userId
+                      ? "border-red-500"
+                      : "border-[#D9D9D9] focus:border-[#2EA98C]"
+                  }`}
+                />
+                {errors.userId && (
+                  <p className="text-red-500 text-xs mt-1 absolute">
+                    {errors.userId.message}
+                  </p>
+                )}
               </div>
-              <span className="text-[14px] font-semibold text-[#434343] group-hover:text-black transition-colors">
-                로그인 유지
-              </span>
-            </label>
+              <div className="relative mt-4">
+                <input
+                  {...register("password")}
+                  type="password"
+                  placeholder="비밀번호"
+                  className={`w-full h-14 px-5 rounded-lg border text-[16px] text-[#262626] placeholder-[#C4C4C4] focus:outline-none transition-colors ${
+                    errors.password
+                      ? "border-red-500"
+                      : "border-[#D9D9D9] focus:border-[#2EA98C]"
+                  }`}
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-xs mt-1 absolute">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+            </div>
 
-            <Link
-              href="/find-account"
-              className="text-[12px] text-[#9D9D9D] hover:text-[#7B7B7B] transition-colors"
+            {/* Options Area */}
+            <div className="w-full flex items-center justify-between mb-10 mt-8">
+              <label
+                className="flex items-center gap-2 cursor-pointer group"
+                onClick={() => setStayLoggedIn(!stayLoggedIn)}
+              >
+                <div
+                  className={`w-5 h-5 rounded flex items-center justify-center border transition-all ${
+                    stayLoggedIn
+                      ? "bg-[#2EA98C] border-[#2EA98C]"
+                      : "border-[#D9D9D9] bg-white"
+                  }`}
+                >
+                  {stayLoggedIn && <Check className="w-4 h-4 text-white" />}
+                </div>
+                <span className="text-[14px] font-semibold text-[#434343] group-hover:text-black transition-colors">
+                  로그인 유지
+                </span>
+              </label>
+
+              <Link
+                href="/find-account"
+                className="text-[12px] text-[#9D9D9D] hover:text-[#7B7B7B] transition-colors"
+              >
+                아이디/비밀번호 찾기
+              </Link>
+            </div>
+
+            {/* Login Button */}
+            <button
+              type="submit"
+              disabled={!isValid || isPending}
+              className={`w-full h-14 bg-main-400 text-white font-bold text-[18px] rounded-lg hover:shadow-lg hover:brightness-105 transition-all mb-6 ${
+                !isValid || isPending ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              아이디/비밀번호 찾기
-            </Link>
-          </div>
-
-          {/* Login Button */}
-          <button className="w-full h-14 bg-main-400 text-white font-bold text-[18px] rounded-lg hover:shadow-lg hover:brightness-105 transition-all mb-6">
-            로그인
-          </button>
+              {isPending ? "로그인 중..." : "로그인"}
+            </button>
+          </form>
 
           {/* Footer Area */}
           <p className="text-[14px] text-[#7B7B7B]">

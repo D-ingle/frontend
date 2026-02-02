@@ -3,7 +3,7 @@ import { defineConfig } from "orval";
 export default defineConfig({
   dingle: {
     input: {
-      target: "./openapi.json", // TODO: 백엔드 Swagger URL이나 파일 경로로 수정 필요
+      target: "https://d-home.o-r.kr/v3/api-docs",
     },
     output: {
       mode: "tags-split",

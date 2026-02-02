@@ -35,11 +35,13 @@ export async function signupAction(data: SignupFormValues) {
     }
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Signup Action Error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "서버 오류가 발생했습니다.";
     return {
       success: false,
-      message: error.message || "서버 오류가 발생했습니다.",
+      message: errorMessage,
     };
   }
 }

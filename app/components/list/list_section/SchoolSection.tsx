@@ -76,9 +76,8 @@ const SchoolSection = ({
 
         <div className="flex flex-col gap-8 px-1">
           {currentSchools.map((school, idx) => (
-            <>
+            <div key={idx}>
               <SchoolItem
-                key={idx}
                 name={school.name}
                 type={school.type}
                 distance={school.distance}
@@ -87,7 +86,7 @@ const SchoolSection = ({
               {idx !== currentSchools.length - 1 && (
                 <div className="w-full h-px bg-[#F4F4F4]" />
               )}
-            </>
+            </div>
           ))}
         </div>
       </div>

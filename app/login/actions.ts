@@ -14,11 +14,13 @@ export async function loginAction(data: LoginFormValues) {
     // 1. 데이터 검증
     const validatedData = loginSchema.parse(data);
 
-    // 2. API 호출
-    const response = await login({
-      username: validatedData.userId,
-      password: validatedData.password,
-    });
+    // 2. FormData 생성
+    const formData = new FormData();
+    formData.append("userId", validatedData.userId);
+    formData.append("password", validatedData.password);
+
+    // 3. API 호출
+    const response = await login(formData);
 
     if (!response.success || !response.data) {
       return {
@@ -31,20 +33,11 @@ export async function loginAction(data: LoginFormValues) {
     const cookieStore = await cookies();
 
     // 액세스 토큰 저장
-    cookieStore.set("accessToken", response.data.accessToken, {
+    cookieStore.set("accessToken", response.data.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24, // 1일
-      path: "/",
-    });
-
-    // 리프레시 토큰 저장
-    cookieStore.set("refreshToken", response.data.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7일
       path: "/",
     });
 

@@ -12,25 +12,25 @@ const HOUSING_TYPES = [
     id: "one-room",
     title: "원룸",
     description: "부담 없는 첫 독립을 위해서!",
-    icon: "/icons/navigation/room.svg",
+    icon: "/icons/navigation/ativate/room.svg",
   },
   {
     id: "villa",
     title: "빌라 · 투룸",
     description: "공간 분리가 필요하다면?",
-    icon: "/icons/navigation/room_two.svg",
+    icon: "/icons/navigation/ativate/room_two.svg",
   },
   {
     id: "officetel",
     title: "오피스텔",
     description: "보안과 편의시설이 우선",
-    icon: "/icons/navigation/officetel.svg",
+    icon: "/icons/navigation/ativate/officetel.svg",
   },
   {
     id: "apartment",
     title: "아파트",
     description: "쾌적한 인프라를 원한다면?",
-    icon: "/icons/navigation/apt.svg",
+    icon: "/icons/navigation/ativate/apt.svg",
   },
 ];
 

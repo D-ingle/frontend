@@ -7,6 +7,8 @@ import ListItem from "./ListItem";
 import ListDetail from "./ListDetail";
 import ContactModal from "./list_section/detail/ContactModal";
 
+import PriorityToggle from "../ui/PriorityToggle";
+
 const properties = [
   {
     id: 1,
@@ -57,42 +59,30 @@ const properties = [
   },
 ];
 
-const priorities = ["안전", "접근성", "편의", "환경", "소음"];
-
-const priorityStyles: Record<
-  string,
-  { icon: string; color: string; bgColor: string }
-> = {
-  안전: {
-    icon: "/icons/priority/safety_badge.svg",
-    color: "#F48787",
-    bgColor: "#FFF7F7",
-  },
-  접근성: {
-    icon: "/icons/priority/accessibility_badge.svg",
-    color: "#7CB7CD",
-    bgColor: "#F7FCFE",
-  },
-  편의: {
-    icon: "/icons/priority/convenience_badge.svg",
-    color: "#AB9FD5",
-    bgColor: "#FAF9FD",
-  },
-  환경: {
-    icon: "/icons/priority/environment_badge.svg",
-    color: "#82AA82",
-    bgColor: "#F8FCF8",
-  },
-  소음: {
-    icon: "/icons/priority/noise_badge.svg",
-    color: "#FBBA78",
-    bgColor: "#FFFCF6",
-  },
-};
-
 const List = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([
+    "safety",
+    "accessibility",
+    "convenience",
+  ]);
+
+  const togglePriority = (id: string) => {
+    setSelectedPriorities((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((p) => p !== id);
+      }
+      if (prev.length < 3) {
+        return [...prev, id];
+      }
+      return prev;
+    });
+  };
+
+  const handleReset = () => {
+    setSelectedPriorities([]);
+  };
 
   return (
     <div className="relative flex h-full no-scrollbar">
@@ -115,7 +105,10 @@ const List = () => {
                 님의 우선순위
               </h2>
             </div>
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <button
+              onClick={handleReset}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
               <Image
                 src="/icons/common/reset.svg"
                 alt="Reset"
@@ -126,43 +119,12 @@ const List = () => {
           </div>
 
           {/* Priority Tags Grid */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {priorities.map((label, i) => {
-              const style = priorityStyles[label];
-              if (!style) return null;
-
-              return (
-                <div
-                  key={i}
-                  className="relative pt-2 pl-2 cursor-pointer group"
-                >
-                  {/* Ranking Badge */}
-                  <div
-                    className="absolute top-0 left-0 w-5 h-5 flex items-center justify-center rounded-full text-white text-[11px] font-semibold z-10"
-                    style={{ backgroundColor: style.color }}
-                  >
-                    {i + 1}
-                  </div>
-
-                  {/* Tag Body */}
-                  <div
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-[30px] border transition-shadow hover:shadow-[2px_2px_4px_rgba(0,0,0,0.05)]"
-                    style={{
-                      backgroundColor: style.bgColor,
-                      borderColor: style.color,
-                    }}
-                  >
-                    <Image
-                      src={style.icon}
-                      alt={label}
-                      width={20}
-                      height={20}
-                    />
-                    <span className={`text-[14px] font-medium`}>{label}</span>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="mb-6">
+            <PriorityToggle
+              selectedPriorities={selectedPriorities}
+              onToggle={togglePriority}
+              variant="compact"
+            />
           </div>
 
           {/* Tip Card */}

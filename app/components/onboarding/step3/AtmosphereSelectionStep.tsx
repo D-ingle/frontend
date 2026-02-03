@@ -8,11 +8,11 @@ import { motion } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 
 const ICONS = {
-  safety: "/icons/priority/safety.svg",
-  convenience: "/icons/priority/convenience.svg",
-  accessibility: "/icons/priority/accessibility.svg",
-  noise: "/icons/priority/noise.svg",
-  environment: "/icons/priority/environment.svg",
+  safety: "/icons/priority/ativate/safety.svg",
+  convenience: "/icons/priority/ativate/convenience.svg",
+  accessibility: "/icons/priority/ativate/accessibility.svg",
+  noise: "/icons/priority/ativate/noise.svg",
+  environment: "/icons/priority/ativate/environment.svg",
 };
 
 const ATMOSPHERES = [

@@ -77,10 +77,13 @@ export default function Navbar() {
               찜한 목록
             </button>
             <div className="bg-border-1 h-5.5 w-px" />
-            <span className="font-semibold text-[#434343] text-[16px]">
+            <Link
+              href="/mypage"
+              className="font-semibold text-[#434343] text-[16px]"
+            >
               <span className="text-[#30CEA1]">{user.username}</span> 님
               안녕하세요!
-            </span>
+            </Link>
             <div className="bg-border-1 h-5.5 w-px" />
             <button
               onClick={handleLogout}

@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-screen bg-white no-scrollbar overflow-y-auto overflow-x-hidden">
       <div className="w-233 mx-auto py-10 md:py-20">
         <div className="flex flex-col gap-6 mb-10 w-full mt-20">
           <Link

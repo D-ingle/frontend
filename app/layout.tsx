@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Providers from "./providers";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/layout/Navbar";
 
 export const metadata: Metadata = {
   title: "D.home",
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className="antialiased no-scrollbar">
         <Providers>
           <Navbar />
           {children}

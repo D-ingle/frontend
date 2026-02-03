@@ -9,6 +9,8 @@ import SignupEmailInput from "./SignupEmailInput";
 import { TermsCheckbox } from "./TermsCheckbox";
 import { useRouter } from "next/navigation";
 import { LucideEye, LucideEyeOff } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { signupAction } from "@/app/signup/actions";
 
 export const SignupForm = () => {
   const router = useRouter();
@@ -39,9 +41,11 @@ export const SignupForm = () => {
     register,
   } = methods;
 
+  // 폼 데이터 변화 모니터링 (디버깅용)
+  const watchedValues = watch();
   useEffect(() => {
-    console.log("watch", watch());
-  }, [watch()]);
+    console.log("watchedValues", watchedValues);
+  }, [watchedValues]);
 
   const [isDomainManual, setIsDomainManual] = useState(true);
 
@@ -56,10 +60,22 @@ export const SignupForm = () => {
     }
   };
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: signupAction,
+    onSuccess: (res) => {
+      if (res.success) {
+        router.push("/signup/complete");
+      } else {
+        alert(res.message);
+      }
+    },
+    onError: () => {
+      alert("네트워크 오류가 발생했습니다.");
+    },
+  });
+
   const onSubmit = (data: SignupFormValues) => {
-    console.log("Form Data:", data);
-    // Handle signup logic here
-    router.push("/signup/complete");
+    mutate(data);
   };
 
   const termsService = watch("termsService");
@@ -174,7 +190,7 @@ export const SignupForm = () => {
                   <option value="nate.com">nate.com</option>
                   <option value="yahoo.co.kr">yahoo.co.kr</option>
                 </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                <div className="absolute right-[-20] top-1/2 -translate-y-1/2 pointer-events-none">
                   <svg
                     width="12"
                     height="8"
@@ -229,27 +245,14 @@ export const SignupForm = () => {
 
         <button
           type="submit"
-          disabled={!isValid}
+          disabled={!isValid || isPending}
           className={`w-55 h-15 rounded-md text-[20px] font-bold text-white transition-colors flex items-center justify-center ml-auto gap-2 ${
-            isValid ? "bg-[#2EA98C] hover:bg-[#28957A]" : "bg-[#9D9D9D]"
+            isValid && !isPending
+              ? "bg-[#2EA98C] hover:bg-[#28957A]"
+              : "bg-[#9D9D9D]"
           }`}
         >
-          가입하기
-          <svg
-            width="8"
-            height="14"
-            viewBox="0 0 8 14"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 1L7 7L1 13"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          {isPending ? "처리중..." : "가입하기"}
         </button>
       </form>
     </FormProvider>

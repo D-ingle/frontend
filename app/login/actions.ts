@@ -44,8 +44,9 @@ export async function loginAction(data: LoginFormValues) {
     return {
       success: true,
       user: {
-        userId: response.data.userId,
-        username: response.data.username,
+        username: response.data.user.userName,
+        preferredType: response.data.user.propertyType,
+        preferredConditions: response.data.user.preferredConditions,
       },
     };
   } catch (error: unknown) {
@@ -57,4 +58,14 @@ export async function loginAction(data: LoginFormValues) {
       message: errorMessage,
     };
   }
+}
+
+/**
+ * 로그아웃 서버 액션
+ * - 저장된 토큰 쿠키를 삭제합니다.
+ */
+export async function logoutAction() {
+  const cookieStore = await cookies();
+  cookieStore.delete("accessToken");
+  return { success: true };
 }

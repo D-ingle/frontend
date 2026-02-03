@@ -11,6 +11,7 @@ import { loginSchema, type LoginFormValues } from "../types/login";
 import { loginAction } from "./actions";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "../store/userStore";
 
 /**
  * 로그인 페이지
@@ -19,6 +20,7 @@ import { useRouter } from "next/navigation";
  */
 const LoginPage = () => {
   const router = useRouter();
+  const { setUser } = useUserStore();
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
 
   const {
@@ -33,7 +35,14 @@ const LoginPage = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: loginAction,
     onSuccess: (res) => {
-      if (res.success) {
+      if (res.success && res.user) {
+        // Zustand 스토어에 유저 정보 저장 (localStorage에 자동 반영됨)
+        setUser({
+          username: res.user.username,
+          preferredType: res.user.preferredType,
+          preferredConditions: res.user.preferredConditions,
+        });
+
         // 로그인 성공 시 메인 또는 지도 페이지로 이동
         router.push("/map");
         router.refresh();

@@ -16,10 +16,12 @@ export interface LoginRequest {
 export interface LoginResponse {
   success: boolean;
   data?: {
-    accessToken: string;
-    refreshToken: string;
-    userId: string;
-    username: string;
+    token: string;
+    user: {
+      userName: string;
+      propertyType: string;
+      preferredConditions: number[];
+    };
   };
   error?: {
     message: string;

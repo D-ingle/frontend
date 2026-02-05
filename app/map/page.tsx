@@ -11,6 +11,8 @@ import ConvenienceModule from "../components/module/ConvenienceModule";
 import NoiseModule from "../components/module/NoiseModule";
 import EnvironmentModule from "../components/module/EnvironmentModule";
 import { useMapModeStore } from "../store/mapModeStore";
+import FavoritePlacesModule from "../components/module/FavoritePlacesModule";
+import TimeSliderModule from "../components/module/TimeSliderModule";
 
 const MapPage = () => {
   const { isMapMode } = useMapModeStore();
@@ -36,14 +38,26 @@ const MapPage = () => {
         {/* Content UI Area */}
         <div className="flex-1 relative pointer-events-none overflow-hidden">
           {isMapMode ? (
-            /* Modules Container */
-            <div className="absolute top-4 bottom-4 right-5 pointer-events-none flex flex-col gap-2.5 overflow-y-auto no-scrollbar pb-10">
-              <AccessibilityModule />
-              <SafetyModule />
-              <ConvenienceModule />
-              <NoiseModule />
-              <EnvironmentModule />
-            </div>
+            <>
+              {/* Modules Container (Right Side) */}
+              <div className="absolute top-4 bottom-4 right-5 pointer-events-none flex flex-col gap-2.5 overflow-y-auto no-scrollbar pb-10">
+                <AccessibilityModule />
+                <SafetyModule />
+                <ConvenienceModule />
+                <NoiseModule />
+                <EnvironmentModule />
+              </div>
+
+              {/* Favorite Places Module (Top-Left Side) */}
+              <div className="absolute top-4 left-5 pointer-events-none">
+                <FavoritePlacesModule />
+              </div>
+
+              {/* Time Slider Module (Bottom-Center) */}
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 pointer-events-none">
+                <TimeSliderModule />
+              </div>
+            </>
           ) : (
             /* List Panel */
             <div className="absolute inset-y-0 left-0 w-auto h-full pointer-events-auto z-10">

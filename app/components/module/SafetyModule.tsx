@@ -11,6 +11,7 @@ function cn(...inputs: ClassValue[]) {
 
 const SafetyModule = () => {
   const [isActive, setIsActive] = useState(false);
+  const [isMainRoadMode, setIsMainRoadMode] = useState(false);
 
   return (
     <div
@@ -96,24 +97,32 @@ const SafetyModule = () => {
                   범죄주의 구간을 지나갑니다.
                 </p>
               </div>
-              <p className="pl-[22px] text-[12px] text-[#7B7B7B] tracking-[-0.15px] leading-tight">
-                경로 상에 노인 범죄주의 구간을 지나는 곳이 존재합니다.
-              </p>
+              <div className="pl-[22px]">
+                <p className="text-[12px] font-medium text-[#7B7B7B] tracking-[-0.15px] leading-[1.3] whitespace-pre-wrap">
+                  경로 상에 노인 범죄주의 구간을 지나는 곳이 존재합니다.
+                </p>
+              </div>
             </div>
 
             {/* Divider */}
-            <div className="h-[1px] bg-[#E5E5E5] w-full" />
+            <div className="h-0 relative w-full border-t border-[#E5E5E5]" />
 
             {/* Stats Items */}
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-3 w-full">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/safety/cctv.svg"
-                    width={18}
-                    height={18}
-                    alt="CCTV"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    {isMainRoadMode ? (
+                      <div className="w-2 h-2 bg-[#F48787] rounded-full shadow-[0_0_8px_#F48787]" />
+                    ) : (
+                      <Image
+                        src="/icons/module/safety/cctv.svg"
+                        width={18}
+                        height={18}
+                        alt="CCTV"
+                      />
+                    )}
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     경로 구역 내 CCTV 개수
                   </span>
@@ -124,12 +133,18 @@ const SafetyModule = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/safety/lamp.svg"
-                    width={18}
-                    height={18}
-                    alt="Lamp"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    {isMainRoadMode ? (
+                      <div className="w-2 h-2 bg-[#F48787] rounded-full shadow-[0_0_8px_#F48787]" />
+                    ) : (
+                      <Image
+                        src="/icons/module/safety/lamp.svg"
+                        width={18}
+                        height={18}
+                        alt="Lamp"
+                      />
+                    )}
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     경로 구역 내 가로등 개수
                   </span>
@@ -141,9 +156,12 @@ const SafetyModule = () => {
             </div>
           </div>
 
-          {/* Path Button */}
-          <button className="w-full bg-[#F48787] text-white py-4 rounded-lg font-semibold text-[16px] tracking-[-0.15px] hover:bg-[#E05353] transition-colors">
-            큰길 우선 경로 확인하기
+          {/* Path Mode Toggle Button */}
+          <button
+            onClick={() => setIsMainRoadMode(!isMainRoadMode)}
+            className="w-full bg-[#F48787] text-white py-4 rounded-lg font-semibold text-[16px] tracking-[-0.15px] hover:bg-[#E05353] transition-colors"
+          >
+            {isMainRoadMode ? "기본 경로 확인하기" : "큰길 우선 경로 확인하기"}
           </button>
         </div>
 
@@ -161,7 +179,11 @@ const SafetyModule = () => {
               <div key={idx} className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
                   <Image
-                    src="/icons/module/safety/police.svg"
+                    src={
+                      isMainRoadMode
+                        ? "/icons/module/safety/police.svg"
+                        : "/icons/module/safety/police.svg"
+                    } // Using available icon, figma showed a star/shield version for one
                     width={18}
                     height={18}
                     alt="Police"

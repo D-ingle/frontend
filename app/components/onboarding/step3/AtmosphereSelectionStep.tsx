@@ -57,8 +57,18 @@ const ATMOSPHERES = [
   },
 ];
 
+import { useOnboardingStore } from "@/app/store/onboardingStore";
+
+const CONDITION_ID_MAP: Record<string, number> = {
+  noise: 1,
+  environment: 2,
+  safety: 3,
+  accessibility: 4,
+  convenience: 5,
+};
+
 interface AtmosphereSelectionStepProps {
-  onNext: (atmospheres: string[]) => void;
+  onNext: () => void;
   onBack: () => void;
 }
 
@@ -66,20 +76,21 @@ export const AtmosphereSelectionStep = ({
   onNext,
   onBack,
 }: AtmosphereSelectionStepProps) => {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const { preferredConditions, setPreferredConditions } = useOnboardingStore();
 
   const handleToggle = (id: string) => {
-    setSelectedIds((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((item) => item !== id);
-      }
-      if (prev.length >= 3) return prev;
-      return [...prev, id];
-    });
+    const numId = CONDITION_ID_MAP[id];
+    const nextConditions = preferredConditions.includes(numId)
+      ? preferredConditions.filter((item) => item !== numId)
+      : preferredConditions.length < 3
+        ? [...preferredConditions, numId]
+        : preferredConditions;
+    setPreferredConditions(nextConditions);
   };
 
   const getOrderNumber = (id: string) => {
-    const index = selectedIds.indexOf(id);
+    const numId = CONDITION_ID_MAP[id];
+    const index = preferredConditions.indexOf(numId);
     return index !== -1 ? index + 1 : undefined;
   };
 
@@ -126,7 +137,9 @@ export const AtmosphereSelectionStep = ({
               description={item.description}
               icon={item.icon}
               iconBgColor={item.iconBgColor}
-              isSelected={selectedIds.includes(item.id)}
+              isSelected={preferredConditions.includes(
+                CONDITION_ID_MAP[item.id],
+              )}
               orderNumber={getOrderNumber(item.id)}
               onClick={() => handleToggle(item.id)}
             />
@@ -140,11 +153,11 @@ export const AtmosphereSelectionStep = ({
           다음에 할래요
         </button>
         <button
-          disabled={selectedIds.length === 0}
-          onClick={() => onNext(selectedIds)}
+          disabled={preferredConditions.length === 0}
+          onClick={onNext}
           className={cn(
             "px-10 py-4 rounded-xl font-bold transition-all duration-300 text-[18px]",
-            selectedIds.length > 0
+            preferredConditions.length > 0
               ? "bg-navy text-white hover:bg-navy/90 shadow-lg"
               : "bg-gray-100 text-gray-400 cursor-not-allowed",
           )}

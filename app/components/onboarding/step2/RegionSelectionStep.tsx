@@ -8,8 +8,10 @@ import SeoulMap from "@/app/components/onboarding/step2/SeoulMap";
 import { AnimatePresence } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 
+import { useOnboardingStore } from "@/app/store/onboardingStore";
+
 interface RegionSelectionStepProps {
-  onNext: (regions: string[]) => void;
+  onNext: () => void;
   onBack: () => void;
 }
 
@@ -17,20 +19,19 @@ export const RegionSelectionStep = ({
   onNext,
   onBack,
 }: RegionSelectionStepProps) => {
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const { preferredDistricts, setPreferredDistricts } = useOnboardingStore();
 
   const handleRegionClick = (regionName: string) => {
-    setSelectedRegions((prev) => {
-      if (prev.includes(regionName)) {
-        return prev.filter((r) => r !== regionName);
-      }
-      if (prev.length >= 3) return prev;
-      return [...prev, regionName];
-    });
+    const nextRegions = preferredDistricts.includes(regionName)
+      ? preferredDistricts.filter((r) => r !== regionName)
+      : preferredDistricts.length < 3
+        ? [...preferredDistricts, regionName]
+        : preferredDistricts;
+    setPreferredDistricts(nextRegions);
   };
 
   const removeRegion = (regionName: string) => {
-    setSelectedRegions((prev) => prev.filter((r) => r !== regionName));
+    setPreferredDistricts(preferredDistricts.filter((r) => r !== regionName));
   };
 
   return (
@@ -60,7 +61,7 @@ export const RegionSelectionStep = ({
 
           <div className="flex flex-wrap gap-3 min-h-12">
             <AnimatePresence>
-              {selectedRegions.map((region) => (
+              {preferredDistricts.map((region) => (
                 <RegionBadge
                   key={region}
                   name={region}
@@ -74,7 +75,7 @@ export const RegionSelectionStep = ({
         {/* Map Container - Moved left using negative margin */}
         <div className="flex relative w-180 h-180 -ml-40 -mt-20 z-50">
           <SeoulMap
-            selectedRegions={selectedRegions}
+            selectedRegions={preferredDistricts}
             onRegionClick={handleRegionClick}
           />
         </div>
@@ -86,11 +87,11 @@ export const RegionSelectionStep = ({
           다음에 할래요
         </button>
         <button
-          disabled={selectedRegions.length === 0}
-          onClick={() => onNext(selectedRegions)}
+          disabled={preferredDistricts.length === 0}
+          onClick={onNext}
           className={cn(
             "px-10 py-4 rounded-xl font-bold transition-all duration-300 text-[18px]",
-            selectedRegions.length > 0
+            preferredDistricts.length > 0
               ? "bg-navy text-white hover:bg-navy/90 shadow-lg"
               : "bg-gray-100 text-gray-400 cursor-not-allowed",
           )}

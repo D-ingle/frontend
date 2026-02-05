@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Providers from "./providers";
 import "./globals.css";
-import Navbar from "./components/layout/Navbar";
+import LayoutClient from "./components/layout/LayoutClient";
 
 export const metadata: Metadata = {
   title: "D.home",
@@ -20,8 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased no-scrollbar">
         <Providers>
-          <Navbar />
-          {children}
+          <LayoutClient>{children}</LayoutClient>
         </Providers>
       </body>
     </html>

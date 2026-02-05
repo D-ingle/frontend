@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/app/lib/utils";
+import Image from "next/image";
 
 const rankBadgeImg = "/icons/common/rank_badge.svg";
 
@@ -40,7 +41,13 @@ export const AtmosphereCard = ({
       {/* Rank Number Badge */}
       {isSelected && orderNumber !== undefined && (
         <div className="absolute top-[-20] left-[-17] w-10.25 h-10.25">
-          <img src={rankBadgeImg} alt="" className="w-full h-full" />
+          <Image
+            src={rankBadgeImg}
+            alt=""
+            className="w-full h-full"
+            width={40}
+            height={40}
+          />
           <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-[18px]">
             {orderNumber}
           </span>
@@ -56,7 +63,7 @@ export const AtmosphereCard = ({
             iconBgColor,
           )}
         >
-          <img src={icon} alt={title} />
+          <Image src={icon} alt={title} width={30} height={30} />
         </div>
       </div>
 

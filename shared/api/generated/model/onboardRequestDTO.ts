@@ -5,18 +5,18 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
-import type { OnboardRequestDTOPreferredType } from './onboardRequestDTOPreferredType';
+import type { OnboardRequestDTOPropertyType } from './onboardRequestDTOPropertyType';
 
 export interface OnboardRequestDTO {
   /**
    * @minItems 1
    * @maxItems 3
    */
-  preferredConditions: string[];
+  preferredConditions: number[];
   /**
    * @minItems 1
    * @maxItems 3
    */
   preferredDistricts: string[];
-  preferredType: OnboardRequestDTOPreferredType;
+  propertyType: OnboardRequestDTOPropertyType;
 }

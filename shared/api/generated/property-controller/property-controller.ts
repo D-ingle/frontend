@@ -6,15 +6,24 @@
  * OpenAPI spec version: v1.0.0
  */
 import {
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query'
 import type {
   MutationFunction,
+  QueryFunction,
+  QueryKey,
   UseMutationOptions,
-  UseMutationResult
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
 } from '@tanstack/react-query'
 import type {
+  CompareListParams,
   PropertyRegisterRequestDTO,
+  RecentViewParams,
+  ResponseDTOListPropertyCompareDTO,
+  ResponseDTOListPropertyListDTO,
   ResponseDTOVoid
 } from '.././model'
 import { customInstance } from '../../axios-instance';
@@ -82,4 +91,170 @@ export const useRegister1 = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
+    export const likeList = (
     
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTOListPropertyListDTO>(
+      {url: `/api/v1/property/zzim`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getLikeListQueryKey = () => {
+    return [`/api/v1/property/zzim`] as const;
+    }
+
+    
+export const getLikeListQueryOptions = <TData = Awaited<ReturnType<typeof likeList>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof likeList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLikeListQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof likeList>>> = ({ signal }) => likeList(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof likeList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type LikeListQueryResult = NonNullable<Awaited<ReturnType<typeof likeList>>>
+export type LikeListQueryError = ErrorType<unknown>
+
+export const useLikeList = <TData = Awaited<ReturnType<typeof likeList>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof likeList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getLikeListQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+export const recentView = (
+    params: RecentViewParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTOListPropertyListDTO>(
+      {url: `/api/v1/property/recent`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getRecentViewQueryKey = (params: RecentViewParams,) => {
+    return [`/api/v1/property/recent`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getRecentViewQueryOptions = <TData = Awaited<ReturnType<typeof recentView>>, TError = ErrorType<unknown>>(params: RecentViewParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof recentView>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getRecentViewQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof recentView>>> = ({ signal }) => recentView(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof recentView>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type RecentViewQueryResult = NonNullable<Awaited<ReturnType<typeof recentView>>>
+export type RecentViewQueryError = ErrorType<unknown>
+
+export const useRecentView = <TData = Awaited<ReturnType<typeof recentView>>, TError = ErrorType<unknown>>(
+ params: RecentViewParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof recentView>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getRecentViewQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+export const compareList = (
+    params: CompareListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTOListPropertyCompareDTO>(
+      {url: `/api/v1/property/compare`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getCompareListQueryKey = (params: CompareListParams,) => {
+    return [`/api/v1/property/compare`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getCompareListQueryOptions = <TData = Awaited<ReturnType<typeof compareList>>, TError = ErrorType<unknown>>(params: CompareListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof compareList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCompareListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof compareList>>> = ({ signal }) => compareList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof compareList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type CompareListQueryResult = NonNullable<Awaited<ReturnType<typeof compareList>>>
+export type CompareListQueryError = ErrorType<unknown>
+
+export const useCompareList = <TData = Awaited<ReturnType<typeof compareList>>, TError = ErrorType<unknown>>(
+ params: CompareListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof compareList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getCompareListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+

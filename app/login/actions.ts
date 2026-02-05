@@ -34,7 +34,7 @@ export async function loginAction(data: LoginFormValues) {
 
     // 액세스 토큰 저장
     cookieStore.set("accessToken", response.data.token, {
-      httpOnly: true,
+      httpOnly: false, // 클라이언트 인터셉터에서 접근 가능하도록 변경
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24, // 1일

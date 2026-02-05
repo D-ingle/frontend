@@ -7,5 +7,6 @@
  */
 
 export interface DistrictRegisterDTO {
+  districtCode?: string;
   districtName?: string;
 }

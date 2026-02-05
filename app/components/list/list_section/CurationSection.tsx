@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
+import { useMapModeStore } from "../../../store/mapModeStore";
 
 const CATEGORY_TOOLTIPS: Record<string, string> = {
   안전: "CCTV수, 범죄주의구간, 보안등, 경찰서 위치를 합산하여 산출한 점수입니다.",
@@ -14,6 +15,7 @@ const CATEGORY_TOOLTIPS: Record<string, string> = {
 
 const CurationSection = () => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const { setMapMode } = useMapModeStore();
 
   return (
     <section className="px-5 py-8 bg-white" id="curation">
@@ -274,7 +276,10 @@ const CurationSection = () => {
         </div>
       </div>
 
-      <button className="w-full h-12 mt-6 bg-navy text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-[#052844] transition-colors">
+      <button
+        onClick={() => setMapMode(true)}
+        className="w-full h-12 mt-6 bg-navy text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-[#052844] transition-colors cursor-pointer"
+      >
         종합 데이터 지도로 보기
         <svg
           width="16"

@@ -5,155 +5,146 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
-import { useQuery } from "@tanstack/react-query";
+import {
+  useQuery
+} from '@tanstack/react-query'
 import type {
   QueryFunction,
   QueryKey,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
-import type { ResponseDTOTestResponseDTO } from ".././model";
-import { customInstance } from "../../axios-instance";
-import type { ErrorType } from "../../axios-instance";
+  UseQueryResult
+} from '@tanstack/react-query'
+import type {
+  ResponseDTOTestResponseDTO
+} from '.././model'
+import { customInstance } from '../../axios-instance';
+import type { ErrorType } from '../../axios-instance';
+
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
+
 
 /**
  * ResponseDto 테스트용 API
  * @summary 테스트 API
  */
 export const testSuccess = (
-  options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal,
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
-  return customInstance<ResponseDTOTestResponseDTO>(
-    { url: `/test/success`, method: "GET", signal },
-    options,
-  );
-};
+      
+      
+      return customInstance<ResponseDTOTestResponseDTO>(
+      {url: `/test/success`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getTestSuccessQueryKey = () => {
-  return [`/test/success`] as const;
-};
+    return [`/test/success`] as const;
+    }
 
-export const getTestSuccessQueryOptions = <
-  TData = Awaited<ReturnType<typeof testSuccess>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof testSuccess>>, TError, TData>
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+    
+export const getTestSuccessQueryOptions = <TData = Awaited<ReturnType<typeof testSuccess>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof testSuccess>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
 
-  const queryKey = queryOptions?.queryKey ?? getTestSuccessQueryKey();
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof testSuccess>>> = ({
-    signal,
-  }) => testSuccess(requestOptions, signal);
+  const queryKey =  queryOptions?.queryKey ?? getTestSuccessQueryKey();
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof testSuccess>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+  
 
-export type TestSuccessQueryResult = NonNullable<
-  Awaited<ReturnType<typeof testSuccess>>
->;
-export type TestSuccessQueryError = ErrorType<unknown>;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof testSuccess>>> = ({ signal }) => testSuccess(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof testSuccess>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type TestSuccessQueryResult = NonNullable<Awaited<ReturnType<typeof testSuccess>>>
+export type TestSuccessQueryError = ErrorType<unknown>
 
 /**
  * @summary 테스트 API
  */
-export const useTestSuccess = <
-  TData = Awaited<ReturnType<typeof testSuccess>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof testSuccess>>, TError, TData>
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const queryOptions = getTestSuccessQueryOptions(options);
+export const useTestSuccess = <TData = Awaited<ReturnType<typeof testSuccess>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof testSuccess>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getTestSuccessQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
-};
+}
+
+
 
 /**
  * ResponseDto 테스트용 API
  * @summary 테스트 API
  */
 export const testFail = (
-  options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal,
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
-  return customInstance<ResponseDTOTestResponseDTO>(
-    { url: `/test/fail`, method: "GET", signal },
-    options,
-  );
-};
+      
+      
+      return customInstance<ResponseDTOTestResponseDTO>(
+      {url: `/test/fail`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getTestFailQueryKey = () => {
-  return [`/test/fail`] as const;
-};
+    return [`/test/fail`] as const;
+    }
 
-export const getTestFailQueryOptions = <
-  TData = Awaited<ReturnType<typeof testFail>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof testFail>>, TError, TData>
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+    
+export const getTestFailQueryOptions = <TData = Awaited<ReturnType<typeof testFail>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof testFail>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
 
-  const queryKey = queryOptions?.queryKey ?? getTestFailQueryKey();
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof testFail>>> = ({
-    signal,
-  }) => testFail(requestOptions, signal);
+  const queryKey =  queryOptions?.queryKey ?? getTestFailQueryKey();
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof testFail>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
+  
 
-export type TestFailQueryResult = NonNullable<
-  Awaited<ReturnType<typeof testFail>>
->;
-export type TestFailQueryError = ErrorType<unknown>;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof testFail>>> = ({ signal }) => testFail(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof testFail>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type TestFailQueryResult = NonNullable<Awaited<ReturnType<typeof testFail>>>
+export type TestFailQueryError = ErrorType<unknown>
 
 /**
  * @summary 테스트 API
  */
-export const useTestFail = <
-  TData = Awaited<ReturnType<typeof testFail>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof testFail>>, TError, TData>
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const queryOptions = getTestFailQueryOptions(options);
+export const useTestFail = <TData = Awaited<ReturnType<typeof testFail>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof testFail>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
-  query.queryKey = queryOptions.queryKey;
+  const queryOptions = getTestFailQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
-};
+}
+
+
+

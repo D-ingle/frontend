@@ -7,27 +7,29 @@ import { OnboardingProgress } from "../OnboardingProgress";
 import { motion } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 
+import { useOnboardingStore } from "@/app/store/onboardingStore";
+
 const HOUSING_TYPES = [
   {
-    id: "one-room",
+    id: "ONE_ROOM",
     title: "원룸",
     description: "부담 없는 첫 독립을 위해서!",
     icon: "/icons/navigation/ativate/room.svg",
   },
   {
-    id: "villa",
+    id: "VILLA",
     title: "빌라 · 투룸",
     description: "공간 분리가 필요하다면?",
     icon: "/icons/navigation/ativate/room_two.svg",
   },
   {
-    id: "officetel",
+    id: "OFFICETEL",
     title: "오피스텔",
     description: "보안과 편의시설이 우선",
     icon: "/icons/navigation/ativate/officetel.svg",
   },
   {
-    id: "apartment",
+    id: "APT",
     title: "아파트",
     description: "쾌적한 인프라를 원한다면?",
     icon: "/icons/navigation/ativate/apt.svg",
@@ -35,12 +37,18 @@ const HOUSING_TYPES = [
 ];
 
 interface HousingTypeStepProps {
-  onNext: (type: string) => void;
+  onNext: () => void;
   onBack: () => void;
 }
 
 export const HousingTypeStep = ({ onNext, onBack }: HousingTypeStepProps) => {
-  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const { preferredType, setPreferredType } = useOnboardingStore();
+
+  const handleNext = () => {
+    if (preferredType) {
+      onNext();
+    }
+  };
 
   return (
     <div className="flex flex-col w-350 mx-auto pt-20 pb-10 mt-15">
@@ -86,8 +94,8 @@ export const HousingTypeStep = ({ onNext, onBack }: HousingTypeStepProps) => {
               title={type.title}
               description={type.description}
               icon={type.icon}
-              isSelected={selectedType === type.id}
-              onClick={() => setSelectedType(type.id)}
+              isSelected={preferredType === type.id}
+              onClick={() => setPreferredType(type.id)}
             />
           </motion.div>
         ))}
@@ -99,11 +107,11 @@ export const HousingTypeStep = ({ onNext, onBack }: HousingTypeStepProps) => {
           다음에 할래요
         </button>
         <button
-          disabled={!selectedType}
-          onClick={() => selectedType && onNext(selectedType)}
+          disabled={!preferredType}
+          onClick={handleNext}
           className={cn(
             "px-10 py-4 rounded-xl font-bold transition-all duration-300 text-[18px]",
-            selectedType
+            preferredType
               ? "bg-navy text-white hover:bg-navy/90 shadow-lg"
               : "bg-gray-100 text-gray-400 cursor-not-allowed",
           )}

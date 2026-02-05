@@ -83,6 +83,10 @@ const TimeSliderModule = () => {
               step="0.5"
               value={time}
               onChange={handleSliderChange}
+              style={{
+                // @ts-expect-error - Custom CSS property for dynamic thumb icon
+                "--thumb-icon": `url('/icons/module/time/${time >= 6 && time < 18 ? "sun.svg" : "moon.svg"}')`,
+              }}
               className="absolute inset-0 w-full h-[34px] appearance-none bg-transparent cursor-pointer outline-none z-10
                 [&::-webkit-slider-thumb]:appearance-none
                 [&::-webkit-slider-thumb]:w-[34px]
@@ -92,10 +96,12 @@ const TimeSliderModule = () => {
                 [&::-webkit-slider-thumb]:border-[1.5px]
                 [&::-webkit-slider-thumb]:border-white
                 [&::-webkit-slider-thumb]:shadow-[0px_2px_4px_0px_rgba(0,0,0,0.1)]
-                [&::-webkit-slider-thumb]:bg-[url('/icons/module/time/moon.svg')]
+                [&::-webkit-slider-thumb]:bg-[image:var(--thumb-icon)]
                 [&::-webkit-slider-thumb]:bg-no-repeat
                 [&::-webkit-slider-thumb]:bg-center
                 [&::-webkit-slider-thumb]:bg-[length:20px_20px]
+                [&::-webkit-slider-thumb]:transition-[background-image]
+                [&::-webkit-slider-thumb]:duration-300
 
                 [&::-moz-range-thumb]:w-[34px]
                 [&::-moz-range-thumb]:h-[34px]
@@ -104,11 +110,13 @@ const TimeSliderModule = () => {
                 [&::-moz-range-thumb]:border-[1.5px]
                 [&::-moz-range-thumb]:border-white
                 [&::-moz-range-thumb]:shadow-[0px_2px_4px_0px_rgba(0,0,0,0.1)]
-                [&::-moz-range-thumb]:bg-[url('/icons/module/time/moon.svg')]
+                [&::-moz-range-thumb]:bg-[image:var(--thumb-icon)]
                 [&::-moz-range-thumb]:bg-no-repeat
                 [&::-moz-range-thumb]:bg-center
                 [&::-moz-range-thumb]:bg-[length:20px_20px]
                 [&::-moz-range-thumb]:border-none
+                [&::-moz-range-thumb]:transition-[background-image]
+                [&::-moz-range-thumb]:duration-300
               "
             />
           </div>

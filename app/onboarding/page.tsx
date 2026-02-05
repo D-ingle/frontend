@@ -54,7 +54,6 @@ export default function OnboardingPage() {
       },
       onError: (error) => {
         console.error("Onboarding Mutation Error:", error);
-        // @ts-expect-error: error response mapping
         const errorData = error.response?.data as {
           error?: { message?: string };
         };
@@ -91,9 +90,9 @@ export default function OnboardingPage() {
 
     onboardMutate({
       data: {
-        preferredType: preferredType as OnboardRequestDTOPreferredType,
+        propertyType: preferredType as OnboardRequestDTOPreferredType,
         preferredDistricts,
-        preferredConditions: preferredConditions.map(String),
+        preferredConditions: preferredConditions.map(Number),
       },
     });
   };

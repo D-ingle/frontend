@@ -14,7 +14,10 @@ import type {
   UseMutationResult
 } from '@tanstack/react-query'
 import type {
-  SaveCctvInfraParams
+  SaveCctvInfraParams,
+  SaveConvenienceStoreInfraParams,
+  SaveHospitalInfraParams,
+  SaveMarketInfraParams
 } from '.././model'
 import { customInstance } from '../../axios-instance';
 import type { ErrorType } from '../../axios-instance';
@@ -23,7 +26,157 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
-export const saveCctvInfra = (
+export const saveMarketInfra = (
+    params: SaveMarketInfraParams,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/infra/market`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+
+
+export const getSaveMarketInfraMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveMarketInfra>>, TError,{params: SaveMarketInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveMarketInfra>>, TError,{params: SaveMarketInfraParams}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveMarketInfra>>, {params: SaveMarketInfraParams}> = (props) => {
+          const {params} = props ?? {};
+
+          return  saveMarketInfra(params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveMarketInfraMutationResult = NonNullable<Awaited<ReturnType<typeof saveMarketInfra>>>
+    
+    export type SaveMarketInfraMutationError = ErrorType<unknown>
+
+    export const useSaveMarketInfra = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveMarketInfra>>, TError,{params: SaveMarketInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof saveMarketInfra>>,
+        TError,
+        {params: SaveMarketInfraParams},
+        TContext
+      > => {
+
+      const mutationOptions = getSaveMarketInfraMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    export const saveHospitalInfra = (
+    params: SaveHospitalInfraParams,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/infra/hospital`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+
+
+export const getSaveHospitalInfraMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveHospitalInfra>>, TError,{params: SaveHospitalInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveHospitalInfra>>, TError,{params: SaveHospitalInfraParams}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveHospitalInfra>>, {params: SaveHospitalInfraParams}> = (props) => {
+          const {params} = props ?? {};
+
+          return  saveHospitalInfra(params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveHospitalInfraMutationResult = NonNullable<Awaited<ReturnType<typeof saveHospitalInfra>>>
+    
+    export type SaveHospitalInfraMutationError = ErrorType<unknown>
+
+    export const useSaveHospitalInfra = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveHospitalInfra>>, TError,{params: SaveHospitalInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof saveHospitalInfra>>,
+        TError,
+        {params: SaveHospitalInfraParams},
+        TContext
+      > => {
+
+      const mutationOptions = getSaveHospitalInfraMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    export const saveConvenienceStoreInfra = (
+    params: SaveConvenienceStoreInfraParams,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/infra/convenienceStore`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+
+
+export const getSaveConvenienceStoreInfraMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveConvenienceStoreInfra>>, TError,{params: SaveConvenienceStoreInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveConvenienceStoreInfra>>, TError,{params: SaveConvenienceStoreInfraParams}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveConvenienceStoreInfra>>, {params: SaveConvenienceStoreInfraParams}> = (props) => {
+          const {params} = props ?? {};
+
+          return  saveConvenienceStoreInfra(params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveConvenienceStoreInfraMutationResult = NonNullable<Awaited<ReturnType<typeof saveConvenienceStoreInfra>>>
+    
+    export type SaveConvenienceStoreInfraMutationError = ErrorType<unknown>
+
+    export const useSaveConvenienceStoreInfra = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveConvenienceStoreInfra>>, TError,{params: SaveConvenienceStoreInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof saveConvenienceStoreInfra>>,
+        TError,
+        {params: SaveConvenienceStoreInfraParams},
+        TContext
+      > => {
+
+      const mutationOptions = getSaveConvenienceStoreInfraMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    export const saveCctvInfra = (
     params: SaveCctvInfraParams,
  options?: SecondParameter<typeof customInstance>,) => {
       

@@ -8,6 +8,7 @@
 import type { DealRequestDTO } from './dealRequestDTO';
 import type { PropertyRegisterRequestDTOFacilitiesItem } from './propertyRegisterRequestDTOFacilitiesItem';
 import type { PropertyRegisterRequestDTOOptionsItem } from './propertyRegisterRequestDTOOptionsItem';
+import type { PropertyRegisterRequestDTOOrientation } from './propertyRegisterRequestDTOOrientation';
 import type { PropertyRegisterRequestDTOPropertyType } from './propertyRegisterRequestDTOPropertyType';
 
 export interface PropertyRegisterRequestDTO {
@@ -22,7 +23,7 @@ export interface PropertyRegisterRequestDTO {
   latitude?: number;
   longitude?: number;
   options?: PropertyRegisterRequestDTOOptionsItem[];
-  orientation?: string;
+  orientation?: PropertyRegisterRequestDTOOrientation;
   propertyType?: PropertyRegisterRequestDTOPropertyType;
   supplyArea?: number;
   totalFloor?: number;

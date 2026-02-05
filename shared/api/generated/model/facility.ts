@@ -5,8 +5,9 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
+import type { FacilityList } from './facilityList';
 
-export interface DistrictRegisterDTO {
-  districtCode?: string;
-  districtName?: string;
+export interface Facility {
+  facilities?: FacilityList[];
+  facilityCount?: number;
 }

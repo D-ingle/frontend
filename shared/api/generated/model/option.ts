@@ -5,8 +5,9 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
+import type { OptionList } from './optionList';
 
-export interface DistrictRegisterDTO {
-  districtCode?: string;
-  districtName?: string;
+export interface Option {
+  optionCount?: number;
+  options?: OptionList[];
 }

@@ -6,7 +6,7 @@
  * OpenAPI spec version: v1.0.0
  */
 
-export interface DistrictRegisterDTO {
-  districtCode?: string;
-  districtName?: string;
+export interface DestinationDTO {
+  destinationAddress?: string;
+  destinationName?: string;
 }

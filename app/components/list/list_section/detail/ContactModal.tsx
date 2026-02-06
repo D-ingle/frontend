@@ -4,13 +4,21 @@ import React from "react";
 import Image from "next/image";
 import { X, Phone } from "lucide-react";
 import Portal from "@/app/components/ui/Portal";
+import type { RealtorInfo } from "@/shared/api/generated/model/realtorInfo";
 
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
+  realtorInfo?: RealtorInfo;
+  apartmentName?: string;
 }
 
-const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
+const ContactModal = ({
+  isOpen,
+  onClose,
+  realtorInfo,
+  apartmentName,
+}: ContactModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -39,54 +47,39 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
           {/* Content */}
           <div className="px-8 pb-8 flex flex-col items-center">
             <p className="text-[16px] font-semibold text-[#555555] mb-5 text-center">
-              중개사무소에 연락하여 방문일을 예약하세요
+              {apartmentName ? `${apartmentName} ` : ""}중개사무소에 연락하여
+              방문일을 예약하세요
             </p>
 
             <div className="w-full space-y-3.5">
               {/* Agency Info Box */}
-              <button className="w-full h-28 bg-[#F8FAFB] rounded-md p-4 flex items-center gap-3 text-left hover:bg-[#F2F5F7] transition-colors group">
-                <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden">
-                  <Image
-                    src="/images/mockup/item.png"
-                    alt="Agency"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+              <div className="w-full h-28 bg-[#F8FAFB] rounded-md p-4 flex items-center gap-3 text-left">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[16px] font-bold text-black truncate">
-                      딩글공인중개사사무소
+                      {realtorInfo?.officeName || "중개사무소"}
                     </span>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#9D9D9D"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
                   </div>
                   <div className="space-y-0.5">
                     <div className="flex gap-3 text-[12px]">
-                      <span className="w-16 shrink-0">대표명</span>
-                      <span className="text-[#262626] font-semibold">
-                        신정인
+                      <span className="w-20 shrink-0 text-[#9D9D9D]">
+                        대표명
+                      </span>
+                      <span className="text-[#262626] font-semibold truncate">
+                        {realtorInfo?.username || "-"}
                       </span>
                     </div>
                     <div className="flex gap-3 text-[12px]">
-                      <span className=" w-16 shrink-0">중개등록번호</span>
+                      <span className="w-20 shrink-0 text-[#9D9D9D]">
+                        중개등록번호
+                      </span>
                       <span className="text-[#262626] font-semibold truncate">
-                        경기-2024-000001
+                        {realtorInfo?.licenseNumber || "-"}
                       </span>
                     </div>
                   </div>
                 </div>
-              </button>
+              </div>
 
               {/* Contact Details Box */}
               <div className="w-full bg-[#F8FAFB] rounded-md p-6 flex flex-col items-center">
@@ -95,7 +88,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                     <Phone className="w-5 h-5 fill-current" />
                   </div>
                   <span className="text-[28px] font-bold text-[#2EA98C] tracking-tight">
-                    010-0000-0000
+                    {realtorInfo?.phone || realtorInfo?.officePhone || "-"}
                   </span>
                 </div>
 
@@ -103,7 +96,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
 
                 <div className="text-center space-y-2">
                   <p className="text-[14px] font-semibold text-[#262626]">
-                    서울 중구 명동10길 52
+                    {realtorInfo?.officeName || "사무소 정보 없음"}
                   </p>
                   <div className="flex items-center justify-center gap-2 text-[12px] font-semibold text-[#262626]">
                     <span>평일 9:00 - 19:00</span>

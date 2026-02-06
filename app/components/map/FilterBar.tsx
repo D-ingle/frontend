@@ -169,20 +169,6 @@ export default function FilterBar() {
             />
           )}
         </div>
-        <div className="relative min-w-28">
-          <FilterButton
-            label={getResidenceTypeLabel()}
-            focus={openFilter === "주거 형태"}
-            active={selectedResidenceTypes.length > 0}
-            onClick={() => toggleFilter("주거 형태")}
-          />
-          {openFilter === "주거 형태" && (
-            <ResidenceTypeDropdown
-              selectedTypes={selectedResidenceTypes}
-              setSelectedTypes={setSelectedResidenceTypes}
-            />
-          )}
-        </div>
         <div className="relative min-w-20">
           <FilterButton
             label={getSpaceLabel()}

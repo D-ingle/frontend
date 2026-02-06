@@ -13,9 +13,25 @@ const CATEGORY_TOOLTIPS: Record<string, string> = {
   소음: "평균 소음 데이터 및 유동인구를 합산하여 산출한 점수입니다.",
 };
 
-const CurationSection = () => {
+interface CurationSectionProps {
+  conditions?: number[];
+}
+
+const CONDITION_MAP: Record<number, string> = {
+  1: "소음",
+  2: "환경",
+  3: "편의",
+  4: "접근성",
+  5: "안전",
+};
+
+const CurationSection = ({ conditions }: CurationSectionProps) => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const { setMapMode } = useMapModeStore();
+
+  const sortedMatchedConditions = (conditions || [])
+    .map((cId) => CONDITION_MAP[cId])
+    .filter(Boolean);
 
   return (
     <section className="px-5 py-8 bg-white" id="curation">
@@ -38,10 +54,28 @@ const CurationSection = () => {
         </div>
         <div>
           <p className="text-[16px] leading-[1.6] text-[#434343]">
-            청구역, 약수역의{" "}
-            <span className="font-bold text-[#2EA98C]">더블 역세권</span> 및{" "}
-            <span className="font-bold text-[#2EA98C]">주변 안전점수</span> 모두
-            높아 거주 만족도가 기대되는 추천 매물입니다!
+            {sortedMatchedConditions.length > 0 ? (
+              <>
+                해당 지역의{" "}
+                {sortedMatchedConditions.slice(0, 2).map((label, i) => (
+                  <React.Fragment key={label}>
+                    <span className="font-bold text-[#2EA98C]">
+                      {label} 점수
+                    </span>
+                    {i === 0 && sortedMatchedConditions.length > 1
+                      ? " 및 "
+                      : ""}
+                  </React.Fragment>
+                ))}{" "}
+                높아 거주 만족도가 기대되는 추천 매물입니다!
+              </>
+            ) : (
+              <>
+                거주 만족도가 높을 것으로 기대되는{" "}
+                <span className="font-bold text-[#2EA98C]">추천 매물</span>
+                입니다!
+              </>
+            )}
           </p>
         </div>
       </div>
@@ -98,7 +132,7 @@ const CurationSection = () => {
             />
           </svg>
 
-          {/* Labels & Scores with Tooltips */}
+          {/* Labels & Scores with Tooltips (Mock values as agreed) */}
           {/* 1. 안전 (Top - 83) */}
           <div
             className="absolute -top-13 left-1/2 -translate-x-1/2 flex flex-col items-center cursor-help group"

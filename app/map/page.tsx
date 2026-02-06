@@ -30,14 +30,14 @@ const MapPage = () => {
 
   const initialActivatedRef = useRef(false);
 
-  // 초기 진입 시 우선순위 1순위 활성화 로직
+  // 초기 진입 시 온보딩 우선순위 활성화 로직
   useEffect(() => {
     if (
-      user?.preferredConditions?.[0] &&
+      user?.preferredConditions &&
+      user.preferredConditions.length > 0 &&
       !initialActivatedRef.current &&
       activeModules.length === 0
     ) {
-      const priorityId = user.preferredConditions[0];
       const idMap: Record<number, ModuleId> = {
         1: "noise",
         2: "environment",
@@ -45,13 +45,18 @@ const MapPage = () => {
         4: "accessibility",
         5: "convenience",
       };
-      const moduleId = idMap[priorityId];
-      if (moduleId) {
-        toggleModule(moduleId);
-        initialActivatedRef.current = true;
-      }
+
+      // 온보딩에서 선택한 우선순위들을 활성화 (최대 3개 권장이나 온보딩 데이터 전체 반영)
+      user.preferredConditions.forEach((priorityId) => {
+        const moduleId = idMap[priorityId];
+        if (moduleId && !activeModules.includes(moduleId)) {
+          toggleModule(moduleId);
+        }
+      });
+
+      initialActivatedRef.current = true;
     }
-  }, [user, activeModules.length, toggleModule]);
+  }, [user, activeModules, toggleModule]);
 
   const renderModule = (id: ModuleId) => {
     switch (id) {

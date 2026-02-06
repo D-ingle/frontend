@@ -5,150 +5,181 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 import type {
   QueryFunction,
   QueryKey,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query'
+  UseQueryResult,
+} from "@tanstack/react-query";
 import type {
   GetMainPropertyParams,
   ResponseDTOMainPropertyResponseDTO,
-  SearchPropertyParams
-} from '.././model'
-import { customInstance } from '../../axios-instance';
-import type { ErrorType } from '../../axios-instance';
-
+  SearchPropertyParams,
+} from ".././model";
+import { customInstance } from "../../axios-instance";
+import type { ErrorType } from "../../axios-instance";
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
-
 
 /**
  * 메인페이지를 조회합니다.
  * @summary 메인페이지 조회 API
  */
 export const getMainProperty = (
-    params: GetMainPropertyParams,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+  params: GetMainPropertyParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<ResponseDTOMainPropertyResponseDTO>(
-      {url: `/api/v1/property`, method: 'GET',
-        params, signal
-    },
-      options);
-    }
-  
+  return customInstance<ResponseDTOMainPropertyResponseDTO>(
+    { url: `/api/v1/property`, method: "GET", params, signal },
+    options,
+  );
+};
 
-export const getGetMainPropertyQueryKey = (params: GetMainPropertyParams,) => {
-    return [`/api/v1/property`, ...(params ? [params]: [])] as const;
-    }
+export const getGetMainPropertyQueryKey = (params: GetMainPropertyParams) => {
+  return [`/api/v1/property`, ...(params ? [params] : [])] as const;
+};
 
-    
-export const getGetMainPropertyQueryOptions = <TData = Awaited<ReturnType<typeof getMainProperty>>, TError = ErrorType<unknown>>(params: GetMainPropertyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMainProperty>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetMainPropertyQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMainProperty>>,
+  TError = ErrorType<unknown>,
+>(
+  params: GetMainPropertyParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getMainProperty>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetMainPropertyQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMainPropertyQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMainProperty>>> = ({
+    signal,
+  }) => getMainProperty(params, requestOptions, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMainProperty>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMainProperty>>> = ({ signal }) => getMainProperty(params, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMainProperty>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetMainPropertyQueryResult = NonNullable<Awaited<ReturnType<typeof getMainProperty>>>
-export type GetMainPropertyQueryError = ErrorType<unknown>
+export type GetMainPropertyQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMainProperty>>
+>;
+export type GetMainPropertyQueryError = ErrorType<unknown>;
 
 /**
  * @summary 메인페이지 조회 API
  */
-export const useGetMainProperty = <TData = Awaited<ReturnType<typeof getMainProperty>>, TError = ErrorType<unknown>>(
- params: GetMainPropertyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMainProperty>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const useGetMainProperty = <
+  TData = Awaited<ReturnType<typeof getMainProperty>>,
+  TError = ErrorType<unknown>,
+>(
+  params: GetMainPropertyParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getMainProperty>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = getGetMainPropertyQueryOptions(params, options);
 
-  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
 
-  const queryOptions = getGetMainPropertyQueryOptions(params,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
-}
-
-
+};
 
 /**
  * 매물을 검색합니다.
  * @summary 매물 검색 API
  */
 export const searchProperty = (
-    params: SearchPropertyParams,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+  params: SearchPropertyParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<ResponseDTOMainPropertyResponseDTO>(
-      {url: `/api/v1/property/search`, method: 'GET',
-        params, signal
-    },
-      options);
-    }
-  
+  return customInstance<ResponseDTOMainPropertyResponseDTO>(
+    { url: `/api/v1/property/search`, method: "GET", params, signal },
+    options,
+  );
+};
 
-export const getSearchPropertyQueryKey = (params: SearchPropertyParams,) => {
-    return [`/api/v1/property/search`, ...(params ? [params]: [])] as const;
-    }
+export const getSearchPropertyQueryKey = (params: SearchPropertyParams) => {
+  return [`/api/v1/property/search`, ...(params ? [params] : [])] as const;
+};
 
-    
-export const getSearchPropertyQueryOptions = <TData = Awaited<ReturnType<typeof searchProperty>>, TError = ErrorType<unknown>>(params: SearchPropertyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchProperty>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getSearchPropertyQueryOptions = <
+  TData = Awaited<ReturnType<typeof searchProperty>>,
+  TError = ErrorType<unknown>,
+>(
+  params: SearchPropertyParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof searchProperty>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getSearchPropertyQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getSearchPropertyQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof searchProperty>>> = ({
+    signal,
+  }) => searchProperty(params, requestOptions, signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof searchProperty>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchProperty>>> = ({ signal }) => searchProperty(params, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchProperty>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type SearchPropertyQueryResult = NonNullable<Awaited<ReturnType<typeof searchProperty>>>
-export type SearchPropertyQueryError = ErrorType<unknown>
+export type SearchPropertyQueryResult = NonNullable<
+  Awaited<ReturnType<typeof searchProperty>>
+>;
+export type SearchPropertyQueryError = ErrorType<unknown>;
 
 /**
  * @summary 매물 검색 API
  */
-export const useSearchProperty = <TData = Awaited<ReturnType<typeof searchProperty>>, TError = ErrorType<unknown>>(
- params: SearchPropertyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchProperty>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const useSearchProperty = <
+  TData = Awaited<ReturnType<typeof searchProperty>>,
+  TError = ErrorType<unknown>,
+>(
+  params: SearchPropertyParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof searchProperty>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = getSearchPropertyQueryOptions(params, options);
 
-  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
 
-  const queryOptions = getSearchPropertyQueryOptions(params,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
-}
-
-
-
+};

@@ -2,36 +2,65 @@
 
 import React from "react";
 import Image from "next/image";
+import type { Facility } from "@/shared/api/generated/model/facility";
+import type { Option } from "@/shared/api/generated/model/option";
 
-const FacilitiesSection = () => {
-  const options = [
-    { label: "냉장고", icon: "/icons/option/refrigerator.svg" },
-    { label: "에어컨", icon: "/icons/option/airconditioner.svg" },
-    { label: "책상", icon: "/icons/option/desk.svg" },
-    { label: "신발장", icon: "/icons/option/shoe.svg" },
-    { label: "세탁기", icon: "/icons/option/washingmachine.svg" },
-    { label: "싱크대", icon: "/icons/option/sink.svg" },
-    { label: "옷장", icon: "/icons/option/closet.svg" },
-    { label: "인덕션", icon: "/icons/option/induction.svg" },
-    { label: "전자레인지", icon: "/icons/option/microwave.svg" },
-  ];
+interface FacilitiesSectionProps {
+  facility?: Facility;
+  option?: Option;
+}
 
-  const buildingFacilities = [
-    { label: "헬스장", icon: "/icons/option/gym.svg" },
-    { label: "세탁방", icon: "/icons/option/laudryshop.svg" },
-    { label: "주차장", icon: "/icons/option/parking.svg" },
-    { label: "커뮤니티", icon: "/icons/option/community.svg" },
-    { label: "관리사무소", icon: "/icons/option/maintenance.svg" },
-    {
-      label: "주민공동시설",
-      icon: "/icons/option/residencefacilities.svg",
-    },
-    { label: "어린이놀이터", icon: "/icons/option/playground.svg" },
-    { label: "문고", icon: "/icons/option/stationary.svg" },
-    { label: "자전거보관소", icon: "/icons/option/bicycle.svg" },
-    { label: "보육시설", icon: "/icons/option/kindergarden.svg" },
-    { label: "휴게시설", icon: "/icons/option/cafe.svg" },
-  ];
+const OPTION_LABELS: Record<string, string> = {
+  REFRIGERATOR: "냉장고",
+  AIR_CONDITIONER: "에어컨",
+  DESK: "책상",
+  SHOE_CABINET: "신발장",
+  WASHING_MACHINE: "세탁기",
+  SINK: "싱크대",
+  WARDROBE: "옷장",
+  INDUCTION: "인덕션",
+  MICROWAVE: "전자레인지",
+};
+
+const FACILITY_LABELS: Record<string, string> = {
+  MANAGEMENT_OFFICE: "관리사무소",
+  CHILDCARE: "보육시설",
+  LIBRARY: "문고",
+  COMMUNITY_FACILITY: "커뮤니티",
+  PLAYGROUND: "어린이놀이터",
+  REST_FACILITY: "휴게시설",
+  COMMUNITY_SPACE: "주민공동시설",
+  BICYCLE_STORAGE: "자전거보관소",
+  OTHER: "기타",
+};
+
+const OPTION_ICONS: Record<string, string> = {
+  REFRIGERATOR: "/icons/option/refrigerator.svg",
+  AIR_CONDITIONER: "/icons/option/airconditioner.svg",
+  DESK: "/icons/option/desk.svg",
+  SHOE_CABINET: "/icons/option/shoe.svg",
+  WASHING_MACHINE: "/icons/option/washingmachine.svg",
+  SINK: "/icons/option/sink.svg",
+  WARDROBE: "/icons/option/closet.svg",
+  INDUCTION: "/icons/option/induction.svg",
+  MICROWAVE: "/icons/option/microwave.svg",
+};
+
+const FACILITY_ICONS: Record<string, string> = {
+  MANAGEMENT_OFFICE: "/icons/option/maintenance.svg",
+  CHILDCARE: "/icons/option/kindergarden.svg",
+  LIBRARY: "/icons/option/stationary.svg",
+  COMMUNITY_FACILITY: "/icons/option/community.svg",
+  PLAYGROUND: "/icons/option/playground.svg",
+  REST_FACILITY: "/icons/option/cafe.svg",
+  COMMUNITY_SPACE: "/icons/option/residencefacilities.svg",
+  BICYCLE_STORAGE: "/icons/option/bicycle.svg",
+  OTHER: "/icons/option/community.svg",
+};
+
+const FacilitiesSection = ({ facility, option }: FacilitiesSectionProps) => {
+  const activeOptions = option?.options || [];
+  const activeFacilities = facility?.facilities || [];
 
   return (
     <section className="px-5 py-8 bg-white" id="facilities">
@@ -39,25 +68,33 @@ const FacilitiesSection = () => {
         <h3 className="text-[20px] font-bold text-[#000000] mb-6 flex items-baseline gap-2">
           옵션{" "}
           <span className="text-[#30CEA1] text-[18px] font-bold">
-            {options.length}개
+            {activeOptions.length}개
           </span>
         </h3>
         <div className="grid grid-cols-4 gap-y-8">
-          {options.map((item, idx) => (
+          {activeOptions.map((item, idx) => (
             <div key={idx} className="flex flex-col items-center gap-2">
               <div className="w-16 h-16 flex items-center justify-center bg-[#F8FAFB] rounded-lg">
                 <Image
-                  src={item.icon}
-                  alt={item.label}
+                  src={
+                    OPTION_ICONS[item.optionType || ""] ||
+                    "/icons/option/refrigerator.svg"
+                  }
+                  alt={OPTION_LABELS[item.optionType || ""] || "Option"}
                   width={24}
                   height={24}
                 />
               </div>
-              <span className="text-[14px] font-semibold text-[#262626]">
-                {item.label}
+              <span className="text-[14px] font-semibold text-[#262626] text-center px-1">
+                {OPTION_LABELS[item.optionType || ""] || "옵션"}
               </span>
             </div>
           ))}
+          {activeOptions.length === 0 && (
+            <p className="col-span-4 text-center text-gray-400 py-4 text-[14px]">
+              등록된 옵션이 없습니다.
+            </p>
+          )}
         </div>
       </div>
 
@@ -65,25 +102,33 @@ const FacilitiesSection = () => {
         <h3 className="text-[20px] font-bold text-[#000000] mb-6 flex items-baseline gap-2">
           부대시설{" "}
           <span className="text-[#30CEA1] text-[18px] font-bold">
-            {buildingFacilities.length}개
+            {activeFacilities.length}개
           </span>
         </h3>
         <div className="grid grid-cols-4 gap-y-8">
-          {buildingFacilities.map((item, idx) => (
+          {activeFacilities.map((item, idx) => (
             <div key={idx} className="flex flex-col items-center gap-2">
               <div className="w-16 h-16 flex items-center justify-center bg-[#F8FAFB] rounded-lg">
                 <Image
-                  src={item.icon}
-                  alt={item.label}
+                  src={
+                    FACILITY_ICONS[item.facilityType || ""] ||
+                    "/icons/option/community.svg"
+                  }
+                  alt={FACILITY_LABELS[item.facilityType || ""] || "Facility"}
                   width={24}
                   height={24}
                 />
               </div>
-              <span className="text-[14px] font-semibold text-[#262626]">
-                {item.label}
+              <span className="text-[14px] font-semibold text-[#262626] text-center px-1">
+                {FACILITY_LABELS[item.facilityType || ""] || "시설"}
               </span>
             </div>
           ))}
+          {activeFacilities.length === 0 && (
+            <p className="col-span-4 text-center text-gray-400 py-4 text-[14px]">
+              등록된 부대시설이 없습니다.
+            </p>
+          )}
         </div>
       </div>
     </section>

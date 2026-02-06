@@ -31,8 +31,7 @@ const ListItem = ({ property, onClick }: ListItemProps) => {
         <Image
           src={property.image}
           alt={property.name}
-          width={160}
-          height={160}
+          fill
           className="object-cover"
         />
         {/* Rank Badge */}

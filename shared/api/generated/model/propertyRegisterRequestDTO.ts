@@ -13,17 +13,19 @@ import type { PropertyRegisterRequestDTOPropertyType } from './propertyRegisterR
 
 export interface PropertyRegisterRequestDTO {
   address?: string;
-  appartmentName?: string;
+  apartmentName?: string;
   bathrooms?: number;
   bedrooms?: number;
   deal?: DealRequestDTO;
   exclusiveArea?: number;
   facilities?: PropertyRegisterRequestDTOFacilitiesItem[];
   floor?: number;
+  floorImageUrl?: string;
   latitude?: number;
   longitude?: number;
   options?: PropertyRegisterRequestDTOOptionsItem[];
   orientation?: PropertyRegisterRequestDTOOrientation;
+  propertyImageUrls?: string[];
   propertyType?: PropertyRegisterRequestDTOPropertyType;
   supplyArea?: number;
   totalFloor?: number;

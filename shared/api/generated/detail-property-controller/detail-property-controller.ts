@@ -24,6 +24,10 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 매물 상세조회를 합니다.
+ * @summary 매물 상세조회 API
+ */
 export const getPropertyDetail = (
     propertyId: number,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -63,6 +67,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type GetPropertyDetailQueryResult = NonNullable<Awaited<ReturnType<typeof getPropertyDetail>>>
 export type GetPropertyDetailQueryError = ErrorType<unknown>
 
+/**
+ * @summary 매물 상세조회 API
+ */
 export const useGetPropertyDetail = <TData = Awaited<ReturnType<typeof getPropertyDetail>>, TError = ErrorType<unknown>>(
  propertyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPropertyDetail>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 

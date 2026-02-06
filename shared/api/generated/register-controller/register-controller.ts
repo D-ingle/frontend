@@ -29,6 +29,10 @@ import type { ErrorType, BodyType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 회원을 등록합니다.
+ * @summary 회원가입 API
+ */
 export const register = (
     userDTO: BodyType<UserDTO>,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -67,7 +71,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     export type RegisterMutationBody = BodyType<UserDTO>
     export type RegisterMutationError = ErrorType<unknown>
 
-    export const useRegister = <TError = ErrorType<unknown>,
+    /**
+ * @summary 회원가입 API
+ */
+export const useRegister = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof register>>, TError,{data: BodyType<UserDTO>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof register>>,

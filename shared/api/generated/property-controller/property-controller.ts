@@ -91,7 +91,11 @@ export const useRegister1 = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
-    export const likeList = (
+    /**
+ * 찜한 매물을 조회합니다.
+ * @summary 찜한 매물 조회 API
+ */
+export const likeList = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -130,6 +134,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type LikeListQueryResult = NonNullable<Awaited<ReturnType<typeof likeList>>>
 export type LikeListQueryError = ErrorType<unknown>
 
+/**
+ * @summary 찜한 매물 조회 API
+ */
 export const useLikeList = <TData = Awaited<ReturnType<typeof likeList>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof likeList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
@@ -146,6 +153,10 @@ export const useLikeList = <TData = Awaited<ReturnType<typeof likeList>>, TError
 
 
 
+/**
+ * 자주 방문하는 스팟을 저장합니다.
+ * @summary 최근 본 매물 조회 API
+ */
 export const recentView = (
     params: RecentViewParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -186,6 +197,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type RecentViewQueryResult = NonNullable<Awaited<ReturnType<typeof recentView>>>
 export type RecentViewQueryError = ErrorType<unknown>
 
+/**
+ * @summary 최근 본 매물 조회 API
+ */
 export const useRecentView = <TData = Awaited<ReturnType<typeof recentView>>, TError = ErrorType<unknown>>(
  params: RecentViewParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof recentView>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
@@ -202,6 +216,10 @@ export const useRecentView = <TData = Awaited<ReturnType<typeof recentView>>, TE
 
 
 
+/**
+ * 찜한 매물을 1개씩 상세조회합니다.
+ * @summary 찜한 매물 상세조회 API
+ */
 export const compareList = (
     params: CompareListParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -242,6 +260,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type CompareListQueryResult = NonNullable<Awaited<ReturnType<typeof compareList>>>
 export type CompareListQueryError = ErrorType<unknown>
 
+/**
+ * @summary 찜한 매물 상세조회 API
+ */
 export const useCompareList = <TData = Awaited<ReturnType<typeof compareList>>, TError = ErrorType<unknown>>(
  params: CompareListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof compareList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 

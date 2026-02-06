@@ -23,6 +23,10 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 하수처리장 데이터를 저장합니다.
+ * @summary 하수처리장 데이터 저장 API
+ */
 export const saveWasteFacility = (
     params: SaveWasteFacilityParams,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -60,7 +64,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveWasteFacilityMutationError = ErrorType<unknown>
 
-    export const useSaveWasteFacility = <TError = ErrorType<unknown>,
+    /**
+ * @summary 하수처리장 데이터 저장 API
+ */
+export const useSaveWasteFacility = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveWasteFacility>>, TError,{params: SaveWasteFacilityParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveWasteFacility>>,

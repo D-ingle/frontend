@@ -26,6 +26,10 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 마트 데이터를 저장합니다.
+ * @summary 마트 데이터 저장 API
+ */
 export const saveMarketInfra = (
     params: SaveMarketInfraParams,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -63,7 +67,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveMarketInfraMutationError = ErrorType<unknown>
 
-    export const useSaveMarketInfra = <TError = ErrorType<unknown>,
+    /**
+ * @summary 마트 데이터 저장 API
+ */
+export const useSaveMarketInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveMarketInfra>>, TError,{params: SaveMarketInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveMarketInfra>>,
@@ -76,7 +83,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
-    export const saveHospitalInfra = (
+    /**
+ * 병원 데이터를 저장합니다.
+ * @summary 병원 데이터 저장 API
+ */
+export const saveHospitalInfra = (
     params: SaveHospitalInfraParams,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -113,7 +124,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveHospitalInfraMutationError = ErrorType<unknown>
 
-    export const useSaveHospitalInfra = <TError = ErrorType<unknown>,
+    /**
+ * @summary 병원 데이터 저장 API
+ */
+export const useSaveHospitalInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveHospitalInfra>>, TError,{params: SaveHospitalInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveHospitalInfra>>,
@@ -126,7 +140,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
-    export const saveConvenienceStoreInfra = (
+    /**
+ * 편의점 데이터를 저장합니다.
+ * @summary 편의점 데이터 저장 API
+ */
+export const saveConvenienceStoreInfra = (
     params: SaveConvenienceStoreInfraParams,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -163,7 +181,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveConvenienceStoreInfraMutationError = ErrorType<unknown>
 
-    export const useSaveConvenienceStoreInfra = <TError = ErrorType<unknown>,
+    /**
+ * @summary 편의점 데이터 저장 API
+ */
+export const useSaveConvenienceStoreInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveConvenienceStoreInfra>>, TError,{params: SaveConvenienceStoreInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveConvenienceStoreInfra>>,
@@ -176,7 +197,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
-    export const saveCctvInfra = (
+    /**
+ * CCTV 데이터를 저장합니다.
+ * @summary CCTV 데이터 저장 API
+ */
+export const saveCctvInfra = (
     params: SaveCctvInfraParams,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -213,7 +238,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveCctvInfraMutationError = ErrorType<unknown>
 
-    export const useSaveCctvInfra = <TError = ErrorType<unknown>,
+    /**
+ * @summary CCTV 데이터 저장 API
+ */
+export const useSaveCctvInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveCctvInfra>>, TError,{params: SaveCctvInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveCctvInfra>>,

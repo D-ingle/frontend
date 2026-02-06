@@ -30,6 +30,10 @@ import type { ErrorType, BodyType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 자주 방문하는 스팟을 조회합니다.
+ * @summary 자주 방문하는 스팟 조회 API
+ */
 export const getDestination = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -69,6 +73,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type GetDestinationQueryResult = NonNullable<Awaited<ReturnType<typeof getDestination>>>
 export type GetDestinationQueryError = ErrorType<unknown>
 
+/**
+ * @summary 자주 방문하는 스팟 조회 API
+ */
 export const useGetDestination = <TData = Awaited<ReturnType<typeof getDestination>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDestination>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
@@ -85,6 +92,10 @@ export const useGetDestination = <TData = Awaited<ReturnType<typeof getDestinati
 
 
 
+/**
+ * 자주 방문하는 스팟을 저장합니다.
+ * @summary 자주 방문하는 스팟 저장 API
+ */
 export const saveDestination = (
     destinationDTO: BodyType<DestinationDTO>,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -123,7 +134,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     export type SaveDestinationMutationBody = BodyType<DestinationDTO>
     export type SaveDestinationMutationError = ErrorType<unknown>
 
-    export const useSaveDestination = <TError = ErrorType<unknown>,
+    /**
+ * @summary 자주 방문하는 스팟 저장 API
+ */
+export const useSaveDestination = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveDestination>>, TError,{data: BodyType<DestinationDTO>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveDestination>>,

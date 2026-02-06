@@ -24,6 +24,67 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 소음 데이터를 저장합니다.
+ * @summary 소음 데이터 저장 API
+ */
+export const getNoise = (
+    params: GetNoiseParams,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/noise`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+
+
+export const getGetNoiseMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getNoise>>, {params: GetNoiseParams}> = (props) => {
+          const {params} = props ?? {};
+
+          return  getNoise(params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GetNoiseMutationResult = NonNullable<Awaited<ReturnType<typeof getNoise>>>
+    
+    export type GetNoiseMutationError = ErrorType<unknown>
+
+    /**
+ * @summary 소음 데이터 저장 API
+ */
+export const useGetNoise = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof getNoise>>,
+        TError,
+        {params: GetNoiseParams},
+        TContext
+      > => {
+
+      const mutationOptions = getGetNoiseMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * 유동인구 데이터를 저장합니다.
+ * @summary 유동인구 데이터 저장 API
+ */
 export const getFloatingPopulation = (
     
  options?: SecondParameter<typeof customInstance>,) => {
@@ -60,7 +121,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type GetFloatingPopulationMutationError = ErrorType<unknown>
 
-    export const useGetFloatingPopulation = <TError = ErrorType<unknown>,
+    /**
+ * @summary 유동인구 데이터 저장 API
+ */
+export const useGetFloatingPopulation = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getFloatingPopulation>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof getFloatingPopulation>>,
@@ -73,7 +137,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
-    export const saveFireStationInfra = (
+    /**
+ * 소방서 데이터를 저장합니다.
+ * @summary 소방서 데이터 저장 API
+ */
+export const saveFireStationInfra = (
     
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -109,7 +177,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveFireStationInfraMutationError = ErrorType<unknown>
 
-    export const useSaveFireStationInfra = <TError = ErrorType<unknown>,
+    /**
+ * @summary 소방서 데이터 저장 API
+ */
+export const useSaveFireStationInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveFireStationInfra>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveFireStationInfra>>,
@@ -122,7 +193,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
-    export const saveConstructionInfra = (
+    /**
+ * 공사 데이터를 저장합니다.
+ * @summary 공사 데이터 저장 API
+ */
+export const saveConstructionInfra = (
     params: SaveConstructionInfraParams,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -159,7 +234,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveConstructionInfraMutationError = ErrorType<unknown>
 
-    export const useSaveConstructionInfra = <TError = ErrorType<unknown>,
+    /**
+ * @summary 공사 데이터 저장 API
+ */
+export const useSaveConstructionInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveConstructionInfra>>, TError,{params: SaveConstructionInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveConstructionInfra>>,
@@ -169,56 +247,6 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
       > => {
 
       const mutationOptions = getSaveConstructionInfraMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    export const getNoise = (
-    params: GetNoiseParams,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<void>(
-      {url: `/api/v1/noise/`, method: 'POST',
-        params
-    },
-      options);
-    }
-  
-
-
-export const getGetNoiseMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext> => {
-const {mutation: mutationOptions, request: requestOptions} = options ?? {};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getNoise>>, {params: GetNoiseParams}> = (props) => {
-          const {params} = props ?? {};
-
-          return  getNoise(params,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type GetNoiseMutationResult = NonNullable<Awaited<ReturnType<typeof getNoise>>>
-    
-    export type GetNoiseMutationError = ErrorType<unknown>
-
-    export const useGetNoise = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationResult<
-        Awaited<ReturnType<typeof getNoise>>,
-        TError,
-        {params: GetNoiseParams},
-        TContext
-      > => {
-
-      const mutationOptions = getGetNoiseMutationOptions(options);
 
       return useMutation(mutationOptions);
     }

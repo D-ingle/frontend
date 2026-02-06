@@ -20,6 +20,10 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 파출소 데이터를 저장합니다.
+ * @summary 파출소 데이터 저장 API
+ */
 export const importGuroPoliceOffice = (
     
  options?: SecondParameter<typeof customInstance>,) => {
@@ -56,7 +60,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type ImportGuroPoliceOfficeMutationError = ErrorType<unknown>
 
-    export const useImportGuroPoliceOffice = <TError = ErrorType<unknown>,
+    /**
+ * @summary 파출소 데이터 저장 API
+ */
+export const useImportGuroPoliceOffice = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importGuroPoliceOffice>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof importGuroPoliceOffice>>,

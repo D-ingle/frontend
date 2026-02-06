@@ -9,6 +9,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
+import { useRouter } from "next/navigation";
 import HouseCard from "./HouseCard";
 
 interface House {
@@ -72,6 +73,7 @@ const MOCK_HOUSES: House[] = [
 ];
 
 const LikedHouses = () => {
+  const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<string[]>(["1", "2"]);
 
   const toggleSelection = (id: string) => {
@@ -87,8 +89,9 @@ const LikedHouses = () => {
   };
 
   const handleCompare = () => {
-    console.log("Comparing properties:", selectedIds);
-    // Prepare for POST request
+    if (selectedIds.length > 0) {
+      router.push(`/compare?ids=${selectedIds.join(",")}`);
+    }
   };
 
   return (

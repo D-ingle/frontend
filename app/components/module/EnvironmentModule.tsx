@@ -1,7 +1,6 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
+import { useModuleStore } from "@/app/store/moduleStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -10,7 +9,8 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const EnvironmentModule = () => {
-  const [isActive, setIsActive] = useState(false);
+  const { activeModules, toggleModule } = useModuleStore();
+  const isActive = activeModules.includes("environment");
 
   return (
     <div
@@ -38,8 +38,8 @@ const EnvironmentModule = () => {
           >
             <Image
               src="/icons/module/environment/whitetree.svg"
-              width={16}
-              height={16}
+              width={14.853}
+              height={18.567}
               alt="Environment"
             />
           </div>
@@ -58,12 +58,12 @@ const EnvironmentModule = () => {
 
         {/* Toggle Switch */}
         <button
-          onClick={() => setIsActive(!isActive)}
+          onClick={() => toggleModule("environment")}
           className={cn(
             "w-[36px] h-[21px] rounded-[11px] border-[0.5px] flex items-center p-[3px] transition-all duration-200",
             isActive
               ? "bg-[#82AA82] border-[#82AA82] justify-end"
-              : "bg-[#F8FAFB] border-[#8298A8] justify-start",
+              : "bg-gray-200 border-gray-300 justify-start",
           )}
         >
           <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
@@ -86,12 +86,14 @@ const EnvironmentModule = () => {
             {/* Slope Alert */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center gap-1">
-                <Image
-                  src="/icons/module/safety/warning.svg"
-                  width={18}
-                  height={18}
-                  alt="Warning"
-                />
+                <div className="w-[18px] h-[18px] flex items-center justify-center">
+                  <Image
+                    src="/icons/module/safety/warning.svg"
+                    width={13.5}
+                    height={13.5}
+                    alt="Warning"
+                  />
+                </div>
                 <p className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                   경사도가 높은 편입니다.
                 </p>
@@ -108,12 +110,14 @@ const EnvironmentModule = () => {
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/environment/dog.svg"
-                    width={18}
-                    height={18}
-                    alt="Park"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/environment/dog.svg"
+                      width={16.286}
+                      height={12.857}
+                      alt="Park"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     도심공원
                   </span>
@@ -124,12 +128,14 @@ const EnvironmentModule = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/environment/mountain.svg"
-                    width={18}
-                    height={18}
-                    alt="Trail"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/environment/mountain.svg"
+                      width={12.9}
+                      height={11.143}
+                      alt="Trail"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     산책로
                   </span>
@@ -140,12 +146,14 @@ const EnvironmentModule = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/environment/slope.svg"
-                    width={18}
-                    height={18}
-                    alt="Slope"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/environment/slope.svg"
+                      width={10}
+                      height={8}
+                      alt="Slope"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     경사도/평균
                   </span>
@@ -171,26 +179,34 @@ const EnvironmentModule = () => {
                 name: "폐기물 수집",
                 time: "도보 8분",
                 icon: "/icons/module/environment/factory.svg",
+                width: 15,
+                height: 15,
               },
               {
                 name: "하수처리장",
                 time: "도보 10분",
                 icon: "/icons/module/environment/factory.svg",
+                width: 15,
+                height: 15,
               },
               {
                 name: "장례시설",
                 time: "도보 15분",
                 icon: "/icons/module/environment/funeral.svg",
+                width: 14.571,
+                height: 14.571,
               },
             ].map((item, idx) => (
               <div key={idx} className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src={item.icon}
-                    width={18}
-                    height={18}
-                    alt={item.name}
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src={item.icon}
+                      width={item.width}
+                      height={item.height}
+                      alt={item.name}
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     {item.name}
                   </span>
@@ -211,12 +227,14 @@ const EnvironmentModule = () => {
           <div className="flex gap-2">
             <div className="flex-1 bg-white border-[1.5px] border-[#82AA82] rounded-lg p-3 pt-4 pb-4 flex flex-col gap-8">
               <div className="flex items-center gap-1">
-                <Image
-                  src="/icons/module/environment/dust.svg"
-                  width={18}
-                  height={18}
-                  alt="Dust"
-                />
+                <div className="w-[18px] h-[18px] flex items-center justify-center">
+                  <Image
+                    src="/icons/module/environment/dust.svg"
+                    width={14.571}
+                    height={12.857}
+                    alt="Dust"
+                  />
+                </div>
                 <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                   미세먼지 농도
                 </span>
@@ -237,12 +255,14 @@ const EnvironmentModule = () => {
             </div>
             <div className="flex-1 bg-white border-[1.5px] border-[#82AA82] rounded-lg p-3 pt-4 pb-4 flex flex-col gap-8">
               <div className="flex items-center gap-1">
-                <Image
-                  src="/icons/module/environment/dust.svg"
-                  width={18}
-                  height={18}
-                  alt="Fine Dust"
-                />
+                <div className="w-[18px] h-[18px] flex items-center justify-center">
+                  <Image
+                    src="/icons/module/environment/dust.svg"
+                    width={14.571}
+                    height={12.857}
+                    alt="Fine Dust"
+                  />
+                </div>
                 <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                   초미세먼지 농도
                 </span>

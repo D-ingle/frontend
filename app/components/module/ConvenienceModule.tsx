@@ -1,8 +1,7 @@
-"use client";
-
 import React, { useState } from "react";
 import Image from "next/image";
 import { Check } from "lucide-react";
+import { useModuleStore } from "@/app/store/moduleStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -11,7 +10,8 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const ConvenienceModule = () => {
-  const [isActive, setIsActive] = useState(false);
+  const { activeModules, toggleModule } = useModuleStore();
+  const isActive = activeModules.includes("convenience");
   const [selectedTime, setSelectedTime] = useState(5); // 5, 10, 20
 
   // Checkbox states for the facilities
@@ -51,8 +51,8 @@ const ConvenienceModule = () => {
           >
             <Image
               src="/icons/module/convenience/whiteapt.svg"
-              width={16}
-              height={16}
+              width={17.063}
+              height={16.188}
               alt="Convenience"
             />
           </div>
@@ -71,12 +71,12 @@ const ConvenienceModule = () => {
 
         {/* Toggle Switch */}
         <button
-          onClick={() => setIsActive(!isActive)}
+          onClick={() => toggleModule("convenience")}
           className={cn(
             "w-[36px] h-[21px] rounded-[11px] border-[0.5px] flex items-center p-[3px] transition-all duration-200",
             isActive
               ? "bg-[#AB9FD5] border-[#AB9FD5] justify-end"
-              : "bg-[#F8FAFB] border-[#8298A8] justify-start",
+              : "bg-gray-200 border-gray-300 justify-start",
           )}
         >
           <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
@@ -128,12 +128,14 @@ const ConvenienceModule = () => {
               {/* Convenience Store */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/convenience/24shop.svg"
-                    width={18}
-                    height={18}
-                    alt="Store"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/convenience/24shop.svg"
+                      width={15.07}
+                      height={13.5}
+                      alt="Store"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     편의점
                   </span>
@@ -156,12 +158,14 @@ const ConvenienceModule = () => {
               {/* Market */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/convenience/market.svg"
-                    width={18}
-                    height={18}
-                    alt="Market"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/convenience/market.svg"
+                      width={12}
+                      height={15.002}
+                      alt="Market"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     대형마트, 백화점, 시장
                   </span>
@@ -184,12 +188,14 @@ const ConvenienceModule = () => {
               {/* Hospital */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/convenience/hospital.svg"
-                    width={18}
-                    height={18}
-                    alt="Hospital"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/convenience/hospital.svg"
+                      width={16.2}
+                      height={14.4}
+                      alt="Hospital"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     병원
                   </span>

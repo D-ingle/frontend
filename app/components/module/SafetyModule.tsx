@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useModuleStore } from "@/app/store/moduleStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -10,7 +11,8 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const SafetyModule = () => {
-  const [isActive, setIsActive] = useState(false);
+  const { activeModules, toggleModule } = useModuleStore();
+  const isActive = activeModules.includes("safety");
   const [isMainRoadMode, setIsMainRoadMode] = useState(false);
 
   return (
@@ -39,8 +41,8 @@ const SafetyModule = () => {
           >
             <Image
               src="/icons/module/safety/white_cctv.svg"
-              width={16}
-              height={16}
+              width={17.437}
+              height={17.5}
               alt="Safety"
             />
           </div>
@@ -59,12 +61,12 @@ const SafetyModule = () => {
 
         {/* Toggle Switch */}
         <button
-          onClick={() => setIsActive(!isActive)}
+          onClick={() => toggleModule("safety")}
           className={cn(
             "w-[36px] h-[21px] rounded-[11px] border-[0.5px] flex items-center p-[3px] transition-all duration-200",
             isActive
               ? "bg-[#F48787] border-[#F48787] justify-end"
-              : "bg-[#F8FAFB] border-[#8298A8] justify-start",
+              : "bg-gray-200 border-gray-300 justify-start",
           )}
         >
           <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
@@ -87,12 +89,14 @@ const SafetyModule = () => {
             {/* Warning Item */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center gap-1">
-                <Image
-                  src="/icons/module/safety/warning.svg"
-                  width={18}
-                  height={18}
-                  alt="Warning"
-                />
+                <div className="w-[18px] h-[18px] flex items-center justify-center">
+                  <Image
+                    src="/icons/module/safety/warning.svg"
+                    width={13.5}
+                    height={13.5}
+                    alt="Warning"
+                  />
+                </div>
                 <p className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                   범죄주의 구간을 지나갑니다.
                 </p>
@@ -115,12 +119,14 @@ const SafetyModule = () => {
                     {isMainRoadMode ? (
                       <div className="w-2 h-2 bg-[#F48787] rounded-full shadow-[0_0_8px_#F48787]" />
                     ) : (
-                      <Image
-                        src="/icons/module/safety/cctv.svg"
-                        width={18}
-                        height={18}
-                        alt="CCTV"
-                      />
+                      <div className="w-[18px] h-[18px] flex items-center justify-center">
+                        <Image
+                          src="/icons/module/safety/cctv.svg"
+                          width={15}
+                          height={15}
+                          alt="CCTV"
+                        />
+                      </div>
                     )}
                   </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
@@ -137,12 +143,14 @@ const SafetyModule = () => {
                     {isMainRoadMode ? (
                       <div className="w-2 h-2 bg-[#F48787] rounded-full shadow-[0_0_8px_#F48787]" />
                     ) : (
-                      <Image
-                        src="/icons/module/safety/lamp.svg"
-                        width={18}
-                        height={18}
-                        alt="Lamp"
-                      />
+                      <div className="w-[18px] h-[18px] flex items-center justify-center">
+                        <Image
+                          src="/icons/module/safety/lamp.svg"
+                          width={13.5}
+                          height={15}
+                          alt="Lamp"
+                        />
+                      </div>
                     )}
                   </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
@@ -178,16 +186,18 @@ const SafetyModule = () => {
             ].map((station, idx) => (
               <div key={idx} className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src={
-                      isMainRoadMode
-                        ? "/icons/module/safety/police.svg"
-                        : "/icons/module/safety/police.svg"
-                    } // Using available icon, figma showed a star/shield version for one
-                    width={18}
-                    height={18}
-                    alt="Police"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src={
+                        isMainRoadMode
+                          ? "/icons/module/safety/police.svg"
+                          : "/icons/module/safety/police.svg"
+                      } // Using available icon, figma showed a star/shield version for one
+                      width={13.5}
+                      height={16.359}
+                      alt="Police"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     {station.name}
                   </span>

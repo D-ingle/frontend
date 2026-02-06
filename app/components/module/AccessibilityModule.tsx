@@ -1,7 +1,6 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
+import { useModuleStore } from "@/app/store/moduleStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -10,14 +9,15 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const AccessibilityModule = () => {
-  const [isActive, setIsActive] = useState(false);
+  const { activeModules, toggleModule } = useModuleStore();
+  const isActive = activeModules.includes("accessibility");
 
   return (
     <div
       className={cn(
         "w-[340px] shrink-0 flex flex-col items-start overflow-hidden rounded-[16px] border-2 shadow-[0px_5px_15px_0px_rgba(0,0,0,0.25)] pointer-events-auto transition-all duration-300",
         isActive
-          ? "border-[#7CB7CD] bg-[#D6E6F8]/90 backdrop-blur-[2.5px]"
+          ? "border-[#7CB7CD] bg-[#D6EFF8]/90 backdrop-blur-[2.5px]"
           : "border-[#C4C4C4] bg-white/90 backdrop-blur-[2.5px]",
       )}
     >
@@ -38,8 +38,8 @@ const AccessibilityModule = () => {
           >
             <Image
               src="/icons/module/accessibility/whitetrain.svg"
-              width={15}
-              height={15}
+              width={12.67}
+              height={15.83}
               alt="Accessibility"
             />
           </div>
@@ -58,12 +58,12 @@ const AccessibilityModule = () => {
 
         {/* Toggle Switch */}
         <button
-          onClick={() => setIsActive(!isActive)}
+          onClick={() => toggleModule("accessibility")}
           className={cn(
             "w-[36px] h-[21px] rounded-[11px] border-[0.5px] flex items-center p-[3px] transition-all duration-200",
             isActive
               ? "bg-[#7CB7CD] border-[#7CB7CD] justify-end"
-              : "bg-[#F8FAFB] border-[#8298A8] justify-start",
+              : "bg-gray-200 border-gray-300 justify-start",
           )}
         >
           <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
@@ -86,25 +86,27 @@ const AccessibilityModule = () => {
             {/* Transport Card */}
             <div className="flex-1 min-w-0 bg-white border-[1.5px] border-[#7CB7CD] rounded-lg p-3 pt-4 flex flex-col gap-10">
               <div className="flex items-center gap-1">
-                <Image
-                  src="/icons/module/accessibility/train.svg"
-                  width={15}
-                  height={15}
-                  alt="Transit"
-                />
+                <div className="w-[18px] h-[18px] flex items-center justify-center">
+                  <Image
+                    src="/icons/module/accessibility/train.svg"
+                    width={12}
+                    height={15}
+                    alt="Transit"
+                  />
+                </div>
                 <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                   대중교통
                 </span>
               </div>
               <div className="flex items-center justify-end gap-1">
-                <span className="font-semibold text-[14px] text-black tracking-[-0.15px] opacity-70">
+                <span className="font-semibold text-[14px] text-gray-900 tracking-[-0.15px] opacity-70">
                   평균
                 </span>
                 <div className="flex items-baseline">
                   <span className="font-semibold text-[24px] text-[#0192C8]">
                     49
                   </span>
-                  <span className="font-semibold text-[14px] text-black">
+                  <span className="font-semibold text-[24px] text-black">
                     분
                   </span>
                 </div>
@@ -114,25 +116,27 @@ const AccessibilityModule = () => {
             {/* Car Card */}
             <div className="flex-1 min-w-0 bg-white border-[1.5px] border-[#7CB7CD] rounded-lg p-3 pt-4 flex flex-col gap-10">
               <div className="flex items-center gap-1">
-                <Image
-                  src="/icons/module/accessibility/car.svg"
-                  width={18}
-                  height={18}
-                  alt="Car"
-                />
+                <div className="w-[18px] h-[18px] flex items-center justify-center">
+                  <Image
+                    src="/icons/module/accessibility/car.svg"
+                    width={14.4}
+                    height={12.6}
+                    alt="Car"
+                  />
+                </div>
                 <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                   자동차
                 </span>
               </div>
               <div className="flex items-center justify-end gap-1">
-                <span className="font-semibold text-[14px] text-black tracking-[-0.15px] opacity-70">
+                <span className="font-semibold text-[14px] text-gray-900 tracking-[-0.15px] opacity-70">
                   평균
                 </span>
                 <div className="flex items-baseline">
                   <span className="font-semibold text-[24px] text-[#0192C8]">
                     27
                   </span>
-                  <span className="font-semibold text-[14px] text-black">
+                  <span className="font-semibold text-[24px] text-black">
                     분
                   </span>
                 </div>
@@ -151,12 +155,14 @@ const AccessibilityModule = () => {
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/accessibility/train.svg"
-                    width={15}
-                    height={15}
-                    alt="Transit"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/accessibility/train.svg"
+                      width={12}
+                      height={15}
+                      alt="Transit"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     4호선 명동역
                   </span>
@@ -174,12 +180,14 @@ const AccessibilityModule = () => {
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/accessibility/bus.svg"
-                    width={18}
-                    height={18}
-                    alt="Bus"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/accessibility/bus.svg"
+                      width={15}
+                      height={15}
+                      alt="Bus"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     남산 3호터널 입구
                   </span>

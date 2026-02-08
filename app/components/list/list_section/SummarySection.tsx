@@ -9,10 +9,13 @@ import type { DealInfo } from "@/shared/api/generated/model/dealInfo";
 import type { PropertyImages } from "@/shared/api/generated/model/propertyImages";
 
 interface SummarySectionProps {
+  propertyId?: number;
   propertyInfo?: PropertyInfo;
   deal?: DealInfo;
   images?: PropertyImages;
   conditions?: number[];
+  isLiked?: boolean;
+  onToggleZzim?: (id: number, isLiked: boolean) => void;
 }
 
 const ORIENTATION_MAP: Record<string, string> = {
@@ -59,10 +62,13 @@ const variants = {
 };
 
 const SummarySection = ({
+  propertyId,
   propertyInfo,
   deal,
   images,
   conditions,
+  isLiked,
+  onToggleZzim,
 }: SummarySectionProps) => {
   const imageUrls = images?.propertyImageUrls || ["/images/mockup/item.png"];
   const [[page, direction], setPage] = useState([0, 0]);
@@ -182,16 +188,41 @@ const SummarySection = ({
 
       {/* Basic Info Section */}
       <div className="px-5 py-6 bg-white">
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-[24px] font-bold text-[#000000] mb-1">
+            <h2 className="text-[24px] font-bold text-[#000000]">
               {formatPrice(deal)}
             </h2>
           </div>
-          <button className="text-[#30CEA1] mt-2">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
+          <button
+            onClick={() => {
+              if (propertyId && onToggleZzim) {
+                onToggleZzim(propertyId, Boolean(isLiked));
+              }
+            }}
+            className="cursor-pointer"
+          >
+            {isLiked ? (
+              <Image
+                src="/icons/feature/list/like.svg"
+                alt="Favorite"
+                width={24}
+                height={24}
+              />
+            ) : (
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#E5E5E5"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+            )}
           </button>
         </div>
         <div className="flex gap-5 items-center mb-8">

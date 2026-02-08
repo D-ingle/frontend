@@ -80,7 +80,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
         </div>
       </div>
 
-      <div className="relative w-full aspect-361/280 bg-[#F8FAFB] rounded-xl flex items-center justify-center p-6 border border-[#E5E5E5]">
+      <div className="relative w-full pt-10 aspect-361/280 bg-[#F8FAFB] rounded-xl flex items-center justify-center p-6 border border-[#E5E5E5]">
         <div className="relative w-40 h-40">
           {/* Background Circles */}
           <div className="absolute inset-0 flex items-center justify-center">
@@ -156,7 +156,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
             </div>
-            <span className="text-[12px] font-bold text-[#F48787] bg-[#FFD9D9] px-2 py-0.5 rounded mt-1">
+            <span className="text-[12px] font-bold text-[#F48787] bg-[#FFD9D9] px-2 py-0.5 rounded-full mt-1">
               83
             </span>
             {hoveredCategory === "안전" && (
@@ -170,7 +170,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
 
           {/* 2. 환경 (Right-ish - 67) */}
           <div
-            className="absolute top-[15%] -right-12 flex flex-col items-center cursor-help"
+            className="absolute top-[15%] -right-10 flex flex-col items-center cursor-help"
             onMouseEnter={() => setHoveredCategory("환경")}
             onMouseLeave={() => setHoveredCategory(null)}
           >
@@ -191,7 +191,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
             </div>
-            <span className="text-[12px] font-bold text-[#82AA82] bg-[#DAF0DA] px-2 py-0.5 rounded mt-1">
+            <span className="text-[12px] font-bold text-[#82AA82] bg-[#DAF0DA] px-2 py-0.5 rounded-full mt-1">
               67
             </span>
             {hoveredCategory === "환경" && (
@@ -205,7 +205,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
 
           {/* 3. 접근성 (Bottom-Right - 45) */}
           <div
-            className="absolute -bottom-8 -right-8 flex flex-col items-center cursor-help"
+            className="absolute -bottom-8 -right-3 flex flex-col items-center cursor-help"
             onMouseEnter={() => setHoveredCategory("접근성")}
             onMouseLeave={() => setHoveredCategory(null)}
           >
@@ -226,7 +226,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
             </div>
-            <span className="text-[12px] font-bold text-[#7CB7CD] bg-[#D6EFF8] px-2 py-0.5 rounded mt-1">
+            <span className="text-[12px] font-bold text-[#7CB7CD] bg-[#D6EFF8] px-2 py-0.5 rounded-full mt-1">
               45
             </span>
             {hoveredCategory === "접근성" && (
@@ -240,7 +240,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
 
           {/* 4. 편의 (Bottom-Left - 60) */}
           <div
-            className="absolute -bottom-8 -left-8 flex flex-col items-center cursor-help"
+            className="absolute -bottom-8 -left-1 flex flex-col items-center cursor-help"
             onMouseEnter={() => setHoveredCategory("편의")}
             onMouseLeave={() => setHoveredCategory(null)}
           >
@@ -261,7 +261,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
             </div>
-            <span className="text-[12px] font-bold text-[#AB9FD5] bg-[#E5E0F7] px-2 py-0.5 rounded mt-1">
+            <span className="text-[12px] font-bold text-[#AB9FD5] bg-[#E5E0F7] px-2 py-0.5 rounded-full mt-1">
               60
             </span>
             {hoveredCategory === "편의" && (
@@ -275,7 +275,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
 
           {/* 5. 소음 (Left-ish - 10) */}
           <div
-            className="absolute top-[15%] -left-12 flex flex-col items-center cursor-help"
+            className="absolute top-[15%] -left-10 flex flex-col items-center cursor-help"
             onMouseEnter={() => setHoveredCategory("소음")}
             onMouseLeave={() => setHoveredCategory(null)}
           >
@@ -296,7 +296,7 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
             </div>
-            <span className="text-[12px] font-bold text-[#FBBA78] bg-[#FFEFD4] px-2 py-0.5 rounded mt-1">
+            <span className="text-[12px] font-bold text-[#FBBA78] bg-[#FFEFD4] px-2 py-0.5 rounded-full mt-1">
               10
             </span>
             {hoveredCategory === "소음" && (

@@ -5,134 +5,165 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
-import {
-  useMutation
-} from '@tanstack/react-query'
+import { useMutation } from "@tanstack/react-query";
 import type {
   MutationFunction,
   UseMutationOptions,
-  UseMutationResult
-} from '@tanstack/react-query'
-import type {
-  ResponseDTOVoid
-} from '.././model'
-import { customInstance } from '../../axios-instance';
-import type { ErrorType } from '../../axios-instance';
-
+  UseMutationResult,
+} from "@tanstack/react-query";
+import type { ResponseDTOVoid } from ".././model";
+import { customInstance } from "../../axios-instance";
+import type { ErrorType } from "../../axios-instance";
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
-
 
 /**
  * 매물을 찜합니다.
  * @summary 매물 찜 API
  */
 export const saveProperty = (
-    propertyId: number,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<ResponseDTOVoid>(
-      {url: `/api/v1/property/zzim/${propertyId}`, method: 'POST'
-    },
-      options);
-    }
-  
+  propertyId: number,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<ResponseDTOVoid>(
+    { url: `/api/v1/property/zzim/${propertyId}`, method: "POST" },
+    options,
+  );
+};
 
+export const getSavePropertyMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof saveProperty>>,
+    TError,
+    { propertyId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof saveProperty>>,
+  TError,
+  { propertyId: number },
+  TContext
+> => {
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-export const getSavePropertyMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveProperty>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof saveProperty>>, TError,{propertyId: number}, TContext> => {
-const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof saveProperty>>,
+    { propertyId: number }
+  > = (props) => {
+    const { propertyId } = props ?? {};
 
-      
+    return saveProperty(propertyId, requestOptions);
+  };
 
+  return { mutationFn, ...mutationOptions };
+};
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveProperty>>, {propertyId: number}> = (props) => {
-          const {propertyId} = props ?? {};
+export type SavePropertyMutationResult = NonNullable<
+  Awaited<ReturnType<typeof saveProperty>>
+>;
 
-          return  saveProperty(propertyId,requestOptions)
-        }
+export type SavePropertyMutationError = ErrorType<unknown>;
 
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SavePropertyMutationResult = NonNullable<Awaited<ReturnType<typeof saveProperty>>>
-    
-    export type SavePropertyMutationError = ErrorType<unknown>
-
-    /**
+/**
  * @summary 매물 찜 API
  */
-export const useSaveProperty = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveProperty>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationResult<
-        Awaited<ReturnType<typeof saveProperty>>,
-        TError,
-        {propertyId: number},
-        TContext
-      > => {
+export const useSaveProperty = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof saveProperty>>,
+    TError,
+    { propertyId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof saveProperty>>,
+  TError,
+  { propertyId: number },
+  TContext
+> => {
+  const mutationOptions = getSavePropertyMutationOptions(options);
 
-      const mutationOptions = getSavePropertyMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    /**
+  return useMutation(mutationOptions);
+};
+/**
  * 매물 찜을 취소합니다.
  * @summary 매물 찜 취소 API
  */
 export const unsaveProperty = (
-    propertyId: number,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<ResponseDTOVoid>(
-      {url: `/api/v1/property/zzim/${propertyId}`, method: 'DELETE'
-    },
-      options);
-    }
-  
+  propertyId: number,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<ResponseDTOVoid>(
+    { url: `/api/v1/property/zzim/${propertyId}`, method: "DELETE" },
+    options,
+  );
+};
 
+export const getUnsavePropertyMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof unsaveProperty>>,
+    TError,
+    { propertyId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof unsaveProperty>>,
+  TError,
+  { propertyId: number },
+  TContext
+> => {
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-export const getUnsavePropertyMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unsaveProperty>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof unsaveProperty>>, TError,{propertyId: number}, TContext> => {
-const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof unsaveProperty>>,
+    { propertyId: number }
+  > = (props) => {
+    const { propertyId } = props ?? {};
 
-      
+    return unsaveProperty(propertyId, requestOptions);
+  };
 
+  return { mutationFn, ...mutationOptions };
+};
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unsaveProperty>>, {propertyId: number}> = (props) => {
-          const {propertyId} = props ?? {};
+export type UnsavePropertyMutationResult = NonNullable<
+  Awaited<ReturnType<typeof unsaveProperty>>
+>;
 
-          return  unsaveProperty(propertyId,requestOptions)
-        }
+export type UnsavePropertyMutationError = ErrorType<unknown>;
 
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type UnsavePropertyMutationResult = NonNullable<Awaited<ReturnType<typeof unsaveProperty>>>
-    
-    export type UnsavePropertyMutationError = ErrorType<unknown>
-
-    /**
+/**
  * @summary 매물 찜 취소 API
  */
-export const useUnsaveProperty = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unsaveProperty>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationResult<
-        Awaited<ReturnType<typeof unsaveProperty>>,
-        TError,
-        {propertyId: number},
-        TContext
-      > => {
+export const useUnsaveProperty = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof unsaveProperty>>,
+    TError,
+    { propertyId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof unsaveProperty>>,
+  TError,
+  { propertyId: number },
+  TContext
+> => {
+  const mutationOptions = getUnsavePropertyMutationOptions(options);
 
-      const mutationOptions = getUnsavePropertyMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
+  return useMutation(mutationOptions);
+};

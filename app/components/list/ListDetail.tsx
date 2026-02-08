@@ -18,6 +18,7 @@ import { useEffect, useRef } from "react";
 import { useGetPropertyDetail } from "@/shared/api/generated/detail-property-controller/detail-property-controller";
 
 import { useMapModeStore } from "@/app/store/mapModeStore";
+import { usePropertyZzim } from "@/app/hooks/usePropertyZzim";
 
 const sections = [
   { id: "curation", label: "맞춤 큐레이션 정보" },
@@ -42,6 +43,7 @@ const ListDetail = ({
   );
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const { setSelectedProperty, clearSelectedProperty } = useMapModeStore();
+  const { toggleZzim } = usePropertyZzim();
 
   const isManualScrolling = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -157,10 +159,13 @@ const ListDetail = ({
         ) : (
           <>
             <SummarySection
+              propertyId={propertyId}
               propertyInfo={detailData?.propertyInfo}
               deal={detailData?.deal}
               images={detailData?.images}
               conditions={detailData?.conditions}
+              isLiked={detailData?.propertyInfo?.liked}
+              onToggleZzim={toggleZzim}
             />
 
             <div className="h-4 bg-[#F4F4F4]" />

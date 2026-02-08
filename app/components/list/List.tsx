@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import ListItem from "./ListItem";
 import ListDetail from "./ListDetail";
-import ContactModal from "./list_section/detail/ContactModal";
 
 import { useEffect } from "react";
 import PriorityToggle from "../ui/PriorityToggle";
@@ -14,7 +13,8 @@ import { useModuleStore, ModuleId } from "@/app/store/moduleStore";
 import { useGetMainProperty } from "@/shared/api/generated/main-property-controller/main-property-controller";
 import { GetMainPropertyPropertyType } from "@/shared/api/generated/model/getMainPropertyPropertyType";
 import { DealInfoDealType } from "@/shared/api/generated/model/dealInfoDealType";
-import { formatPrice, formatNumberToKoreanPrice } from "@/app/utils/format";
+import { formatNumberToKoreanPrice } from "@/app/utils/format";
+import { usePropertyZzim } from "@/app/hooks/usePropertyZzim";
 
 const CONDITION_MAP: Record<number, string> = {
   1: "소음",
@@ -37,6 +37,7 @@ const List = () => {
 
   const { user } = useUserStore();
   const { activeModules, toggleModule } = useModuleStore();
+  const { toggleZzim } = usePropertyZzim();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -139,12 +140,12 @@ const List = () => {
           </div>
 
           {/* Tip Card */}
-          <div className="flex items-center gap-2 p-4 bg-[#F8FAFB] rounded-xl">
+          <div className="flex items-center gap-2 p-4 bg-[#F8FAFB] rounded-xl border border-[#f5f5f5]">
             <Image
               src="/icons/feature/list/quotation.svg"
               alt="Quotation"
-              width={20}
-              height={20}
+              width={15}
+              height={15}
             />
             <p className="text-[12px] text-[#9D9D9D] leading-tight">
               최대 3개의 우선순위를 기반으로 딱 맞는 집을 추천해드려요.
@@ -166,6 +167,7 @@ const List = () => {
                 key={property.id}
                 property={property}
                 onClick={(id) => setSelectedId(id)}
+                onToggleZzim={toggleZzim}
               />
             ))
           ) : (

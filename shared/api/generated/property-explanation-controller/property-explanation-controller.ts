@@ -20,11 +20,105 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
-/**
- * 환경 점수를 측정합니다.
- * @summary 환경 점수 측정 API
- */
-export const evaluateEnvironment = (
+export const evaluateSafety = (
+    propertyId: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/openai/${propertyId}/safety`, method: 'POST'
+    },
+      options);
+    }
+  
+
+
+export const getEvaluateSafetyMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof evaluateSafety>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof evaluateSafety>>, TError,{propertyId: number}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof evaluateSafety>>, {propertyId: number}> = (props) => {
+          const {propertyId} = props ?? {};
+
+          return  evaluateSafety(propertyId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EvaluateSafetyMutationResult = NonNullable<Awaited<ReturnType<typeof evaluateSafety>>>
+    
+    export type EvaluateSafetyMutationError = ErrorType<unknown>
+
+    export const useEvaluateSafety = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof evaluateSafety>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof evaluateSafety>>,
+        TError,
+        {propertyId: number},
+        TContext
+      > => {
+
+      const mutationOptions = getEvaluateSafetyMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    export const evaluateNoise = (
+    propertyId: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/openai/${propertyId}/noise`, method: 'POST'
+    },
+      options);
+    }
+  
+
+
+export const getEvaluateNoiseMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof evaluateNoise>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof evaluateNoise>>, TError,{propertyId: number}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof evaluateNoise>>, {propertyId: number}> = (props) => {
+          const {propertyId} = props ?? {};
+
+          return  evaluateNoise(propertyId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EvaluateNoiseMutationResult = NonNullable<Awaited<ReturnType<typeof evaluateNoise>>>
+    
+    export type EvaluateNoiseMutationError = ErrorType<unknown>
+
+    export const useEvaluateNoise = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof evaluateNoise>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof evaluateNoise>>,
+        TError,
+        {propertyId: number},
+        TContext
+      > => {
+
+      const mutationOptions = getEvaluateNoiseMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    export const evaluateEnvironment = (
     propertyId: number,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -60,10 +154,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type EvaluateEnvironmentMutationError = ErrorType<unknown>
 
-    /**
- * @summary 환경 점수 측정 API
- */
-export const useEvaluateEnvironment = <TError = ErrorType<unknown>,
+    export const useEvaluateEnvironment = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof evaluateEnvironment>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof evaluateEnvironment>>,
@@ -76,11 +167,7 @@ export const useEvaluateEnvironment = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
-    /**
- * 편의 점수를 측정합니다.
- * @summary 편의 점수 측정 API
- */
-export const evaluateConvenience = (
+    export const evaluateConvenience = (
     propertyId: number,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -116,10 +203,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type EvaluateConvenienceMutationError = ErrorType<unknown>
 
-    /**
- * @summary 편의 점수 측정 API
- */
-export const useEvaluateConvenience = <TError = ErrorType<unknown>,
+    export const useEvaluateConvenience = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof evaluateConvenience>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof evaluateConvenience>>,
@@ -132,11 +216,7 @@ export const useEvaluateConvenience = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
-    /**
- * 접근성 점수를 측정합니다.
- * @summary 접근성 점수 측정 API
- */
-export const evaluateAccessibility = (
+    export const evaluateAccessibility = (
     propertyId: number,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -172,10 +252,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type EvaluateAccessibilityMutationError = ErrorType<unknown>
 
-    /**
- * @summary 접근성 점수 측정 API
- */
-export const useEvaluateAccessibility = <TError = ErrorType<unknown>,
+    export const useEvaluateAccessibility = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof evaluateAccessibility>>, TError,{propertyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof evaluateAccessibility>>,

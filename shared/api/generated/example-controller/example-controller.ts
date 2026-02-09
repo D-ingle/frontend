@@ -24,10 +24,6 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
-/**
- * ResponseDto 테스트용 API
- * @summary 테스트 API
- */
 export const testSuccess = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -67,9 +63,6 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type TestSuccessQueryResult = NonNullable<Awaited<ReturnType<typeof testSuccess>>>
 export type TestSuccessQueryError = ErrorType<unknown>
 
-/**
- * @summary 테스트 API
- */
 export const useTestSuccess = <TData = Awaited<ReturnType<typeof testSuccess>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof testSuccess>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
@@ -86,10 +79,6 @@ export const useTestSuccess = <TData = Awaited<ReturnType<typeof testSuccess>>, 
 
 
 
-/**
- * ResponseDto 테스트용 API
- * @summary 테스트 API
- */
 export const testFail = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -129,9 +118,6 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type TestFailQueryResult = NonNullable<Awaited<ReturnType<typeof testFail>>>
 export type TestFailQueryError = ErrorType<unknown>
 
-/**
- * @summary 테스트 API
- */
 export const useTestFail = <TData = Awaited<ReturnType<typeof testFail>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof testFail>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 

@@ -13,6 +13,7 @@ export interface PropertyListDTO {
   dealInfo?: DealInfo;
   exclusiveArea?: number;
   floor?: number;
+  imageUrl?: string;
   propertyId?: number;
   propertyType?: PropertyListDTOPropertyType;
   supplyArea?: number;

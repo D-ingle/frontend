@@ -6,15 +6,24 @@
  * OpenAPI spec version: v1.0.0
  */
 import {
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query'
 import type {
   MutationFunction,
+  QueryFunction,
+  QueryKey,
   UseMutationOptions,
-  UseMutationResult
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
 } from '@tanstack/react-query'
 import type {
+  GetNearbyNoiseParams,
   GetNoiseParams,
+  GetSmartPoleParams,
+  ResponseDTONearbyNoiseDTO,
+  ResponseDTOSmartPoleResponseDTO,
   SaveConstructionInfraParams
 } from '.././model'
 import { customInstance } from '../../axios-instance';
@@ -24,10 +33,6 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
-/**
- * 소음 데이터를 저장합니다.
- * @summary 소음 데이터 저장 API
- */
 export const getNoise = (
     params: GetNoiseParams,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -65,10 +70,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type GetNoiseMutationError = ErrorType<unknown>
 
-    /**
- * @summary 소음 데이터 저장 API
- */
-export const useGetNoise = <TError = ErrorType<unknown>,
+    export const useGetNoise = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof getNoise>>,
@@ -81,11 +83,7 @@ export const useGetNoise = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
-    /**
- * 유동인구 데이터를 저장합니다.
- * @summary 유동인구 데이터 저장 API
- */
-export const getFloatingPopulation = (
+    export const getFloatingPopulation = (
     
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -121,10 +119,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type GetFloatingPopulationMutationError = ErrorType<unknown>
 
-    /**
- * @summary 유동인구 데이터 저장 API
- */
-export const useGetFloatingPopulation = <TError = ErrorType<unknown>,
+    export const useGetFloatingPopulation = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getFloatingPopulation>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof getFloatingPopulation>>,
@@ -137,11 +132,7 @@ export const useGetFloatingPopulation = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
-    /**
- * 소방서 데이터를 저장합니다.
- * @summary 소방서 데이터 저장 API
- */
-export const saveFireStationInfra = (
+    export const saveFireStationInfra = (
     
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -177,10 +168,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveFireStationInfraMutationError = ErrorType<unknown>
 
-    /**
- * @summary 소방서 데이터 저장 API
- */
-export const useSaveFireStationInfra = <TError = ErrorType<unknown>,
+    export const useSaveFireStationInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveFireStationInfra>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveFireStationInfra>>,
@@ -193,11 +181,56 @@ export const useSaveFireStationInfra = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
-    /**
- * 공사 데이터를 저장합니다.
- * @summary 공사 데이터 저장 API
- */
-export const saveConstructionInfra = (
+    export const saveEmergencyCenterInfra = (
+    
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/noise/emergency`, method: 'POST'
+    },
+      options);
+    }
+  
+
+
+export const getSaveEmergencyCenterInfraMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>, TError,void, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>, void> = () => {
+          
+
+          return  saveEmergencyCenterInfra(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveEmergencyCenterInfraMutationResult = NonNullable<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>>
+    
+    export type SaveEmergencyCenterInfraMutationError = ErrorType<unknown>
+
+    export const useSaveEmergencyCenterInfra = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof saveEmergencyCenterInfra>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getSaveEmergencyCenterInfraMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    export const saveConstructionInfra = (
     params: SaveConstructionInfraParams,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -234,10 +267,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveConstructionInfraMutationError = ErrorType<unknown>
 
-    /**
- * @summary 공사 데이터 저장 API
- */
-export const useSaveConstructionInfra = <TError = ErrorType<unknown>,
+    export const useSaveConstructionInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveConstructionInfra>>, TError,{params: SaveConstructionInfraParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveConstructionInfra>>,
@@ -250,4 +280,115 @@ export const useSaveConstructionInfra = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
+    export const getSmartPole = (
+    params: GetSmartPoleParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTOSmartPoleResponseDTO>(
+      {url: `/api/v1/noise/smartpole`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetSmartPoleQueryKey = (params: GetSmartPoleParams,) => {
+    return [`/api/v1/noise/smartpole`, ...(params ? [params]: [])] as const;
+    }
+
     
+export const getGetSmartPoleQueryOptions = <TData = Awaited<ReturnType<typeof getSmartPole>>, TError = ErrorType<unknown>>(params: GetSmartPoleParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSmartPole>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSmartPoleQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSmartPole>>> = ({ signal }) => getSmartPole(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSmartPole>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSmartPoleQueryResult = NonNullable<Awaited<ReturnType<typeof getSmartPole>>>
+export type GetSmartPoleQueryError = ErrorType<unknown>
+
+export const useGetSmartPole = <TData = Awaited<ReturnType<typeof getSmartPole>>, TError = ErrorType<unknown>>(
+ params: GetSmartPoleParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSmartPole>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetSmartPoleQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+export const getNearbyNoise = (
+    params: GetNearbyNoiseParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTONearbyNoiseDTO>(
+      {url: `/api/v1/noise/nearby`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetNearbyNoiseQueryKey = (params: GetNearbyNoiseParams,) => {
+    return [`/api/v1/noise/nearby`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetNearbyNoiseQueryOptions = <TData = Awaited<ReturnType<typeof getNearbyNoise>>, TError = ErrorType<unknown>>(params: GetNearbyNoiseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNearbyNoise>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNearbyNoiseQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNearbyNoise>>> = ({ signal }) => getNearbyNoise(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNearbyNoise>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNearbyNoiseQueryResult = NonNullable<Awaited<ReturnType<typeof getNearbyNoise>>>
+export type GetNearbyNoiseQueryError = ErrorType<unknown>
+
+export const useGetNearbyNoise = <TData = Awaited<ReturnType<typeof getNearbyNoise>>, TError = ErrorType<unknown>>(
+ params: GetNearbyNoiseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNearbyNoise>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetNearbyNoiseQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+

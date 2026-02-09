@@ -20,10 +20,6 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
-/**
- * 보안등 데이터를 저장합니다.
- * @summary 보안등 데이터 저장 API
- */
 export const saveSafetyLightInfra = (
     
  options?: SecondParameter<typeof customInstance>,) => {
@@ -60,10 +56,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     
     export type SaveSafetyLightInfraMutationError = ErrorType<unknown>
 
-    /**
- * @summary 보안등 데이터 저장 API
- */
-export const useSaveSafetyLightInfra = <TError = ErrorType<unknown>,
+    export const useSaveSafetyLightInfra = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveSafetyLightInfra>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof saveSafetyLightInfra>>,

@@ -87,11 +87,7 @@ export const useRegister = <TError = ErrorType<unknown>,
 
       return useMutation(mutationOptions);
     }
-    /**
- * 요청을 보낸 사용자가 누구인지 확인합니다.
- * @summary 사용자 확인 API
- */
-export const me = (
+    export const me = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -130,9 +126,6 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type MeQueryResult = NonNullable<Awaited<ReturnType<typeof me>>>
 export type MeQueryError = ErrorType<unknown>
 
-/**
- * @summary 사용자 확인 API
- */
 export const useMe = <TData = Awaited<ReturnType<typeof me>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof me>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 

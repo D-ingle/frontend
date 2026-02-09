@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import { useMapModeStore } from "../../../store/mapModeStore";
 
 const CATEGORY_TOOLTIPS: Record<string, string> = {
@@ -58,35 +60,48 @@ const CurationSection = ({
             D.HOME 요약
           </span>
         </div>
-        <div>
-          <p className="text-[16px] leading-[1.6] text-[#434343]">
-            {isAiLoading ? (
-              <span className="text-gray-400 animate-pulse">
-                AI가 매물을 분석하고 있습니다...
-              </span>
-            ) : aiSummary ? (
-              aiSummary
-            ) : sortedMatchedConditions.length > 0 ? (
-              <>
-                해당 지역의{" "}
-                {sortedMatchedConditions.slice(0, 2).map((label, i) => (
-                  <React.Fragment key={label}>
-                    <span className="font-bold text-[#2EA98C]">
-                      {label} 점수
-                    </span>
-                    {i === 0 && sortedMatchedConditions.length > 1
-                      ? " 및 "
-                      : ""}
-                  </React.Fragment>
-                ))}{" "}
-                높아 거주 만족도가 기대되는 추천 매물입니다!
-              </>
-            ) : (
-              <span className="text-gray-400 animate-pulse">
-                AI가 매물을 분석하고 있습니다...
-              </span>
-            )}
-          </p>
+        <div className="text-[16px] leading-[1.6] text-[#434343]">
+          {isAiLoading ? (
+            <span className="text-gray-400 animate-pulse">
+              AI가 매물을 분석하고 있습니다...
+            </span>
+          ) : aiSummary ? (
+            <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
+              components={{
+                p: ({ children }) => (
+                  <p className="mb-2 last:mb-0">{children}</p>
+                ),
+                strong: ({ children }) => (
+                  <strong className="font-bold text-[#2EA98C]">
+                    {children}
+                  </strong>
+                ),
+                ul: ({ children }) => (
+                  <ul className="list-disc list-inside mb-2">{children}</ul>
+                ),
+                li: ({ children }) => <li className="ml-1">{children}</li>,
+                div: ({ children }) => <div>{children}</div>,
+              }}
+            >
+              {aiSummary}
+            </ReactMarkdown>
+          ) : sortedMatchedConditions.length > 0 ? (
+            <p>
+              해당 지역의{" "}
+              {sortedMatchedConditions.slice(0, 2).map((label, i) => (
+                <React.Fragment key={label}>
+                  <span className="font-bold text-[#2EA98C]">{label} 점수</span>
+                  {i === 0 && sortedMatchedConditions.length > 1 ? " 및 " : ""}
+                </React.Fragment>
+              ))}{" "}
+              높아 거주 만족도가 기대되는 추천 매물입니다!
+            </p>
+          ) : (
+            <span className="text-gray-400 animate-pulse">
+              AI가 매물을 분석하고 있습니다...
+            </span>
+          )}
         </div>
       </div>
 

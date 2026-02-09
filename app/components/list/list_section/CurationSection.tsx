@@ -15,6 +15,8 @@ const CATEGORY_TOOLTIPS: Record<string, string> = {
 
 interface CurationSectionProps {
   conditions?: number[];
+  aiSummary?: string;
+  isAiLoading?: boolean;
 }
 
 const CONDITION_MAP: Record<number, string> = {
@@ -25,7 +27,11 @@ const CONDITION_MAP: Record<number, string> = {
   5: "안전",
 };
 
-const CurationSection = ({ conditions }: CurationSectionProps) => {
+const CurationSection = ({
+  conditions,
+  aiSummary,
+  isAiLoading,
+}: CurationSectionProps) => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const { setMapMode } = useMapModeStore();
 
@@ -54,7 +60,13 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
         </div>
         <div>
           <p className="text-[16px] leading-[1.6] text-[#434343]">
-            {sortedMatchedConditions.length > 0 ? (
+            {isAiLoading ? (
+              <span className="text-gray-400 animate-pulse">
+                AI가 매물을 분석하고 있습니다...
+              </span>
+            ) : aiSummary ? (
+              aiSummary
+            ) : sortedMatchedConditions.length > 0 ? (
               <>
                 해당 지역의{" "}
                 {sortedMatchedConditions.slice(0, 2).map((label, i) => (
@@ -70,11 +82,9 @@ const CurationSection = ({ conditions }: CurationSectionProps) => {
                 높아 거주 만족도가 기대되는 추천 매물입니다!
               </>
             ) : (
-              <>
-                거주 만족도가 높을 것으로 기대되는{" "}
-                <span className="font-bold text-[#2EA98C]">추천 매물</span>
-                입니다!
-              </>
+              <span className="text-gray-400 animate-pulse">
+                AI가 매물을 분석하고 있습니다...
+              </span>
             )}
           </p>
         </div>

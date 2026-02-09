@@ -1,164 +1,169 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CompareSidebar from "../components/mypage/CompareSidebar";
 import CompareMain from "../components/mypage/CompareMain";
+import { useSearchParams, useRouter } from "next/navigation";
+import {
+  useRecentView,
+  useCompareList,
+} from "@/shared/api/generated/property-controller/property-controller";
+import { getCurateQueryOptions } from "@/shared/api/generated/personalized-curation-controller/personalized-curation-controller";
+import { useQueries } from "@tanstack/react-query";
+import { DealInfoDealType } from "@/shared/api/generated/model/dealInfoDealType";
+import { formatNumberToKoreanPrice } from "@/app/utils/format";
+
+import { Suspense } from "react";
 
 // Shared interfaces for simplicity in this file
-interface House {
-  id: string;
-  price: string;
-  name: string;
-  area: string;
-  floor: string;
-  image: string;
-  location: string;
-}
+// ... House interface was here ...
+// ... MOCK_HOUSES, MOCK_CURATION, MOCK_BASIC_INFO were here ...
 
-const MOCK_HOUSES: House[] = [
-  {
-    id: "1",
-    price: "전세 6억 9,000",
-    name: "아파트 약수 하이츠 104동",
-    area: "면적 107/84m²",
-    floor: "층수 2/20층",
-    image: "/images/mockup/item.png",
-    location: "서울시 중구",
-  },
-  {
-    id: "2",
-    price: "전세 6억 9,000",
-    name: "아파트 남산타운아파트 101동",
-    area: "면적 110/85m²",
-    floor: "층수 5/15층",
-    image: "/images/mockup/item.png",
-    location: "서울시 중구",
-  },
-  {
-    id: "3",
-    price: "전세 5억 5,000",
-    name: "빌라 옥수동 빌라",
-    area: "면적 60/45m²",
-    floor: "층수 3/5층",
-    image: "/images/mockup/item.png",
-    location: "서울시 성동구",
-  },
-  {
-    id: "4",
-    price: "전세 6억 9,000",
-    name: "아파트 약수 하이츠 104동",
-    area: "면적 107/84m²",
-    floor: "층수 2/20층",
-    image: "/images/mockup/item.png",
-    location: "서울시 중구",
-  },
-  {
-    id: "5",
-    price: "전세 6억 9,000",
-    name: "아파트 남산타운아파트 101동",
-    area: "면적 110/85m²",
-    floor: "층수 5/15층",
-    image: "/images/mockup/item.png",
-    location: "서울시 중구",
-  },
-  {
-    id: "6",
-    price: "전세 5억 5,000",
-    name: "빌라 옥수동 빌라",
-    area: "면적 60/45m²",
-    floor: "층수 3/5층",
-    image: "/images/mockup/item.png",
-    location: "서울시 성동구",
-  },
-];
+const ComparePageContent = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const idsParam = searchParams.get("ids");
+  const initialIds = idsParam ? idsParam.split(",") : [];
 
-const MOCK_CURATION: any = {
-  "1": {
-    summary:
-      "조용한 주거 환경을 선호하는 딩글님께 추천하는 집이에요. 밤늦은 귀갓길도 CCTV와 밝은 가로등 덕분에 안심할 수 있어요.",
-    tags: ["안전", "소음"],
-    scores: { 소음: 96, 환경: 70, 안전: 80, 편의: 80, 접근성: 60 },
-  },
-  "2": {
-    summary:
-      "주변에 병원, 은행 등 필수 인프라가 잘 갖춰져 있어요. 바쁜 일상 속에서 라이프스타일이 한층 편리해집니다.",
-    tags: ["접근성", "편의"],
-    scores: { 소음: 60, 환경: 60, 안전: 60, 편의: 95, 접근성: 90 },
-  },
-  "3": {
-    summary:
-      "주변에 병원, 은행 등 필수 인프라가 잘 갖춰져 있어요. 바쁜 일상 속에서 라이프스타일이 한층 편리해집니다.",
-    tags: ["접근성", "편의"],
-    scores: { 소음: 60, 환경: 60, 안전: 60, 편의: 95, 접근성: 90 },
-  },
-  "4": {
-    summary:
-      "주변에 병원, 은행 등 필수 인프라가 잘 갖춰져 있어요. 바쁜 일상 속에서 라이프스타일이 한층 편리해집니다.",
-    tags: ["접근성", "편의"],
-    scores: { 소음: 60, 환경: 60, 안전: 60, 편의: 95, 접근성: 90 },
-  },
-  "5": {
-    summary:
-      "주변에 병원, 은행 등 필수 인프라가 잘 갖춰져 있어요. 바쁜 일상 속에서 라이프스타일이 한층 편리해집니다.",
-    tags: ["접근성", "편의"],
-    scores: { 소음: 60, 환경: 60, 안전: 60, 편의: 95, 접근성: 90 },
-  },
-  "6": {
-    summary:
-      "주변에 병원, 은행 등 필수 인프라가 잘 갖춰져 있어요. 바쁜 일상 속에서 라이프스타일이 한층 편리해집니다.",
-    tags: ["접근성", "편의"],
-    scores: { 소음: 60, 환경: 60, 안전: 60, 편의: 95, 접근성: 90 },
-  },
-};
+  const [selectedIds, setSelectedIds] = useState<string[]>(initialIds);
 
-const MOCK_BASIC_INFO: any = {
-  "1": {
-    건물명: "약수하이츠 104동",
-    주소: "서울시 중구 동호로 10길 30 101동",
-    매물형태: "아파트",
-    면적: "110.39m²/142.65m²",
-    층수: "11층/20층",
-    방향: "남향",
-    주차: "0 / 1.2대",
-  },
-};
+  // 2. 상단 카드용 기본 정보 (RecentView API 재사용)
+  const { data: recentViewResponse, isLoading: isRecentLoading } =
+    useRecentView({
+      propertyIds: selectedIds.map(Number),
+    });
 
-const ComparePage = () => {
-  const [selectedIds, setSelectedIds] = useState<string[]>(["1", "2"]);
+  // 3. 기술 상세 정보 및 점수 조회
+  const { data: compareResponse, isLoading: isCompareLoading } = useCompareList(
+    {
+      propertyIds: selectedIds.map(Number),
+    },
+  );
+
+  // 4. AI 큐레이션 개별 조회 (ID별로 개별 쿼리 실행)
+  const curationQueries = useQueries({
+    queries: selectedIds.map((id) => getCurateQueryOptions(Number(id))),
+  });
 
   const toggleSelection = (id: string) => {
     setSelectedIds((prev) => {
       if (prev.includes(id)) {
-        return prev.filter((item) => item !== id);
+        const next = prev.filter((item) => item !== id);
+        // URL 업데이트 (동기화)
+        const params = new URLSearchParams(searchParams);
+        if (next.length > 0) {
+          params.set("ids", next.join(","));
+        } else {
+          params.delete("ids");
+        }
+        router.replace(`/compare?${params.toString()}`);
+        return next;
       }
       if (prev.length < 3) {
-        return [...prev, id];
+        const next = [...prev, id];
+        const params = new URLSearchParams(searchParams);
+        params.set("ids", next.join(","));
+        router.replace(`/compare?${params.toString()}`);
+        return next;
       }
       return prev;
     });
   };
 
-  // Always ensure we have 3 slots, padded with null if necessary
-  const displayIds = [...selectedIds, null, null, null].slice(0, 3);
-
-  const selectedHouses = displayIds.map((id) =>
-    id ? MOCK_HOUSES.find((h) => h.id === id) : null,
-  ) as (House | null)[];
-
-  const curationData = displayIds.map((id) => (id ? MOCK_CURATION[id] : null));
-
-  const basicInfo = displayIds.map((id) => {
+  // 데이터 매핑: selectedHouses (상단 카드)
+  const selectedHouses = [0, 1, 2].map((_, index) => {
+    const id = selectedIds[index];
     if (!id) return null;
-    return (
-      MOCK_BASIC_INFO[id] ||
-      (MOCK_BASIC_INFO["1"]
-        ? {
-            ...MOCK_BASIC_INFO["1"],
-            건물명: MOCK_HOUSES.find((h) => h.id === id)?.name || "정보 없음",
-          }
-        : null)
+
+    const item = recentViewResponse?.data?.find(
+      (h) => String(h.propertyId) === id,
     );
+
+    const compareItem = compareResponse?.data?.find(
+      (h) => String(h.propertyId) === id,
+    );
+
+    if (!item) return null;
+
+    let priceStr = "";
+    const deal = item.dealInfo;
+    if (deal?.dealType === DealInfoDealType.RENT) {
+      priceStr = `월세 ${deal.deposit}/${deal.monthlyRent}`;
+    } else if (deal?.dealType === DealInfoDealType.LEASE) {
+      priceStr = `전세 ${formatNumberToKoreanPrice(deal.price || 0)}`;
+    } else if (deal?.dealType === DealInfoDealType.SALE) {
+      priceStr = `매매 ${formatNumberToKoreanPrice(deal.price || 0)}`;
+    }
+
+    return {
+      id: String(item.propertyId),
+      price: priceStr,
+      name: item.apartmentName || "정보 없음",
+      area: `면적 ${item.supplyArea || 0}/${item.exclusiveArea || 0}m²`,
+      floor: `층수 ${item.floor || 0}/${item.totalFloor || 0}층`,
+      image: item.imageUrl || "/images/mockup/item.png",
+      location: compareItem?.address || "ggdd", // CompareList에 주소가 있음
+    };
   });
+
+  // 데이터 매핑: curationData
+  const curationData = [0, 1, 2].map((_, index) => {
+    const id = selectedIds[index];
+    if (!id) return null;
+
+    const compareInfo = compareResponse?.data?.find(
+      (c) => String(c.propertyId) === id,
+    );
+    const curationInfo = curationQueries[index]?.data?.data;
+
+    return {
+      summary: curationInfo?.description || "큐레이션 분석 중입니다...",
+      tags: ["안전", "편의"] as (
+        | "소음"
+        | "안전"
+        | "접근성"
+        | "편의"
+        | "환경"
+      )[], // 백엔드에서 제공하지 않으므로 기본태그
+      scores: {
+        소음: compareInfo?.noiseScore || 0,
+        환경: compareInfo?.environmentScore || 0,
+        안전: compareInfo?.safetyScore || 0,
+        편의: compareInfo?.convenienceScore || 0,
+        접근성: compareInfo?.accessibilityScore || 0,
+      },
+    };
+  });
+
+  // 데이터 매핑: basicInfo
+  const basicInfo = [0, 1, 2].map((_, index) => {
+    const id = selectedIds[index];
+    if (!id) return null;
+
+    const recentInfo = recentViewResponse?.data?.find(
+      (h) => String(h.propertyId) === id,
+    );
+    const compareInfo = compareResponse?.data?.find(
+      (c) => String(c.propertyId) === id,
+    );
+
+    if (!recentInfo) return null;
+
+    return {
+      건물명: recentInfo.apartmentName || "",
+      주소: compareInfo?.address || "정보 없음",
+      매물형태: "아파트", // PropertyListDTO lacks this formatted
+      면적: `${recentInfo.supplyArea || 0}m²/${recentInfo.exclusiveArea || 0}m²`,
+      층수: `${recentInfo.floor || 0}층`,
+      배당층_총층수: `${recentInfo.floor || 0}층 / ${recentInfo.totalFloor || 0}층`,
+      방향: compareInfo?.orientation || "정보 없음",
+      주차: compareInfo?.parkingRatio
+        ? `세대당 ${compareInfo.parkingRatio}대`
+        : "정보 없음",
+    };
+  });
+
+  const isLoading = isRecentLoading || isCompareLoading;
 
   return (
     <div className="flex w-full h-full bg-white mt-20">
@@ -168,14 +173,34 @@ const ComparePage = () => {
         userName="딩글"
       />
       <div className="flex-1">
-        <CompareMain
-          selectedHouses={selectedHouses}
-          curationData={curationData}
-          basicInfo={basicInfo}
-          onRemove={toggleSelection}
-        />
+        {isLoading ? (
+          <div className="flex justify-center items-center h-full">
+            <div className="w-12 h-12 border-4 border-main-400 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : (
+          <CompareMain
+            selectedHouses={selectedHouses}
+            curationData={curationData}
+            basicInfo={basicInfo}
+            onRemove={toggleSelection}
+          />
+        )}
       </div>
     </div>
+  );
+};
+
+const ComparePage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-screen">
+          <div className="w-12 h-12 border-4 border-main-400 border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <ComparePageContent />
+    </Suspense>
   );
 };
 

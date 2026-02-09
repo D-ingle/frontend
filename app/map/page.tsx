@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, Suspense } from "react";
 import FilterBar from "../components/map/FilterBar";
 import List from "../components/list/List";
 import KakaoMap from "../components/map/KakaoMap";
@@ -121,7 +121,13 @@ const MapPage = () => {
           ) : (
             /* List Panel */
             <div className="absolute inset-y-0 left-0 w-auto h-full pointer-events-auto z-10">
-              <List />
+              <Suspense
+                fallback={
+                  <div className="w-100 h-full bg-white animate-pulse" />
+                }
+              >
+                <List />
+              </Suspense>
             </div>
           )}
         </div>

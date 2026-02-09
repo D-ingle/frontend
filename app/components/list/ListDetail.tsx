@@ -16,6 +16,7 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 import { useGetPropertyDetail } from "@/shared/api/generated/detail-property-controller/detail-property-controller";
+import { useCurate } from "@/shared/api/generated/personalized-curation-controller/personalized-curation-controller";
 
 import { useMapModeStore } from "@/app/store/mapModeStore";
 import { usePropertyZzim } from "@/app/hooks/usePropertyZzim";
@@ -49,6 +50,8 @@ const ListDetail = ({
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { data: apiResponse, isLoading } = useGetPropertyDetail(propertyId);
+  const { data: curationResponse, isLoading: isAiLoading } =
+    useCurate(propertyId);
   const detailData = apiResponse?.data;
 
   // 매물 정보를 불러오면 지도에 좌표 설정
@@ -190,7 +193,11 @@ const ListDetail = ({
 
             {/* Render Sections */}
             <div id="curation">
-              <CurationSection conditions={detailData?.conditions} />
+              <CurationSection
+                conditions={detailData?.conditions}
+                aiSummary={curationResponse?.data?.description}
+                isAiLoading={isAiLoading}
+              />
             </div>
             <div className="h-4 bg-[#F4F4F4]" />
 

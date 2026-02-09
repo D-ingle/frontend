@@ -67,6 +67,7 @@ const LoginPage = () => {
           description="로그인 하고 맞춤형 정보를 받아보세요!"
           isSubComponent
           showButton={false}
+          transparentBg={true}
         />
       </div>
 

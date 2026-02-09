@@ -18,6 +18,7 @@ import { DealInfoDealType } from "@/shared/api/generated/model/dealInfoDealType"
 const LikedHouses = () => {
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
   const { data: apiResponse, isLoading } = useLikeList();
 
   const toggleSelection = (id: string) => {
@@ -38,6 +39,17 @@ const LikedHouses = () => {
     }
   };
 
+  const handleToggleMode = () => {
+    setIsSelectionMode((prev) => !prev);
+    if (isSelectionMode) {
+      setSelectedIds([]); // 모드 해제 시 선택 초기화
+    }
+  };
+
+  const handlesNavigation = (id: string) => {
+    router.push(`/map?propertyId=${id}`);
+  };
+
   const houses =
     apiResponse?.data?.map((item) => {
       let priceStr = "";
@@ -56,7 +68,7 @@ const LikedHouses = () => {
         name: item.apartmentName || "",
         area: `면적 ${item.supplyArea || 0}/${item.exclusiveArea || 0}m²`,
         floor: `층수 ${item.floor || 0}/${item.totalFloor || 0}층`,
-        image: "/images/mockup/item.png", // PropertyListDTO lacks imageUrl
+        image: item.imageUrl || "/images/mockup/item.png", // PropertyListDTO lacks imageUrl
       };
     }) || [];
 
@@ -78,24 +90,45 @@ const LikedHouses = () => {
             <h3 className="text-[24px] font-bold text-black">
               내 매물 비교하기
             </h3>
-            <span className="text-[14px] text-gray-400 font-medium">
-              최대 3개 선택가능
-            </span>
-          </div>
-          <button
-            onClick={handleCompare}
-            disabled={selectedIds.length === 0}
-            className={cn(
-              "px-6 py-2 rounded-full text-[16px] font-bold transition-all",
-              selectedIds.length > 0
-                ? "bg-main-400 text-white shadow-sm hover:opacity-90"
-                : "bg-gray-100 text-gray-400 cursor-not-allowed",
+            {isSelectionMode && (
+              <span className="text-[14px] text-gray-400 font-medium">
+                최대 3개 선택가능
+              </span>
             )}
-          >
-            {selectedIds.length > 0
-              ? `${selectedIds.length}개 선택 비교하기`
-              : "비교하기"}
-          </button>
+          </div>
+          <div className="flex gap-3">
+            {isSelectionMode ? (
+              <>
+                <button
+                  onClick={handleToggleMode}
+                  className="px-6 py-2 rounded-full text-[16px] font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 transition-all"
+                >
+                  비교 취소하기
+                </button>
+                <button
+                  onClick={handleCompare}
+                  disabled={selectedIds.length === 0}
+                  className={cn(
+                    "px-6 py-2 rounded-full text-[16px] font-bold transition-all",
+                    selectedIds.length > 0
+                      ? "bg-main-400 text-white shadow-sm hover:opacity-90"
+                      : "bg-gray-100 text-gray-400 cursor-not-allowed",
+                  )}
+                >
+                  {selectedIds.length > 0
+                    ? `${selectedIds.length}개 선택 비교하기`
+                    : "비교하기"}
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={handleToggleMode}
+                className="px-6 py-2 rounded-full text-[16px] font-bold bg-main-400 text-white shadow-sm hover:opacity-90 transition-all"
+              >
+                비교할 매물 선택하기
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Grid */}
@@ -109,9 +142,10 @@ const LikedHouses = () => {
               <HouseCard
                 key={house.id}
                 {...house}
-                variant="checkbox"
-                isSelected={selectedIds.includes(house.id)}
-                onSelect={toggleSelection}
+                variant={isSelectionMode ? "checkbox" : "navigation"}
+                isSelected={isSelectionMode && selectedIds.includes(house.id)}
+                onSelect={isSelectionMode ? toggleSelection : undefined}
+                onClick={!isSelectionMode ? handlesNavigation : undefined}
               />
             ))}
           </div>

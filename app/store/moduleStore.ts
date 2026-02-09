@@ -27,6 +27,7 @@ interface ModuleState {
   toastMessage: string | null;
 
   toggleModule: (id: ModuleId) => void;
+  resetModules: (ids?: ModuleId[]) => void;
   setToastMessage: (message: string | null) => void;
   getDisplayOrder: () => ModuleId[]; // 렌더링 순서 계산 (활성 모듈 우선 + 미활성 모듈)
 }
@@ -59,6 +60,8 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
       set({ activeModules: newActiveModules });
     }
   },
+
+  resetModules: (ids = []) => set({ activeModules: ids }),
 
   setToastMessage: (message) => set({ toastMessage: message }),
 

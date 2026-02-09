@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useModuleStore } from "@/app/store/moduleStore";
+import { useMapModeStore } from "@/app/store/mapModeStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -12,8 +13,10 @@ function cn(...inputs: ClassValue[]) {
 
 const SafetyModule = () => {
   const { activeModules, toggleModule } = useModuleStore();
+  const { selectedProperty } = useMapModeStore();
   const isActive = activeModules.includes("safety");
   const [isMainRoadMode, setIsMainRoadMode] = useState(false);
+  const score = selectedProperty?.propertyScores?.safetyScore || 0;
 
   return (
     <div
@@ -55,7 +58,7 @@ const SafetyModule = () => {
               isActive ? "text-[#E05353]" : "text-[#555555]",
             )}
           >
-            82점
+            {score}점
           </span>
         </div>
 

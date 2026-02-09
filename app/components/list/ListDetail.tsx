@@ -20,6 +20,7 @@ import { useCurate } from "@/shared/api/generated/personalized-curation-controll
 
 import { useMapModeStore } from "@/app/store/mapModeStore";
 import { usePropertyZzim } from "@/app/hooks/usePropertyZzim";
+import { formatNumberToKoreanPrice } from "@/app/utils/format";
 
 const sections = [
   { id: "curation", label: "맞춤 큐레이션 정보" },
@@ -43,7 +44,8 @@ const ListDetail = ({
     null,
   );
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const { setSelectedProperty, clearSelectedProperty } = useMapModeStore();
+  const { isMapMode, setSelectedProperty, clearSelectedProperty } =
+    useMapModeStore();
   const { toggleZzim } = usePropertyZzim();
 
   const isManualScrolling = useRef(false);
@@ -58,17 +60,41 @@ const ListDetail = ({
   useEffect(() => {
     if (detailData?.propertyInfo) {
       const { latitude, longitude, apartmentName } = detailData.propertyInfo;
+      const deal = detailData.deal;
+      let priceStr = "";
+      let dealLabel = "";
+
+      if (deal) {
+        if (deal.dealType === "RENT") {
+          priceStr = `${deal.deposit}/${deal.monthlyRent}`;
+          dealLabel = "월세";
+        } else if (deal.dealType === "LEASE") {
+          priceStr = formatNumberToKoreanPrice(deal.price || 0);
+          dealLabel = "전세";
+        } else if (deal.dealType === "SALE") {
+          priceStr = formatNumberToKoreanPrice(deal.price || 0);
+          dealLabel = "매매";
+        }
+      }
+
       if (latitude && longitude) {
         setSelectedProperty({
+          id: propertyId,
           lat: latitude,
           lng: longitude,
           title: apartmentName || "매물 위치",
+          price: priceStr,
+          dealType: dealLabel,
+          propertyScores: detailData.propertyScore,
         });
       }
     }
 
     return () => {
-      clearSelectedProperty();
+      // 렌더링 사이클에 의존하지 않고 전역 스토어의 최신 상태를 직접 확인
+      if (!useMapModeStore.getState().isMapMode) {
+        clearSelectedProperty();
+      }
     };
   }, [detailData, setSelectedProperty, clearSelectedProperty]);
 

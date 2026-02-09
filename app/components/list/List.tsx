@@ -8,6 +8,7 @@ import ListDetail from "./ListDetail";
 import PriorityToggle from "../ui/PriorityToggle";
 import { useUserStore } from "@/app/store/userStore";
 import { useModuleStore, ModuleId } from "@/app/store/moduleStore";
+import { useMapModeStore } from "@/app/store/mapModeStore";
 import { useGetMainProperty } from "@/shared/api/generated/main-property-controller/main-property-controller";
 import { DealInfoDealType } from "@/shared/api/generated/model/dealInfoDealType";
 import { formatNumberToKoreanPrice } from "@/app/utils/format";
@@ -40,6 +41,7 @@ const List = () => {
   const { toggleZzim } = usePropertyZzim();
   const { addViewedId } = useRecentViewStore();
   const { selectedPropertyType } = usePropertyStore();
+  const { setPropertiesOnMap } = useMapModeStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,7 +66,7 @@ const List = () => {
     {
       select: user?.preferredConditions || [],
       propertyType: selectedPropertyType,
-      size: 10,
+      size: 30,
     },
     {
       query: {
@@ -72,6 +74,39 @@ const List = () => {
       },
     },
   );
+
+  // 현재 리스트의 매물들을 지도에 표시하기 위해 동기화
+  useEffect(() => {
+    if (apiResponse?.data?.items) {
+      const markers = apiResponse.data.items
+        .filter((item) => item.latitude && item.longitude)
+        .map((item) => {
+          let priceStr = "";
+          let dealLabel = "";
+          const deal = item.dealInfo;
+          if (deal?.dealType === DealInfoDealType.RENT) {
+            priceStr = `${deal.deposit}/${deal.monthlyRent}`;
+            dealLabel = "월세";
+          } else if (deal?.dealType === DealInfoDealType.LEASE) {
+            priceStr = formatNumberToKoreanPrice(deal.price || 0);
+            dealLabel = "전세";
+          } else if (deal?.dealType === DealInfoDealType.SALE) {
+            priceStr = formatNumberToKoreanPrice(deal.price || 0);
+            dealLabel = "매매";
+          }
+
+          return {
+            id: item.propertyId || 0,
+            lat: item.latitude!,
+            lng: item.longitude!,
+            title: item.apartmentName || "",
+            price: priceStr,
+            dealType: dealLabel,
+          };
+        });
+      setPropertiesOnMap(markers);
+    }
+  }, [apiResponse, setPropertiesOnMap]);
 
   const houses =
     apiResponse?.data?.items?.map((item, index) => {

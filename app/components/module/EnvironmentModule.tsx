@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useModuleStore } from "@/app/store/moduleStore";
+import { useMapModeStore } from "@/app/store/mapModeStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -10,7 +11,9 @@ function cn(...inputs: ClassValue[]) {
 
 const EnvironmentModule = () => {
   const { activeModules, toggleModule } = useModuleStore();
+  const { selectedProperty } = useMapModeStore();
   const isActive = activeModules.includes("environment");
+  const score = selectedProperty?.propertyScores?.environmentScore || 0;
 
   return (
     <div
@@ -52,7 +55,7 @@ const EnvironmentModule = () => {
               isActive ? "text-[#29AD29]" : "text-[#555555]",
             )}
           >
-            82점
+            {score}점
           </span>
         </div>
 

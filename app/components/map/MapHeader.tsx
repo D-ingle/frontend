@@ -8,8 +8,9 @@ interface MapHeaderProps {
   title?: string;
 }
 
-const MapHeader = ({ title = "약수하이츠아파트" }: MapHeaderProps) => {
-  const { setMapMode } = useMapModeStore();
+const MapHeader = () => {
+  const { setMapMode, selectedProperty } = useMapModeStore();
+  const title = selectedProperty?.title || "매물 위치";
 
   return (
     <div className="flex gap-3 items-center w-full px-5 pt-5 pointer-events-none">

@@ -10,5 +10,7 @@ import type { Item } from './item';
 export interface SmartPolePopulationResponseDTO {
   avgPopulation?: number;
   count?: number;
+  districtAvgPopulation?: number;
   items?: Item[];
+  overCount?: number;
 }

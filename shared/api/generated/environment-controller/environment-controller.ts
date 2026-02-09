@@ -6,14 +6,21 @@
  * OpenAPI spec version: v1.0.0
  */
 import {
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query'
 import type {
   MutationFunction,
+  QueryFunction,
+  QueryKey,
   UseMutationOptions,
-  UseMutationResult
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
 } from '@tanstack/react-query'
 import type {
+  GetEnvironmentTotalParams,
+  ResponseDTOEnvironmentTotalDTO,
   SaveWasteFacilityParams
 } from '.././model'
 import { customInstance } from '../../axios-instance';
@@ -73,4 +80,59 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
+    export const getEnvironmentTotal = (
+    params: GetEnvironmentTotalParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTOEnvironmentTotalDTO>(
+      {url: `/api/v1/environment/total`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetEnvironmentTotalQueryKey = (params: GetEnvironmentTotalParams,) => {
+    return [`/api/v1/environment/total`, ...(params ? [params]: [])] as const;
+    }
+
     
+export const getGetEnvironmentTotalQueryOptions = <TData = Awaited<ReturnType<typeof getEnvironmentTotal>>, TError = ErrorType<unknown>>(params: GetEnvironmentTotalParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnvironmentTotal>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetEnvironmentTotalQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnvironmentTotal>>> = ({ signal }) => getEnvironmentTotal(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnvironmentTotal>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetEnvironmentTotalQueryResult = NonNullable<Awaited<ReturnType<typeof getEnvironmentTotal>>>
+export type GetEnvironmentTotalQueryError = ErrorType<unknown>
+
+export const useGetEnvironmentTotal = <TData = Awaited<ReturnType<typeof getEnvironmentTotal>>, TError = ErrorType<unknown>>(
+ params: GetEnvironmentTotalParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnvironmentTotal>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetEnvironmentTotalQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+

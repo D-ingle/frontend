@@ -9,6 +9,7 @@ import type { SmartPoleNoiseResponseDTO } from './smartPoleNoiseResponseDTO';
 import type { SmartPolePopulationResponseDTO } from './smartPolePopulationResponseDTO';
 
 export interface SmartPoleResponseDTO {
+  districtId?: number;
   noise?: SmartPoleNoiseResponseDTO;
   population?: SmartPolePopulationResponseDTO;
   propertyId?: number;

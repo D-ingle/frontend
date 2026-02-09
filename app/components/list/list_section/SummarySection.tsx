@@ -305,7 +305,7 @@ const SummarySection = ({
             컬러로 표시된 키워드는 유저 님의 관심사와 일치하는 키워드에요
           </p>
           <div className="flex gap-2">
-            {priorityFactors.map((a, i) => {
+            {priorityFactors?.map((a, i) => {
               const isMatched = conditions?.some(
                 (cId) => CONDITION_MAP[cId] === a,
               );

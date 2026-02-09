@@ -1,12 +1,10 @@
-"use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ListItem from "./ListItem";
 import ListDetail from "./ListDetail";
 
-import { useEffect } from "react";
 import PriorityToggle from "../ui/PriorityToggle";
 import { useUserStore } from "@/app/store/userStore";
 import { useModuleStore, ModuleId } from "@/app/store/moduleStore";
@@ -15,6 +13,7 @@ import { GetMainPropertyPropertyType } from "@/shared/api/generated/model/getMai
 import { DealInfoDealType } from "@/shared/api/generated/model/dealInfoDealType";
 import { formatNumberToKoreanPrice } from "@/app/utils/format";
 import { usePropertyZzim } from "@/app/hooks/usePropertyZzim";
+import { useRecentViewStore } from "@/app/store/recentViewStore";
 
 const CONDITION_MAP: Record<number, string> = {
   1: "소음",
@@ -38,6 +37,7 @@ const List = () => {
   const { user } = useUserStore();
   const { activeModules, toggleModule } = useModuleStore();
   const { toggleZzim } = usePropertyZzim();
+  const { addViewedId } = useRecentViewStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,6 +45,18 @@ const List = () => {
     }, 0);
     return () => clearTimeout(timer);
   }, []);
+
+  const searchParams = useSearchParams();
+
+  // URL 파라미터로 propertyId가 넘어오면 자동으로 상세창 열기
+  useEffect(() => {
+    if (hasMounted) {
+      const propertyIdParam = searchParams.get("propertyId");
+      if (propertyIdParam) {
+        setSelectedId(Number(propertyIdParam));
+      }
+    }
+  }, [hasMounted, searchParams]);
 
   const { data: apiResponse, isLoading } = useGetMainProperty(
     {
@@ -166,7 +178,10 @@ const List = () => {
               <ListItem
                 key={property.id}
                 property={property}
-                onClick={(id) => setSelectedId(id)}
+                onClick={(id) => {
+                  setSelectedId(id);
+                  addViewedId(id);
+                }}
                 onToggleZzim={toggleZzim}
               />
             ))

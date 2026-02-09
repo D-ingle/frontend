@@ -50,7 +50,7 @@ const PriorityToggle = ({
                 )}
                 style={{ backgroundColor: p.color }}
               >
-                {index + 1}
+                {selectedPriorities.length - index}
               </span>
             )}
             <button
@@ -71,7 +71,7 @@ const PriorityToggle = ({
                       backgroundColor:
                         variant === "compact" ? p.bgColor : "white",
                     }
-                  : {}
+                  : { borderColor: "#9D9D9D", backgroundColor: "#f5f5f5" }
               }
             >
               <Image

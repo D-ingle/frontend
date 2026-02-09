@@ -24,10 +24,6 @@ import type { ErrorType, BodyType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
-/**
- * 선호 조건을 추가합니다.
- * @summary 선호 조건 등록 API
- */
 export const registerCondition = (
     conditionRegisterDTO: BodyType<ConditionRegisterDTO>,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -66,10 +62,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     export type RegisterConditionMutationBody = BodyType<ConditionRegisterDTO>
     export type RegisterConditionMutationError = ErrorType<unknown>
 
-    /**
- * @summary 선호 조건 등록 API
- */
-export const useRegisterCondition = <TError = ErrorType<unknown>,
+    export const useRegisterCondition = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerCondition>>, TError,{data: BodyType<ConditionRegisterDTO>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof registerCondition>>,

@@ -19,7 +19,7 @@ const SchoolItem = ({
   onClick,
 }: SchoolItemProps) => {
   return (
-    <div className="group cursor-pointer relative" onClick={onClick}>
+    <div className="group cursor-pointer relative h-10" onClick={onClick}>
       <div className="flex items-center justify-between">
         <div>
           <div className="flex justify-between items-start mb-2">

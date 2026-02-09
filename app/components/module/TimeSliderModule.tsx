@@ -57,7 +57,7 @@ const TimeSliderModule = () => {
             <span className="text-[13px] font-semibold text-[#7B7B7B] tracking-[-0.15px]">
               00:00
             </span>
-            <span className="text-[13px] font-semibold text-[#7B7B7B] tracking-[-0.15px] translate-x-[4px]">
+            <span className="text-[13px] font-semibold text-[#7B7B7B] tracking-[-0.15px]">
               12:00
             </span>
             <span className="text-[13px] font-semibold text-[#7B7B7B] tracking-[-0.15px]">

@@ -5,16 +5,18 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
-import type { DealInfo } from './dealInfo';
-import type { PropertyListDTOPropertyType } from './propertyListDTOPropertyType';
+import type { DealInfo } from "./dealInfo";
+import type { PropertyListDTOPropertyType } from "./propertyListDTOPropertyType";
 
 export interface PropertyListDTO {
   apartmentName?: string;
   dealInfo?: DealInfo;
   exclusiveArea?: number;
   floor?: number;
+  imageUrl?: string;
   propertyId?: number;
   propertyType?: PropertyListDTOPropertyType;
   supplyArea?: number;
   totalFloor?: number;
+  address?: string;
 }

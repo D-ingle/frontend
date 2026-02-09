@@ -6,15 +6,24 @@
  * OpenAPI spec version: v1.0.0
  */
 import {
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query'
 import type {
   MutationFunction,
+  QueryFunction,
+  QueryKey,
   UseMutationOptions,
-  UseMutationResult
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
 } from '@tanstack/react-query'
 import type {
+  GetNearbyNoiseParams,
   GetNoiseParams,
+  GetSmartPoleParams,
+  ResponseDTONearbyNoiseDTO,
+  ResponseDTOSmartPoleResponseDTO,
   SaveConstructionInfraParams
 } from '.././model'
 import { customInstance } from '../../axios-instance';
@@ -24,7 +33,57 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
-export const getFloatingPopulation = (
+export const getNoise = (
+    params: GetNoiseParams,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/noise`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+
+
+export const getGetNoiseMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getNoise>>, {params: GetNoiseParams}> = (props) => {
+          const {params} = props ?? {};
+
+          return  getNoise(params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GetNoiseMutationResult = NonNullable<Awaited<ReturnType<typeof getNoise>>>
+    
+    export type GetNoiseMutationError = ErrorType<unknown>
+
+    export const useGetNoise = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof getNoise>>,
+        TError,
+        {params: GetNoiseParams},
+        TContext
+      > => {
+
+      const mutationOptions = getGetNoiseMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    export const getFloatingPopulation = (
     
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -122,6 +181,55 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
+    export const saveEmergencyCenterInfra = (
+    
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/noise/emergency`, method: 'POST'
+    },
+      options);
+    }
+  
+
+
+export const getSaveEmergencyCenterInfraMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>, TError,void, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>, void> = () => {
+          
+
+          return  saveEmergencyCenterInfra(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveEmergencyCenterInfraMutationResult = NonNullable<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>>
+    
+    export type SaveEmergencyCenterInfraMutationError = ErrorType<unknown>
+
+    export const useSaveEmergencyCenterInfra = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveEmergencyCenterInfra>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof saveEmergencyCenterInfra>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getSaveEmergencyCenterInfraMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
     export const saveConstructionInfra = (
     params: SaveConstructionInfraParams,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -172,54 +280,115 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
-    export const getNoise = (
-    params: GetNoiseParams,
- options?: SecondParameter<typeof customInstance>,) => {
+    export const getSmartPole = (
+    params: GetSmartPoleParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
       
       
-      return customInstance<void>(
-      {url: `/api/v1/noise/`, method: 'POST',
-        params
+      return customInstance<ResponseDTOSmartPoleResponseDTO>(
+      {url: `/api/v1/noise/smartpole`, method: 'GET',
+        params, signal
     },
       options);
     }
   
 
+export const getGetSmartPoleQueryKey = (params: GetSmartPoleParams,) => {
+    return [`/api/v1/noise/smartpole`, ...(params ? [params]: [])] as const;
+    }
 
-export const getGetNoiseMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext> => {
-const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+    
+export const getGetSmartPoleQueryOptions = <TData = Awaited<ReturnType<typeof getSmartPole>>, TError = ErrorType<unknown>>(params: GetSmartPoleParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSmartPole>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSmartPoleQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSmartPole>>> = ({ signal }) => getSmartPole(params, requestOptions, signal);
 
       
 
+      
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getNoise>>, {params: GetNoiseParams}> = (props) => {
-          const {params} = props ?? {};
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSmartPole>>, TError, TData> & { queryKey: QueryKey }
+}
 
-          return  getNoise(params,requestOptions)
-        }
+export type GetSmartPoleQueryResult = NonNullable<Awaited<ReturnType<typeof getSmartPole>>>
+export type GetSmartPoleQueryError = ErrorType<unknown>
 
-        
+export const useGetSmartPole = <TData = Awaited<ReturnType<typeof getSmartPole>>, TError = ErrorType<unknown>>(
+ params: GetSmartPoleParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSmartPole>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetSmartPoleQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
 
 
-  return  { mutationFn, ...mutationOptions }}
 
-    export type GetNoiseMutationResult = NonNullable<Awaited<ReturnType<typeof getNoise>>>
-    
-    export type GetNoiseMutationError = ErrorType<unknown>
-
-    export const useGetNoise = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getNoise>>, TError,{params: GetNoiseParams}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationResult<
-        Awaited<ReturnType<typeof getNoise>>,
-        TError,
-        {params: GetNoiseParams},
-        TContext
-      > => {
-
-      const mutationOptions = getGetNoiseMutationOptions(options);
-
-      return useMutation(mutationOptions);
+export const getNearbyNoise = (
+    params: GetNearbyNoiseParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTONearbyNoiseDTO>(
+      {url: `/api/v1/noise/nearby`, method: 'GET',
+        params, signal
+    },
+      options);
     }
+  
+
+export const getGetNearbyNoiseQueryKey = (params: GetNearbyNoiseParams,) => {
+    return [`/api/v1/noise/nearby`, ...(params ? [params]: [])] as const;
+    }
+
     
+export const getGetNearbyNoiseQueryOptions = <TData = Awaited<ReturnType<typeof getNearbyNoise>>, TError = ErrorType<unknown>>(params: GetNearbyNoiseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNearbyNoise>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNearbyNoiseQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNearbyNoise>>> = ({ signal }) => getNearbyNoise(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNearbyNoise>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNearbyNoiseQueryResult = NonNullable<Awaited<ReturnType<typeof getNearbyNoise>>>
+export type GetNearbyNoiseQueryError = ErrorType<unknown>
+
+export const useGetNearbyNoise = <TData = Awaited<ReturnType<typeof getNearbyNoise>>, TError = ErrorType<unknown>>(
+ params: GetNearbyNoiseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNearbyNoise>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetNearbyNoiseQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+

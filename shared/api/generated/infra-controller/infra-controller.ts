@@ -6,14 +6,21 @@
  * OpenAPI spec version: v1.0.0
  */
 import {
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query'
 import type {
   MutationFunction,
+  QueryFunction,
+  QueryKey,
   UseMutationOptions,
-  UseMutationResult
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
 } from '@tanstack/react-query'
 import type {
+  GetConvenienceInfraParams,
+  ResponseDTONearbyInfraDTO,
   SaveCctvInfraParams,
   SaveConvenienceStoreInfraParams,
   SaveHospitalInfraParams,
@@ -226,4 +233,66 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
+    /**
+ * 편의 점수에 해당하는 시설을 출력합니다.
+ * @summary 편의 종합 점수 API
+ */
+export const getConvenienceInfra = (
+    params: GetConvenienceInfraParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTONearbyInfraDTO>(
+      {url: `/api/v1/infra/convenience`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetConvenienceInfraQueryKey = (params: GetConvenienceInfraParams,) => {
+    return [`/api/v1/infra/convenience`, ...(params ? [params]: [])] as const;
+    }
+
     
+export const getGetConvenienceInfraQueryOptions = <TData = Awaited<ReturnType<typeof getConvenienceInfra>>, TError = ErrorType<unknown>>(params: GetConvenienceInfraParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getConvenienceInfra>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetConvenienceInfraQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getConvenienceInfra>>> = ({ signal }) => getConvenienceInfra(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getConvenienceInfra>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetConvenienceInfraQueryResult = NonNullable<Awaited<ReturnType<typeof getConvenienceInfra>>>
+export type GetConvenienceInfraQueryError = ErrorType<unknown>
+
+/**
+ * @summary 편의 종합 점수 API
+ */
+export const useGetConvenienceInfra = <TData = Awaited<ReturnType<typeof getConvenienceInfra>>, TError = ErrorType<unknown>>(
+ params: GetConvenienceInfraParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getConvenienceInfra>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetConvenienceInfraQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+

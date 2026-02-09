@@ -10,6 +10,7 @@ interface CurationProps {
   buttonLink?: string;
   isSubComponent?: boolean;
   showButton?: boolean;
+  transparentBg?: boolean;
 }
 
 const Curation = ({
@@ -20,12 +21,13 @@ const Curation = ({
   buttonLink,
   isSubComponent = false,
   showButton = true,
+  transparentBg = false,
 }: CurationProps) => {
   return (
     <main
-      className={`relative flex flex-col items-center justify-center overflow-hidden bg-transparent ${isSubComponent ? "w-full h-full" : "min-h-screen bg-white"}`}
+      className={`relative flex flex-col items-center justify-center overflow-hidden ${transparentBg ? "bg-transparent" : "bg-white"} ${isSubComponent ? "w-full h-full" : "min-h-screen"}`}
     >
-      {!isSubComponent && (
+      {!isSubComponent && !transparentBg && (
         <div
           className="absolute inset-0 opacity-60"
           style={{

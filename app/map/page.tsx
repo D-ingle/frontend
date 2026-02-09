@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, Suspense } from "react";
 import FilterBar from "../components/map/FilterBar";
 import List from "../components/list/List";
 import KakaoMap from "../components/map/KakaoMap";
@@ -11,11 +11,69 @@ import ConvenienceModule from "../components/module/ConvenienceModule";
 import NoiseModule from "../components/module/NoiseModule";
 import EnvironmentModule from "../components/module/EnvironmentModule";
 import { useMapModeStore } from "../store/mapModeStore";
+import { useModuleStore, ModuleId } from "../store/moduleStore";
+import { useUserStore } from "../store/userStore";
 import FavoritePlacesModule from "../components/module/FavoritePlacesModule";
 import TimeSliderModule from "../components/module/TimeSliderModule";
+import { Toast } from "../components/ui/Toast";
 
 const MapPage = () => {
   const { isMapMode } = useMapModeStore();
+  const { user } = useUserStore();
+  const {
+    activeModules,
+    toggleModule,
+    toastMessage,
+    setToastMessage,
+    getDisplayOrder,
+  } = useModuleStore();
+
+  const initialActivatedRef = useRef(false);
+
+  // 초기 진입 시 온보딩 우선순위 활성화 로직
+  useEffect(() => {
+    if (
+      user?.preferredConditions &&
+      user.preferredConditions.length > 0 &&
+      !initialActivatedRef.current &&
+      activeModules.length === 0
+    ) {
+      const idMap: Record<number, ModuleId> = {
+        1: "noise",
+        2: "environment",
+        3: "safety",
+        4: "accessibility",
+        5: "convenience",
+      };
+
+      // 온보딩에서 선택한 우선순위들을 활성화 (최대 3개 권장이나 온보딩 데이터 전체 반영)
+      user.preferredConditions.forEach((priorityId) => {
+        const moduleId = idMap[priorityId];
+        if (moduleId && !activeModules.includes(moduleId)) {
+          toggleModule(moduleId);
+        }
+      });
+
+      initialActivatedRef.current = true;
+    }
+  }, [user, activeModules, toggleModule]);
+
+  const renderModule = (id: ModuleId) => {
+    switch (id) {
+      case "accessibility":
+        return <AccessibilityModule key={id} />;
+      case "safety":
+        return <SafetyModule key={id} />;
+      case "convenience":
+        return <ConvenienceModule key={id} />;
+      case "noise":
+        return <NoiseModule key={id} />;
+      case "environment":
+        return <EnvironmentModule key={id} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
@@ -40,13 +98,15 @@ const MapPage = () => {
           {isMapMode ? (
             <>
               {/* Modules Container (Right Side) */}
-              <div className="absolute top-4 bottom-4 right-5 pointer-events-none flex flex-col gap-2.5 overflow-y-auto no-scrollbar pb-10">
-                <AccessibilityModule />
-                <SafetyModule />
-                <ConvenienceModule />
-                <NoiseModule />
-                <EnvironmentModule />
+              <div className="absolute top-4 bottom-4 right-5 pointer-events-none flex flex-col gap-2.5 overflow-y-auto no-scrollbar h-full pb-10">
+                {getDisplayOrder().map((id) => renderModule(id))}
               </div>
+
+              {/* Toast Notification */}
+              <Toast
+                message={toastMessage}
+                onClose={() => setToastMessage(null)}
+              />
 
               {/* Favorite Places Module (Top-Left Side) */}
               <div className="absolute top-4 left-5 pointer-events-none">
@@ -61,7 +121,13 @@ const MapPage = () => {
           ) : (
             /* List Panel */
             <div className="absolute inset-y-0 left-0 w-auto h-full pointer-events-auto z-10">
-              <List />
+              <Suspense
+                fallback={
+                  <div className="w-100 h-full bg-white animate-pulse" />
+                }
+              >
+                <List />
+              </Suspense>
             </div>
           )}
         </div>

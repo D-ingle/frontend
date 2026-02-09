@@ -1,7 +1,6 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
+import { useModuleStore } from "@/app/store/moduleStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -10,7 +9,8 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const NoiseModule = () => {
-  const [isActive, setIsActive] = useState(false);
+  const { activeModules, toggleModule } = useModuleStore();
+  const isActive = activeModules.includes("noise");
 
   return (
     <div
@@ -38,8 +38,8 @@ const NoiseModule = () => {
           >
             <Image
               src="/icons/module/noise/whitenoise.svg"
-              width={16}
-              height={16}
+              width={17.529}
+              height={15.75}
               alt="Noise"
             />
           </div>
@@ -58,12 +58,12 @@ const NoiseModule = () => {
 
         {/* Toggle Switch */}
         <button
-          onClick={() => setIsActive(!isActive)}
+          onClick={() => toggleModule("noise")}
           className={cn(
             "w-[36px] h-[21px] rounded-[11px] border-[0.5px] flex items-center p-[3px] transition-all duration-200",
             isActive
               ? "bg-[#FBBA78] border-[#FBBA78] justify-end"
-              : "bg-[#F8FAFB] border-[#8298A8] justify-start",
+              : "bg-gray-200 border-gray-300 justify-start",
           )}
         >
           <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
@@ -87,12 +87,14 @@ const NoiseModule = () => {
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/safety/warning.svg"
-                    width={18}
-                    height={18}
-                    alt="Warning"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/safety/warning.svg"
+                      width={13.5}
+                      height={13.5}
+                      alt="Warning"
+                    />
+                  </div>
                   <p className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     소음이 높은 편입니다.
                   </p>
@@ -103,12 +105,14 @@ const NoiseModule = () => {
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/safety/warning.svg"
-                    width={18}
-                    height={18}
-                    alt="Warning"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/safety/warning.svg"
+                      width={13.5}
+                      height={13.5}
+                      alt="Warning"
+                    />
+                  </div>
                   <p className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     유동인구가 많은 편입니다.
                   </p>
@@ -127,12 +131,14 @@ const NoiseModule = () => {
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/noise/noise.svg"
-                    width={18}
-                    height={18}
-                    alt="Noise"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/noise/noise.svg"
+                      width={15.025}
+                      height={13.5}
+                      alt="Noise"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     현재 소음/평균
                   </span>
@@ -145,12 +151,14 @@ const NoiseModule = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Image
-                    src="/icons/module/noise/crowd.svg"
-                    width={18}
-                    height={18}
-                    alt="Crowd"
-                  />
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
+                    <Image
+                      src="/icons/module/noise/crowd.svg"
+                      width={15.75}
+                      height={13.5}
+                      alt="Crowd"
+                    />
+                  </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     현재 유동인구/평균
                   </span>
@@ -179,12 +187,14 @@ const NoiseModule = () => {
             {/* Construction Alert */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center gap-1">
-                <Image
-                  src="/icons/module/safety/warning.svg"
-                  width={18}
-                  height={18}
-                  alt="Warning"
-                />
+                <div className="w-[18px] h-[18px] flex items-center justify-center">
+                  <Image
+                    src="/icons/module/safety/warning.svg"
+                    width={13.5}
+                    height={13.5}
+                    alt="Warning"
+                  />
+                </div>
                 <p className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                   공사 소음이 발생할 수 있습니다.
                 </p>
@@ -204,33 +214,43 @@ const NoiseModule = () => {
                 name: "소방서",
                 time: "도보 4분",
                 icon: "/icons/module/noise/fire.svg",
+                width: 14.75,
+                height: 14.585,
               },
               {
                 name: "8차선 도로",
                 time: "도보 7분",
                 icon: "/icons/module/noise/road.svg",
+                width: 14.402,
+                height: 12.6,
               },
               {
                 name: "대학병원",
                 time: "도보 7분",
                 icon: "/icons/module/noise/hospital.svg",
+                width: 16.2,
+                height: 14.4,
               },
               {
                 name: "남산예장공원 조경 정비 공사",
                 time: "도보 1분",
                 icon: "/icons/module/noise/construction.svg",
                 sub: "2026.03.01 종료예정",
+                width: 15.6,
+                height: 15.63,
               },
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
-                    <Image
-                      src={item.icon}
-                      width={18}
-                      height={18}
-                      alt={item.name}
-                    />
+                    <div className="w-[18px] h-[18px] flex items-center justify-center">
+                      <Image
+                        src={item.icon}
+                        width={item.width}
+                        height={item.height}
+                        alt={item.name}
+                      />
+                    </div>
                     <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                       {item.name}
                     </span>

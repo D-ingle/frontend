@@ -24,6 +24,10 @@ import type { ErrorType, BodyType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 온보딩을 진행합니다.
+ * @summary 온보딩 API
+ */
 export const onboard = (
     onboardRequestDTO: BodyType<OnboardRequestDTO>,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -62,7 +66,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     export type OnboardMutationBody = BodyType<OnboardRequestDTO>
     export type OnboardMutationError = ErrorType<unknown>
 
-    export const useOnboard = <TError = ErrorType<unknown>,
+    /**
+ * @summary 온보딩 API
+ */
+export const useOnboard = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof onboard>>, TError,{data: BodyType<OnboardRequestDTO>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof onboard>>,

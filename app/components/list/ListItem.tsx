@@ -18,9 +18,10 @@ interface ListItemProps {
     isLiked?: boolean;
   };
   onClick: (id: number) => void;
+  onToggleZzim?: (id: number, isLiked: boolean) => void;
 }
 
-const ListItem = ({ property, onClick }: ListItemProps) => {
+const ListItem = ({ property, onClick, onToggleZzim }: ListItemProps) => {
   return (
     <div
       onClick={() => onClick(property.id)}
@@ -31,8 +32,7 @@ const ListItem = ({ property, onClick }: ListItemProps) => {
         <Image
           src={property.image}
           alt={property.name}
-          width={160}
-          height={160}
+          fill
           className="object-cover"
         />
         {/* Rank Badge */}
@@ -51,20 +51,22 @@ const ListItem = ({ property, onClick }: ListItemProps) => {
             </div>
           </div>
         )}
-        {/* Heart Icon */}
         <button
-          className={`absolute top-2 right-2 p-1.5 rounded-full ${
-            property.isLiked ? "text-[#30CEA1]" : "text-white"
-          }`}
+          className="absolute top-2 right-2 p-1.5 rounded-full transition-opacity cursor-pointer z-10"
           onClick={(e) => {
             e.stopPropagation();
-            // Handle like logic here
+            onToggleZzim?.(property.id, Boolean(property.isLiked));
           }}
         >
-          <Heart
-            className="w-5 h-5"
-            fill={property.isLiked ? "currentColor" : "rgba(0,0,0,0.2)"}
-            stroke={property.isLiked ? "currentColor" : "white"}
+          <Image
+            src={
+              property.isLiked
+                ? "/icons/feature/list/like.svg"
+                : "/icons/feature/list/nolike.svg"
+            }
+            alt="Favorite"
+            width={24}
+            height={24}
           />
         </button>
       </div>

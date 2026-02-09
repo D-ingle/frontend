@@ -169,20 +169,7 @@ export default function FilterBar() {
             />
           )}
         </div>
-        <div className="relative min-w-28">
-          <FilterButton
-            label={getResidenceTypeLabel()}
-            focus={openFilter === "주거 형태"}
-            active={selectedResidenceTypes.length > 0}
-            onClick={() => toggleFilter("주거 형태")}
-          />
-          {openFilter === "주거 형태" && (
-            <ResidenceTypeDropdown
-              selectedTypes={selectedResidenceTypes}
-              setSelectedTypes={setSelectedResidenceTypes}
-            />
-          )}
-        </div>
+
         <div className="relative min-w-20">
           <FilterButton
             label={getSpaceLabel()}
@@ -236,7 +223,7 @@ function FilterButton({
           ? "border-[#30CEA1] bg-[#E8FBF6]"
           : focus
             ? "border-[#30CEA1]"
-            : "border-[#E5E5E5] bg-[#FFFFFF] hover:border-[#30CEA1]"
+            : "border-[#E5E5E5] bg-[#FFFFFF]"
       } hover:bg-[#f5f5f5]`}
     >
       <span

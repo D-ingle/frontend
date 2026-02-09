@@ -84,7 +84,7 @@ const SchoolSection = ({
                 onClick={() => onOpenSchoolDetail?.(school.name)}
               />
               {idx !== currentSchools.length - 1 && (
-                <div className="w-full h-px bg-[#F4F4F4]" />
+                <div className="w-full h-px bg-[#F4F4F4] mt-4" />
               )}
             </div>
           ))}

@@ -26,6 +26,10 @@ import type { ErrorType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * 메인페이지를 조회합니다.
+ * @summary 메인페이지 조회 API
+ */
 export const getMainProperty = (
     params: GetMainPropertyParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -66,6 +70,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type GetMainPropertyQueryResult = NonNullable<Awaited<ReturnType<typeof getMainProperty>>>
 export type GetMainPropertyQueryError = ErrorType<unknown>
 
+/**
+ * @summary 메인페이지 조회 API
+ */
 export const useGetMainProperty = <TData = Awaited<ReturnType<typeof getMainProperty>>, TError = ErrorType<unknown>>(
  params: GetMainPropertyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMainProperty>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
@@ -82,6 +89,10 @@ export const useGetMainProperty = <TData = Awaited<ReturnType<typeof getMainProp
 
 
 
+/**
+ * 매물을 검색합니다.
+ * @summary 매물 검색 API
+ */
 export const searchProperty = (
     params: SearchPropertyParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -122,6 +133,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type SearchPropertyQueryResult = NonNullable<Awaited<ReturnType<typeof searchProperty>>>
 export type SearchPropertyQueryError = ErrorType<unknown>
 
+/**
+ * @summary 매물 검색 API
+ */
 export const useSearchProperty = <TData = Awaited<ReturnType<typeof searchProperty>>, TError = ErrorType<unknown>>(
  params: SearchPropertyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchProperty>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 

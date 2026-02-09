@@ -24,10 +24,6 @@ import type { ErrorType, BodyType } from '../../axios-instance';
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
-/**
- * 지역구를 추가합니다.
- * @summary 지역구 등록 API
- */
 export const registerDistrict = (
     districtRegisterDTO: BodyType<DistrictRegisterDTO>,
  options?: SecondParameter<typeof customInstance>,) => {
@@ -66,10 +62,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
     export type RegisterDistrictMutationBody = BodyType<DistrictRegisterDTO>
     export type RegisterDistrictMutationError = ErrorType<unknown>
 
-    /**
- * @summary 지역구 등록 API
- */
-export const useRegisterDistrict = <TError = ErrorType<unknown>,
+    export const useRegisterDistrict = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerDistrict>>, TError,{data: BodyType<DistrictRegisterDTO>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof registerDistrict>>,

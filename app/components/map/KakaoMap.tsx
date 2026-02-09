@@ -12,6 +12,16 @@ import { cn } from "@/app/lib/utils";
 import { FacilityItemInfraType } from "@/shared/api/generated/model/facilityItemInfraType";
 import { FacilityItem } from "@/shared/api/generated/model/facilityItem";
 
+export interface Item {
+  natureType?: "WALK" | "PARK";
+  distanceMeters?: number;
+  id?: number;
+  name?: string;
+  latitude?: number;
+  longitude?: number;
+  population?: number;
+}
+
 const CustomMarker = ({
   lat,
   lng,
@@ -93,6 +103,39 @@ const FacilityOverlay = ({
   );
 };
 
+const EnvironmentOverlay = ({
+  item,
+  onClose,
+}: {
+  item: Item;
+  onClose: () => void;
+}) => {
+  return (
+    <div
+      className="bg-[#F7FAF7] border border-[#29AD29] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden w-45"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="bg-[#29AD29] px-2.5 py-1.75 flex justify-between items-center">
+        <p className="font-semibold text-[14px] text-white truncate">
+          {item.name}
+        </p>
+        <button onClick={onClose} className="text-white text-[12px] ml-2">
+          ✕
+        </button>
+      </div>
+      <div className="bg-white px-2.5 py-2 flex gap-1">
+        <p className="font-bold text-[12px] text-[#06302C] leading-tight break-words">
+          {item.distanceMeters &&
+            `${(item.distanceMeters / 1000).toFixed(1)}km`}
+        </p>
+        <p className="text-[12px] text-[#06302C] leading-tight break-words">
+          거리에 있습니다.
+        </p>
+      </div>
+    </div>
+  );
+};
+
 const KakaoMap = () => {
   const {
     isMapMode,
@@ -102,6 +145,10 @@ const KakaoMap = () => {
     selectedInfra,
     setSelectedInfra,
     clearSelectedInfra,
+    environmentInfras,
+    selectedEnvironment,
+    setSelectedEnvironment,
+    clearSelectedEnvironment,
   } = useMapModeStore();
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
 
@@ -114,6 +161,11 @@ const KakaoMap = () => {
     [FacilityItemInfraType.MARKET]: "/map_marker/convenience/mart_marker.svg",
     [FacilityItemInfraType.CONVENIENCE_STORE]:
       "/map_marker/convenience/store_marker.svg",
+  };
+
+  const envIconMap: Record<string, string> = {
+    WALK: "/map_marker/environment/mountain_marker.svg",
+    PARK: "/map_marker/environment/park_marker.svg",
   };
 
   // 기본 중심값: 약수역
@@ -163,6 +215,7 @@ const KakaoMap = () => {
       onCreate={setMap}
       onClick={() => {
         clearSelectedInfra();
+        clearSelectedEnvironment();
       }}
     >
       {isMapMode ? (
@@ -206,6 +259,47 @@ const KakaoMap = () => {
                 <FacilityOverlay
                   infra={selectedInfra}
                   onClose={() => clearSelectedInfra()}
+                />
+              </CustomOverlayMap>
+            )}
+
+          {/* 환경 정보 마커 */}
+          {environmentInfras.map((item) => {
+            const iconSrc = item.natureType
+              ? envIconMap[item.natureType]
+              : null;
+            if (!iconSrc || !item.latitude || !item.longitude) return null;
+
+            return (
+              <MapMarker
+                key={`env-${item.id}`}
+                position={{ lat: item.latitude, lng: item.longitude }}
+                image={{
+                  src: iconSrc,
+                  size: { width: 44, height: 44 },
+                  options: {
+                    offset: { x: 22, y: 44 },
+                  },
+                }}
+                onClick={() => setSelectedEnvironment(item)}
+              />
+            );
+          })}
+
+          {/* 환경 정보 커스텀 오버레이 */}
+          {selectedEnvironment &&
+            selectedEnvironment.latitude &&
+            selectedEnvironment.longitude && (
+              <CustomOverlayMap
+                position={{
+                  lat: selectedEnvironment.latitude,
+                  lng: selectedEnvironment.longitude,
+                }}
+                yAnchor={1.2}
+              >
+                <EnvironmentOverlay
+                  item={selectedEnvironment}
+                  onClose={() => clearSelectedEnvironment()}
                 />
               </CustomOverlayMap>
             )}

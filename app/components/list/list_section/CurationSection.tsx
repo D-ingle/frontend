@@ -35,11 +35,47 @@ const CurationSection = ({
   isAiLoading,
 }: CurationSectionProps) => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-  const { setMapMode } = useMapModeStore();
+  const { setMapMode, selectedProperty } = useMapModeStore();
 
   const sortedMatchedConditions = (conditions || [])
     .map((cId) => CONDITION_MAP[cId])
     .filter(Boolean);
+
+  // 실제 점수 데이터 가져오기 (기본값 0)
+  const scores = {
+    안전: selectedProperty?.propertyScores?.safetyScore ?? 0,
+    환경: selectedProperty?.propertyScores?.environmentScore ?? 0,
+    접근성: selectedProperty?.propertyScores?.accessibilityScore ?? 0,
+    편의: selectedProperty?.propertyScores?.convenienceScore ?? 0,
+    소음: selectedProperty?.propertyScores?.noiseScore ?? 0,
+  };
+
+  // 레이더 차트 좌표 계산 (중심: 80, 80 / 최대 반지름: 80)
+  const getPoint = (score: number, angle: number) => {
+    const radius = 80 * (score / 100);
+    const rad = ((angle - 90) * Math.PI) / 180;
+    return {
+      x: 80 + radius * Math.cos(rad),
+      y: 80 + radius * Math.sin(rad),
+    };
+  };
+
+  // 5가지 요소의 각도 (안전, 환경, 접근성, 편의, 소음)
+  const angles = [0, 72, 144, 216, 288];
+  const radarScores = [
+    scores.안전,
+    scores.환경,
+    scores.접근성,
+    scores.편의,
+    scores.소음,
+  ];
+
+  const points = angles
+    .map((angle, i) => {
+      const p = getPoint(radarScores[i], angle);
+      return `${p.x},${p.y}`;
+    })
+    .join(" ");
 
   return (
     <section className="px-5 py-8 bg-white" id="curation">
@@ -151,14 +187,11 @@ const CurationSection = ({
                 <stop offset="100%" stopColor="#30CEA1" stopOpacity="0.1" />
               </linearGradient>
             </defs>
-            <polygon
-              points="80,13.6 130.97,63.44 101.17,109.12 51.78,118.83 22.94,61.46"
-              fill="url(#radarGradient)"
-            />
+            <polygon points={points} fill="url(#radarGradient)" />
           </svg>
 
-          {/* Labels & Scores with Tooltips (Mock values as agreed) */}
-          {/* 1. 안전 (Top - 83) */}
+          {/* Labels & Scores with Tooltips */}
+          {/* 1. 안전 */}
           <div
             className="absolute -top-13 left-1/2 -translate-x-1/2 flex flex-col items-center cursor-help group"
             onMouseEnter={() => setHoveredCategory("안전")}
@@ -182,7 +215,7 @@ const CurationSection = ({
               </svg>
             </div>
             <span className="text-[12px] font-bold text-[#F48787] bg-[#FFD9D9] px-2 py-0.5 rounded-full mt-1">
-              83
+              {scores.안전}
             </span>
             {hoveredCategory === "안전" && (
               <div className="absolute mb-2 top-5 -left-1 bg-[#E8FBF6] border border-[#30CEA1] rounded-md px-3 py-2 shadow-lg z-50 w-45">
@@ -193,7 +226,7 @@ const CurationSection = ({
             )}
           </div>
 
-          {/* 2. 환경 (Right-ish - 67) */}
+          {/* 2. 환경 */}
           <div
             className="absolute top-[15%] -right-10 flex flex-col items-center cursor-help"
             onMouseEnter={() => setHoveredCategory("환경")}
@@ -217,7 +250,7 @@ const CurationSection = ({
               </svg>
             </div>
             <span className="text-[12px] font-bold text-[#82AA82] bg-[#DAF0DA] px-2 py-0.5 rounded-full mt-1">
-              67
+              {scores.환경}
             </span>
             {hoveredCategory === "환경" && (
               <div className="absolute top-5 mb-2 -right-1 bg-[#E8FBF6] border border-[#30CEA1] rounded-md px-3 py-2 shadow-lg z-20 w-45">
@@ -228,7 +261,7 @@ const CurationSection = ({
             )}
           </div>
 
-          {/* 3. 접근성 (Bottom-Right - 45) */}
+          {/* 3. 접근성 */}
           <div
             className="absolute -bottom-8 -right-3 flex flex-col items-center cursor-help"
             onMouseEnter={() => setHoveredCategory("접근성")}
@@ -252,7 +285,7 @@ const CurationSection = ({
               </svg>
             </div>
             <span className="text-[12px] font-bold text-[#7CB7CD] bg-[#D6EFF8] px-2 py-0.5 rounded-full mt-1">
-              45
+              {scores.접근성}
             </span>
             {hoveredCategory === "접근성" && (
               <div className="absolute top-5 mb-2 -right-1 bg-[#E8FBF6] border border-[#30CEA1] rounded-md px-3 py-2 shadow-lg z-20 w-45">
@@ -263,7 +296,7 @@ const CurationSection = ({
             )}
           </div>
 
-          {/* 4. 편의 (Bottom-Left - 60) */}
+          {/* 4. 편의 */}
           <div
             className="absolute -bottom-8 -left-1 flex flex-col items-center cursor-help"
             onMouseEnter={() => setHoveredCategory("편의")}
@@ -287,7 +320,7 @@ const CurationSection = ({
               </svg>
             </div>
             <span className="text-[12px] font-bold text-[#AB9FD5] bg-[#E5E0F7] px-2 py-0.5 rounded-full mt-1">
-              60
+              {scores.편의}
             </span>
             {hoveredCategory === "편의" && (
               <div className="absolute top-5 mb-2 -left-1 bg-[#E8FBF6] border border-[#30CEA1] rounded-md px-3 py-2 shadow-lg z-20 w-45">
@@ -298,7 +331,7 @@ const CurationSection = ({
             )}
           </div>
 
-          {/* 5. 소음 (Left-ish - 10) */}
+          {/* 5. 소음 */}
           <div
             className="absolute top-[15%] -left-10 flex flex-col items-center cursor-help"
             onMouseEnter={() => setHoveredCategory("소음")}
@@ -322,7 +355,7 @@ const CurationSection = ({
               </svg>
             </div>
             <span className="text-[12px] font-bold text-[#FBBA78] bg-[#FFEFD4] px-2 py-0.5 rounded-full mt-1">
-              10
+              {scores.소음}
             </span>
             {hoveredCategory === "소음" && (
               <div className="absolute top-5 mb-2 -left-1 bg-[#E8FBF6] border border-[#30CEA1] rounded-md px-3 py-2 shadow-lg z-20 w-45">

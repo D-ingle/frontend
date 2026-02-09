@@ -2,6 +2,8 @@ import React from "react";
 import Image from "next/image";
 import { useModuleStore } from "@/app/store/moduleStore";
 import { useMapModeStore } from "@/app/store/mapModeStore";
+import { useGetEnvironmentTotal } from "@/shared/api/generated/environment-controller/environment-controller";
+import { useEffect } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -11,9 +13,65 @@ function cn(...inputs: ClassValue[]) {
 
 const EnvironmentModule = () => {
   const { activeModules, toggleModule } = useModuleStore();
-  const { selectedProperty } = useMapModeStore();
+  const {
+    selectedProperty,
+    setEnvironmentInfras,
+    clearEnvironmentInfras,
+    clearSelectedEnvironment,
+    environmentInfras,
+  } = useMapModeStore();
   const isActive = activeModules.includes("environment");
-  const score = selectedProperty?.propertyScores?.environmentScore || 0;
+
+  const { data: envData } = useGetEnvironmentTotal(
+    {
+      propertyId: selectedProperty?.id as number,
+      distance: 3000,
+    },
+    {
+      query: {
+        enabled: isActive && !!selectedProperty?.id,
+      },
+    },
+  );
+
+  useEffect(() => {
+    if (isActive && envData?.data?.items) {
+      setEnvironmentInfras(envData.data.items);
+    } else if (!isActive) {
+      clearEnvironmentInfras();
+      clearSelectedEnvironment();
+    }
+  }, [
+    isActive,
+    envData,
+    setEnvironmentInfras,
+    clearEnvironmentInfras,
+    clearSelectedEnvironment,
+  ]);
+
+  const score =
+    envData?.data?.environmentScore ||
+    selectedProperty?.propertyScores?.environmentScore ||
+    0;
+  const pmData = envData?.data?.particulateMatter;
+
+  // 도보 시간 계산 (표준: 80m/min)
+  const calculateWalkTime = (meters?: number) => {
+    if (!meters) return "-";
+    const minutes = Math.ceil(meters / 80);
+    return `도보 ${minutes}분`;
+  };
+
+  const nearestPark = environmentInfras
+    .filter((item) => item.natureType === "PARK")
+    .sort((a, b) => (a.distanceMeters || 0) - (b.distanceMeters || 0))[0];
+
+  const nearestTrail = environmentInfras
+    .filter((item) => item.natureType === "WALK")
+    .sort((a, b) => (a.distanceMeters || 0) - (b.distanceMeters || 0))[0];
+
+  const parkTime = calculateWalkTime(nearestPark?.distanceMeters);
+  const trailTime = calculateWalkTime(nearestTrail?.distanceMeters);
 
   return (
     <div
@@ -126,7 +184,7 @@ const EnvironmentModule = () => {
                   </span>
                 </div>
                 <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                  도보 3분
+                  {parkTime}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -144,7 +202,7 @@ const EnvironmentModule = () => {
                   </span>
                 </div>
                 <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                  도보 10분
+                  {trailTime}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -180,21 +238,21 @@ const EnvironmentModule = () => {
             {[
               {
                 name: "폐기물 수집",
-                time: "도보 8분",
+                time: "-",
                 icon: "/icons/module/environment/factory.svg",
                 width: 15,
                 height: 15,
               },
               {
                 name: "하수처리장",
-                time: "도보 10분",
+                time: "-",
                 icon: "/icons/module/environment/factory.svg",
                 width: 15,
                 height: 15,
               },
               {
                 name: "장례시설",
-                time: "도보 15분",
+                time: "-",
                 icon: "/icons/module/environment/funeral.svg",
                 width: 14.571,
                 height: 14.571,
@@ -248,7 +306,7 @@ const EnvironmentModule = () => {
                 </span>
                 <div className="flex items-baseline gap-0.5">
                   <span className="font-semibold text-[24px] text-[#29AD29]">
-                    15
+                    {pmData?.pm10 ?? 15}
                   </span>
                   <span className="text-[14px] font-medium text-[#7B7B7B]">
                     ㎍/㎥
@@ -276,7 +334,7 @@ const EnvironmentModule = () => {
                 </span>
                 <div className="flex items-baseline gap-0.5">
                   <span className="font-semibold text-[24px] text-[#29AD29]">
-                    21
+                    {pmData?.pm25 ?? 21}
                   </span>
                   <span className="text-[14px] font-medium text-[#7B7B7B]">
                     ㎍/㎥

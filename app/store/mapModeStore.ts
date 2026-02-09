@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { PropertyScore } from "@/shared/api/generated/model/propertyScore";
 import { FacilityItem } from "@/shared/api/generated/model/facilityItem";
+import { Item } from "@/shared/api/generated/model/item";
 
 interface SelectedProperty {
   id: number;
@@ -29,6 +30,12 @@ interface MapModeState {
   selectedInfra: FacilityItem | null;
   setSelectedInfra: (infra: FacilityItem | null) => void;
   clearSelectedInfra: () => void;
+  environmentInfras: Item[];
+  setEnvironmentInfras: (infras: Item[]) => void;
+  clearEnvironmentInfras: () => void;
+  selectedEnvironment: Item | null;
+  setSelectedEnvironment: (item: Item | null) => void;
+  clearSelectedEnvironment: () => void;
 }
 
 export const useMapModeStore = create<MapModeState>((set) => ({
@@ -50,4 +57,11 @@ export const useMapModeStore = create<MapModeState>((set) => ({
   setSelectedInfra: (infra: FacilityItem | null) =>
     set({ selectedInfra: infra }),
   clearSelectedInfra: () => set({ selectedInfra: null }),
+  environmentInfras: [],
+  setEnvironmentInfras: (infras: Item[]) => set({ environmentInfras: infras }),
+  clearEnvironmentInfras: () => set({ environmentInfras: [] }),
+  selectedEnvironment: null,
+  setSelectedEnvironment: (item: Item | null) =>
+    set({ selectedEnvironment: item }),
+  clearSelectedEnvironment: () => set({ selectedEnvironment: null }),
 }));

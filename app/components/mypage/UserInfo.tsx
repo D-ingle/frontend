@@ -1,11 +1,71 @@
 "use client";
 
 import React from "react";
-import { useUserStore } from "@/app/store/userStore";
 import Image from "next/image";
+import Script from "next/script";
+import { useUserStore } from "@/app/store/userStore";
+import {
+  useGetDestination,
+  useSaveDestination,
+} from "@/shared/api/generated/user-controller/user-controller";
+import { useQueryClient } from "@tanstack/react-query";
+
+declare global {
+  interface Window {
+    daum: any;
+  }
+}
 
 const UserInfo = () => {
   const { user } = useUserStore();
+  const queryClient = useQueryClient();
+
+  const { data: destinationResponse, isLoading: isDestLoading } =
+    useGetDestination();
+  const { mutate: saveDest } = useSaveDestination({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["/api/v1/user/destination"],
+        });
+      },
+    },
+  });
+
+  const handleOpenPostcode = () => {
+    if (typeof window !== "undefined" && window.daum) {
+      new window.daum.Postcode({
+        oncomplete: (data: any) => {
+          let fullAddress = data.address;
+          let extraAddress = "";
+
+          if (data.addressType === "R") {
+            if (data.bname !== "") {
+              extraAddress += data.bname;
+            }
+            if (data.buildingName !== "") {
+              extraAddress +=
+                extraAddress !== ""
+                  ? `, ${data.buildingName}`
+                  : data.buildingName;
+            }
+            fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+          }
+
+          const spotName = data.buildingName || "나의 스팟";
+
+          saveDest({
+            data: {
+              destinationAddress: fullAddress,
+              destinationName: spotName,
+            },
+          });
+        },
+      }).open();
+    }
+  };
+
+  const currentSpot = destinationResponse?.data;
 
   // 목데이터 (피그마 기반)
   const priorities = [
@@ -28,8 +88,6 @@ const UserInfo = () => {
       color: "bg-[#E5E0F7]",
     },
   ];
-
-  const preferences = ["오피스텔", "강남구", "관악구", "송파구"];
 
   return (
     <div className="flex-1 flex flex-col gap-17.5 text-sans">
@@ -161,27 +219,47 @@ const UserInfo = () => {
           <div className="flex-1 bg-white rounded-xl p-7.5 border border-border-1 flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <h4 className="text-[18px] font-bold text-gray-800">주요 스팟</h4>
-              <button className="text-[14px] text-gray-400 hover:text-gray-500">
+              <button
+                onClick={handleOpenPostcode}
+                className="text-[14px] text-gray-400 hover:text-gray-500"
+              >
                 변경하기 ›
               </button>
             </div>
-            <div className="flex flex-col gap-1 mt-2">
-              <div className="flex items-center gap-1.5 text-gray-800 font-bold text-[16px]">
-                <Image
-                  src="/icons/feature/list_detail/school/mappin.svg"
-                  width={15}
-                  height={15}
-                  alt=""
-                />
-                <p className="text-[22px]">신한 익스페이스</p>
+            {isDestLoading ? (
+              <div className="flex-1 flex items-center justify-center">
+                <div className="w-5 h-5 border-2 border-main-400 border-t-transparent rounded-full animate-spin" />
               </div>
-              <p className="text-[16px] text-gray-400 font-medium">
-                서울특별시 중구 명동 10길 52
-              </p>
-            </div>
+            ) : currentSpot?.destinationAddress ? (
+              <div className="flex flex-col gap-1 mt-2">
+                <div className="flex items-center gap-1.5 text-gray-800 font-bold text-[16px]">
+                  <Image
+                    src="/icons/feature/list_detail/school/mappin.svg"
+                    width={15}
+                    height={15}
+                    alt=""
+                  />
+                  <p className="text-[22px]">
+                    {currentSpot.destinationName || "나의 스팟"}
+                  </p>
+                </div>
+                <p className="text-[16px] text-gray-400 font-medium">
+                  {currentSpot.destinationAddress}
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-2 mt-4 text-gray-400">
+                <p className="text-[14px]">등록된 주요 스팟이 없습니다.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      <Script
+        src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+        strategy="lazyOnload"
+      />
 
       {/* Recently Viewed Houses */}
       <div className="flex flex-col gap-10">

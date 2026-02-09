@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Script from "next/script";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import {
+  useGetDestination,
+  useSaveDestination,
+} from "@/shared/api/generated/user-controller/user-controller";
+import { useQueryClient } from "@tanstack/react-query";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -17,18 +22,19 @@ declare global {
 }
 
 const FavoritePlacesModule = () => {
-  const [address, setAddress] = useState<string | null>(null);
-  const [placeName, setPlaceName] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  // Load address from localStorage on mount
-  useEffect(() => {
-    const savedAddress = localStorage.getItem("favorite-address");
-    const savedPlaceName = localStorage.getItem("favorite-place-name");
-    if (savedAddress) {
-      setAddress(savedAddress);
-      setPlaceName(savedPlaceName || "등록된 장소");
-    }
-  }, []);
+  const { data: destinationResponse, isLoading: isDestLoading } =
+    useGetDestination();
+  const { mutate: saveDest } = useSaveDestination({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["/api/v1/user/destination"],
+        });
+      },
+    },
+  });
 
   const handleOpenPostcode = () => {
     if (typeof window !== "undefined" && window.daum) {
@@ -50,19 +56,21 @@ const FavoritePlacesModule = () => {
             fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
           }
 
-          setAddress(fullAddress);
-          const defaultName = data.buildingName || "우리 집";
-          setPlaceName(defaultName);
+          const spotName = data.buildingName || "나의 스팟";
 
-          // Save to localStorage
-          localStorage.setItem("favorite-address", fullAddress);
-          localStorage.setItem("favorite-place-name", defaultName);
+          saveDest({
+            data: {
+              destinationAddress: fullAddress,
+              destinationName: spotName,
+            },
+          });
         },
       }).open();
     }
   };
 
-  const hasAddress = !!address;
+  const currentSpot = destinationResponse?.data;
+  const hasAddress = !!currentSpot?.destinationAddress;
 
   return (
     <>
@@ -84,25 +92,34 @@ const FavoritePlacesModule = () => {
             <div className="flex items-center justify-between w-full">
               <div className="flex gap-1.5 items-center flex-1 min-w-0 h-10">
                 <div className="shrink-0 w-5 h-5 flex items-center justify-center mr-1">
-                  <Image
-                    src={
-                      hasAddress
-                        ? "/icons/common/mappin.svg"
-                        : "/icons/common/graymappin.svg"
-                    }
-                    width={15}
-                    height={15}
-                    alt="Marker"
-                  />
+                  {isDestLoading ? (
+                    <div className="w-4 h-4 border-2 border-main-400 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Image
+                      src={
+                        hasAddress
+                          ? "/icons/common/mappin.svg"
+                          : "/icons/common/graymappin.svg"
+                      }
+                      width={15}
+                      height={15}
+                      alt="Marker"
+                    />
+                  )}
                 </div>
 
-                {hasAddress ? (
+                {isDestLoading ? (
+                  <div className="flex flex-col gap-2 flex-1">
+                    <div className="h-3 w-20 bg-gray-200 animate-pulse rounded" />
+                    <div className="h-3 w-32 bg-gray-200 animate-pulse rounded" />
+                  </div>
+                ) : hasAddress ? (
                   <div className="flex flex-col gap-1.5 flex-1 min-w-0">
                     <p className="font-semibold text-[14px] text-black tracking-[-0.15px] truncate">
-                      {placeName}
+                      {currentSpot.destinationName || "나의 스팟"}
                     </p>
                     <p className="font-medium text-[13px] text-[#555555] truncate w-full">
-                      {address}
+                      {currentSpot.destinationAddress}
                     </p>
                   </div>
                 ) : (
@@ -115,6 +132,7 @@ const FavoritePlacesModule = () => {
               <button
                 onClick={handleOpenPostcode}
                 className="bg-[#063152] flex h-[25px] items-center justify-center px-2 py-1 rounded-[4px] shrink-0 hover:bg-[#0a416a] transition-colors"
+                disabled={isDestLoading}
               >
                 <span className="font-semibold text-[12px] text-white tracking-[-0.15px]">
                   {hasAddress ? "변경하기" : "등록하기"}

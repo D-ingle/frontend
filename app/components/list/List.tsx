@@ -9,7 +9,6 @@ import PriorityToggle from "../ui/PriorityToggle";
 import { useUserStore } from "@/app/store/userStore";
 import { useModuleStore, ModuleId } from "@/app/store/moduleStore";
 import { useGetMainProperty } from "@/shared/api/generated/main-property-controller/main-property-controller";
-import { GetMainPropertyPropertyType } from "@/shared/api/generated/model/getMainPropertyPropertyType";
 import { DealInfoDealType } from "@/shared/api/generated/model/dealInfoDealType";
 import { formatNumberToKoreanPrice } from "@/app/utils/format";
 import { usePropertyZzim } from "@/app/hooks/usePropertyZzim";
@@ -30,6 +29,8 @@ const PROPERTY_TYPE_MAP: Record<string, string> = {
   OFFICETEL: "오피스텔",
 };
 
+import { usePropertyStore } from "@/app/store/propertyStore";
+
 const List = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
@@ -38,6 +39,7 @@ const List = () => {
   const { activeModules, toggleModule } = useModuleStore();
   const { toggleZzim } = usePropertyZzim();
   const { addViewedId } = useRecentViewStore();
+  const { selectedPropertyType } = usePropertyStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -61,9 +63,7 @@ const List = () => {
   const { data: apiResponse, isLoading } = useGetMainProperty(
     {
       select: user?.preferredConditions || [],
-      propertyType:
-        (user?.preferredType as GetMainPropertyPropertyType) ||
-        GetMainPropertyPropertyType.APT,
+      propertyType: selectedPropertyType,
       size: 10,
     },
     {

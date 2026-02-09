@@ -7,17 +7,30 @@ import { cn } from "@/app/lib/utils";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/app/store/userStore";
 import { logoutAction } from "@/app/login/actions";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+
+import { usePropertyStore } from "@/app/store/propertyStore";
+import { GetMainPropertyPropertyType } from "@/shared/api/generated/model/getMainPropertyPropertyType";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, clearUser } = useUserStore();
+  const { selectedPropertyType, setPropertyType, syncWithUserPreference } =
+    usePropertyStore();
   const [mounted, setMounted] = useState(false);
 
-  // hydration 에러 방지 (client-side의 localStorage 데이터가 서버 렌더링 결과와 다를 수 있음)
+  // hydration 에러 방지
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // 초기 유저 선호도 동기화
+  useEffect(() => {
+    if (mounted) {
+      syncWithUserPreference();
+    }
+  }, [mounted, syncWithUserPreference]);
 
   const handleLogout = async () => {
     const res = await logoutAction();
@@ -29,11 +42,32 @@ export default function Navbar() {
   };
 
   const menuItems = [
-    { label: "아파트", href: "/map" },
-    { label: "원・투룸", href: "/map" },
-    { label: "주택・빌라", href: "/map" },
-    { label: "오피스텔", href: "/map" },
+    {
+      label: "아파트",
+      href: "/map",
+      type: GetMainPropertyPropertyType.APT,
+    },
+    {
+      label: "원・투룸",
+      href: "/map",
+      type: GetMainPropertyPropertyType.ONE_ROOM,
+    },
+    {
+      label: "주택・빌라",
+      href: "/map",
+      type: GetMainPropertyPropertyType.VILLA,
+    },
+    {
+      label: "오피스텔",
+      href: "/map",
+      type: GetMainPropertyPropertyType.OFFICETEL,
+    },
   ];
+
+  const handleMenuClick = (type: GetMainPropertyPropertyType) => {
+    setPropertyType(type);
+    router.push("/map");
+  };
 
   return (
     <nav className="flex bg-white w-full items-center justify-between box-border h-20 px-10 fixed top-0 z-100 border-b border-[#c4c4c4]/30">
@@ -52,18 +86,20 @@ export default function Navbar() {
         {/* Central Menu */}
         <div className="flex items-center gap-12">
           {menuItems.map((item) => (
-            <Link
+            <button
               key={item.label}
-              href={item.href}
+              onClick={() => handleMenuClick(item.type)}
               className={cn(
                 "text-[20px] font-semibold transition-colors duration-200",
-                item.label === "아파트"
+                mounted &&
+                  pathname === "/map" &&
+                  selectedPropertyType === item.type
                   ? "text-[#30CEA1] font-bold"
                   : "text-black hover:text-[#30CEA1]",
               )}
             >
               {item.label}
-            </Link>
+            </button>
           ))}
         </div>
       </div>

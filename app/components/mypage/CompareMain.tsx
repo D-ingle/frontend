@@ -5,6 +5,8 @@ import CompareCard from "./CompareCard";
 import CurationComparison from "./CurationComparison";
 import BasicInfoComparison from "./BasicInfoComparison";
 import Image from "next/image";
+import CompareModal from "../compare/CompareModal";
+import { cn } from "@/app/lib/utils";
 
 interface House {
   id: string;
@@ -44,6 +46,8 @@ interface CompareMainProps {
   curationData: (CurationData | null)[];
   basicInfo: (BasicInfo | null)[];
   onRemove: (id: string) => void;
+  isUnlocked: boolean;
+  onUnlock: () => void;
 }
 
 const CompareMain = ({
@@ -51,6 +55,8 @@ const CompareMain = ({
   curationData,
   basicInfo,
   onRemove,
+  isUnlocked,
+  onUnlock,
 }: CompareMainProps) => {
   const activeHouses = selectedHouses.filter((h): h is House => h !== null);
   const titles = activeHouses.map((h) => h.name.replace("아파트 ", ""));
@@ -136,28 +142,41 @@ const CompareMain = ({
         </section>
 
         {/* Section Container with Blue Background for Curation & Basic Info */}
-        <div className="bg-[#f8fafb] flex flex-col gap-[60px] px-[60px] py-[60px] rounded-t-[12px]">
-          {/* Section 2: Curation */}
-          <section className="flex flex-col gap-[28px]">
-            <div className="flex flex-col gap-[28px]">
-              <h2 className="font-['Pretendard_Variable:ExtraBold',sans-serif] font-extrabold opacity-90 text-[#191919] text-[28px]">
-                큐레이션 비교 결과
-              </h2>
-              <div className="h-px bg-[#D9D9D9] w-full" />
-            </div>
-            <CurationComparison data={curationData} />
-          </section>
+        <div className="relative">
+          <div
+            className={cn(
+              "bg-[#f8fafb] flex flex-col gap-[60px] px-[60px] py-[60px] rounded-t-[12px] transition-all duration-500",
+              !isUnlocked && "blur-[16px] pointer-events-none scale-[0.98]",
+            )}
+          >
+            {/* Section 2: Curation */}
+            <section className="flex flex-col gap-[28px]">
+              <div className="flex flex-col gap-[28px]">
+                <h2 className="font-['Pretendard_Variable:ExtraBold',sans-serif] font-extrabold opacity-90 text-[#191919] text-[28px]">
+                  큐레이션 비교 결과
+                </h2>
+                <div className="h-px bg-[#D9D9D9] w-full" />
+              </div>
+              <CurationComparison data={curationData} />
+            </section>
 
-          {/* Section 3: Basic Info */}
-          <section className="flex flex-col gap-[28px] mb-[60px]">
-            <div className="flex flex-col gap-[28px]">
-              <h2 className="font-['Pretendard_Variable:ExtraBold',sans-serif] font-extrabold opacity-90 text-[#191919] text-[28px]">
-                기본 정보 비교
-              </h2>
-              <div className="h-px bg-[#D9D9D9] w-full" />
+            {/* Section 3: Basic Info */}
+            <section className="flex flex-col gap-[28px] mb-[60px]">
+              <div className="flex flex-col gap-[28px]">
+                <h2 className="font-['Pretendard_Variable:ExtraBold',sans-serif] font-extrabold opacity-90 text-[#191919] text-[28px]">
+                  기본 정보 비교
+                </h2>
+                <div className="h-px bg-[#D9D9D9] w-full" />
+              </div>
+              <BasicInfoComparison data={basicInfo} />
+            </section>
+          </div>
+
+          {!isUnlocked && (
+            <div className="absolute inset-0 z-50 flex items-start justify-center pt-[100px] bg-white/10 backdrop-blur-[2px]">
+              <CompareModal onUnlock={onUnlock} />
             </div>
-            <BasicInfoComparison data={basicInfo} />
-          </section>
+          )}
         </div>
       </div>
     </div>

@@ -16,12 +16,18 @@ import { useUserStore } from "../store/userStore";
 import FavoritePlacesModule from "../components/module/FavoritePlacesModule";
 import TimeSliderModule from "../components/module/TimeSliderModule";
 import { Toast } from "../components/ui/Toast";
+import { motion, AnimatePresence } from "framer-motion";
 
 const MapPage = () => {
   const { isMapMode } = useMapModeStore();
   const { user } = useUserStore();
-  const { resetModules, toastMessage, setToastMessage, getDisplayOrder } =
-    useModuleStore();
+  const {
+    resetModules,
+    activeModules,
+    toastMessage,
+    setToastMessage,
+    getDisplayOrder,
+  } = useModuleStore();
 
   const initialActivatedRef = useRef(false);
   const listInitialActivatedRef = useRef(false);
@@ -130,7 +136,20 @@ const MapPage = () => {
 
               {/* Time Slider Module (Bottom-Center) */}
               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 pointer-events-none">
-                <TimeSliderModule />
+                <AnimatePresence>
+                  {(activeModules.includes("noise") ||
+                    activeModules.includes("accessibility")) && (
+                    <motion.div
+                      initial={{ y: 50, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 50, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="pointer-events-auto"
+                    >
+                      <TimeSliderModule />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </>
           ) : (

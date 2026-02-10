@@ -36,6 +36,7 @@ const ComparePageContent = () => {
   const initialIds = idsParam ? idsParam.split(",") : [];
 
   const [selectedIds, setSelectedIds] = useState<string[]>(initialIds);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   // 2. 상단 카드용 기본 정보 (RecentView API 재사용)
   const { data: recentViewResponse, isLoading: isRecentLoading } =
@@ -200,7 +201,7 @@ const ComparePageContent = () => {
         onToggle={toggleSelection}
         userName="딩글"
       />
-      <div className="flex-1">
+      <div className="flex-1 relative overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
             <div className="w-12 h-12 border-4 border-main-400 border-t-transparent rounded-full animate-spin" />
@@ -211,6 +212,8 @@ const ComparePageContent = () => {
             curationData={curationData}
             basicInfo={basicInfo}
             onRemove={toggleSelection}
+            isUnlocked={isUnlocked}
+            onUnlock={() => setIsUnlocked(true)}
           />
         )}
       </div>

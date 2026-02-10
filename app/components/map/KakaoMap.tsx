@@ -30,17 +30,27 @@ const CustomMarker = ({
   dealType,
   price,
   isSelected,
+  zoomLevel,
 }: {
   lat: number;
   lng: number;
   dealType?: string;
   price?: string;
   isSelected: boolean;
+  zoomLevel: number;
 }) => {
-  const size = isSelected ? 80 : 70;
+  const getScaledSize = (size: number, level: number) => {
+    if (level <= 2) return size * 1.5;
+    if (level === 3) return size * 1.2;
+    if (level === 4) return size * 1.0;
+    return size * 0.8;
+  };
+
+  const baseSize = isSelected ? 80 : 70;
+  const size = getScaledSize(baseSize, zoomLevel) + 5;
   const iconSrc = isSelected
-    ? "/map_marker/clicked_marker.svg"
-    : "/map_marker/normal_marker.svg";
+    ? "/map_marker/normal_marker.svg"
+    : "/map_marker/clicked_marker.svg";
 
   return (
     <CustomOverlayMap position={{ lat, lng }}>
@@ -117,6 +127,7 @@ const KakaoMap = () => {
     clearSelectedAccessibility,
   } = useMapModeStore();
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(selectedProperty ? 2 : 3);
 
   // 편의 시설 마커 아이콘 매핑
   const infraIconMap: Record<string, string> = {
@@ -143,8 +154,15 @@ const KakaoMap = () => {
     CONSTRUCTION: "/map_marker/noise/construction_marker.svg",
   };
 
-  // 기본 중심값: 약수역
-  const defaultCenter = { lat: 37.5545, lng: 127.0112 };
+  const getScaledSize = (size: number, level: number) => {
+    if (level <= 2) return size * 1.2 + 5;
+    if (level === 3) return size + 5;
+    if (level === 4) return size * 0.8 + 5;
+    return size * 0.6 + 5;
+  };
+
+  // 기본 중심값: 구일역
+  const defaultCenter = { lat: 37.4971, lng: 126.8715 };
 
   // 선택된 매물이 있으면 해당 좌표를, 없으면 기본 좌표를 사용
   const mapCenter = selectedProperty
@@ -188,6 +206,7 @@ const KakaoMap = () => {
       style={{ width: "100%", height: "100%" }}
       level={selectedProperty ? 2 : 3}
       onCreate={setMap}
+      onZoomChanged={(map) => setZoomLevel(map.getLevel())}
       onClick={() => {
         clearSelectedInfra();
         clearSelectedEnvironment();
@@ -212,9 +231,15 @@ const KakaoMap = () => {
                   position={{ lat: infra.latitude, lng: infra.longitude }}
                   image={{
                     src: iconSrc,
-                    size: { width: 44, height: 44 }, // 적절한 마커 크기 설정
+                    size: {
+                      width: getScaledSize(44, zoomLevel),
+                      height: getScaledSize(44, zoomLevel),
+                    },
                     options: {
-                      offset: { x: 22, y: 44 }, // 하단 중앙 기준
+                      offset: {
+                        x: getScaledSize(22, zoomLevel),
+                        y: getScaledSize(44, zoomLevel),
+                      },
                     },
                   }}
                   title={infra.name}
@@ -255,9 +280,15 @@ const KakaoMap = () => {
                 position={{ lat: item.latitude, lng: item.longitude }}
                 image={{
                   src: iconSrc,
-                  size: { width: 44, height: 44 },
+                  size: {
+                    width: getScaledSize(44, zoomLevel),
+                    height: getScaledSize(44, zoomLevel),
+                  },
                   options: {
-                    offset: { x: 22, y: 44 },
+                    offset: {
+                      x: getScaledSize(22, zoomLevel),
+                      y: getScaledSize(44, zoomLevel),
+                    },
                   },
                 }}
                 onClick={() => setSelectedEnvironment(item)}
@@ -292,15 +323,47 @@ const KakaoMap = () => {
                 lng: selectedProperty.lng,
               }}
               image={{
-                src: "/map_marker/map_marker.svg",
-                size: { width: 300, height: 300 },
+                src: "/map_marker/accessibility/map_mark.svg",
+                size: {
+                  width:
+                    zoomLevel <= 2
+                      ? 135
+                      : zoomLevel === 3
+                        ? 115
+                        : zoomLevel === 4
+                          ? 95
+                          : 75,
+                  height:
+                    zoomLevel <= 2
+                      ? 135
+                      : zoomLevel === 3
+                        ? 115
+                        : zoomLevel === 4
+                          ? 95
+                          : 75,
+                },
                 options: {
                   offset: {
-                    x: 150,
-                    y: 150,
+                    x:
+                      (zoomLevel <= 2
+                        ? 135
+                        : zoomLevel === 3
+                          ? 115
+                          : zoomLevel === 4
+                            ? 95
+                            : 75) / 2,
+                    y:
+                      (zoomLevel <= 2
+                        ? 135
+                        : zoomLevel === 3
+                          ? 115
+                          : zoomLevel === 4
+                            ? 95
+                            : 75) / 2,
                   },
                 },
               }}
+              zIndex={999}
             />
           )}
 
@@ -313,9 +376,15 @@ const KakaoMap = () => {
                 onClick={() => setSelectedNoise(item)}
                 image={{
                   src: noiseMarkerIcon,
-                  size: { width: 300, height: 300 },
+                  size: {
+                    width: getScaledSize(300, zoomLevel),
+                    height: getScaledSize(300, zoomLevel),
+                  },
                   options: {
-                    offset: { x: 150, y: 150 },
+                    offset: {
+                      x: getScaledSize(150, zoomLevel),
+                      y: getScaledSize(150, zoomLevel),
+                    },
                   },
                 }}
               />
@@ -351,9 +420,15 @@ const KakaoMap = () => {
                 onClick={() => setSelectedPopulation(item)}
                 image={{
                   src: populationMarkerIcon,
-                  size: { width: 300, height: 300 },
+                  size: {
+                    width: getScaledSize(300, zoomLevel),
+                    height: getScaledSize(300, zoomLevel),
+                  },
                   options: {
-                    offset: { x: 150, y: 150 },
+                    offset: {
+                      x: getScaledSize(150, zoomLevel),
+                      y: getScaledSize(150, zoomLevel),
+                    },
                   },
                 }}
               />
@@ -391,9 +466,15 @@ const KakaoMap = () => {
                 onClick={() => setSelectedNearbyNoise(item)}
                 image={{
                   src: iconSrc,
-                  size: { width: 44, height: 44 },
+                  size: {
+                    width: getScaledSize(44, zoomLevel),
+                    height: getScaledSize(44, zoomLevel),
+                  },
                   options: {
-                    offset: { x: 22, y: 44 },
+                    offset: {
+                      x: getScaledSize(22, zoomLevel),
+                      y: getScaledSize(44, zoomLevel),
+                    },
                   },
                 }}
               />
@@ -426,9 +507,15 @@ const KakaoMap = () => {
               }}
               image={{
                 src: "/map_marker/safety/police_marker.svg",
-                size: { width: 44, height: 44 },
+                size: {
+                  width: getScaledSize(44, zoomLevel),
+                  height: getScaledSize(44, zoomLevel),
+                },
                 options: {
-                  offset: { x: 22, y: 44 },
+                  offset: {
+                    x: getScaledSize(22, zoomLevel),
+                    y: getScaledSize(44, zoomLevel),
+                  },
                 },
               }}
               title={station.policeOfficeName}
@@ -491,8 +578,16 @@ const KakaoMap = () => {
                 position={{ lat: cctv.latitude!, lng: cctv.longitude! }}
                 image={{
                   src: "/map_marker/safety/cctv_marker.svg",
-                  size: { width: 32, height: 32 },
-                  options: { offset: { x: 16, y: 16 } },
+                  size: {
+                    width: getScaledSize(32, zoomLevel),
+                    height: getScaledSize(32, zoomLevel),
+                  },
+                  options: {
+                    offset: {
+                      x: getScaledSize(16, zoomLevel),
+                      y: getScaledSize(16, zoomLevel),
+                    },
+                  },
                 }}
                 title="CCTV"
               />
@@ -507,8 +602,16 @@ const KakaoMap = () => {
                 position={{ lat: light.latitude!, lng: light.longitude! }}
                 image={{
                   src: "/map_marker/safety/light_marker.svg",
-                  size: { width: 32, height: 32 },
-                  options: { offset: { x: 16, y: 16 } },
+                  size: {
+                    width: getScaledSize(32, zoomLevel),
+                    height: getScaledSize(32, zoomLevel),
+                  },
+                  options: {
+                    offset: {
+                      x: getScaledSize(16, zoomLevel),
+                      y: getScaledSize(16, zoomLevel),
+                    },
+                  },
                 }}
                 title="보안등"
               />
@@ -523,7 +626,16 @@ const KakaoMap = () => {
                 position={{ lat: subway.latitude!, lng: subway.longitude! }}
                 image={{
                   src: "/map_marker/accessibility/subway_marker.svg",
-                  size: { width: 44, height: 44 },
+                  size: {
+                    width: getScaledSize(44, zoomLevel),
+                    height: getScaledSize(44, zoomLevel),
+                  },
+                  options: {
+                    offset: {
+                      x: getScaledSize(22, zoomLevel),
+                      y: getScaledSize(44, zoomLevel),
+                    },
+                  },
                 }}
                 title={subway.name}
                 onClick={() => setSelectedAccessibility(subway)}
@@ -539,7 +651,16 @@ const KakaoMap = () => {
                 position={{ lat: bus.latitude!, lng: bus.longitude! }}
                 image={{
                   src: "/map_marker/accessibility/bus_marker.svg",
-                  size: { width: 44, height: 44 },
+                  size: {
+                    width: getScaledSize(44, zoomLevel),
+                    height: getScaledSize(44, zoomLevel),
+                  },
+                  options: {
+                    offset: {
+                      x: getScaledSize(22, zoomLevel),
+                      y: getScaledSize(44, zoomLevel),
+                    },
+                  },
                 }}
                 title={bus.name}
                 onClick={() => setSelectedAccessibility(bus)}
@@ -579,6 +700,7 @@ const KakaoMap = () => {
                 dealType={prop.dealType}
                 price={prop.price}
                 isSelected={isSelected}
+                zoomLevel={zoomLevel}
               />
             );
           })}
@@ -596,6 +718,7 @@ const KakaoMap = () => {
                 dealType={selectedProperty.dealType}
                 price={selectedProperty.price}
                 isSelected={true}
+                zoomLevel={zoomLevel}
               />
             )}
         </>

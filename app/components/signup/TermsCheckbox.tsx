@@ -25,7 +25,7 @@ export const TermsCheckbox = ({
   required = false,
 }: TermsCheckboxProps) => {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-[#F0F0F0] last:border-b-0 ">
+    <div className="flex items-center justify-between py-2 border-[#F0F0F0] last:border-b-0 ">
       <div className="flex items-center gap-3">
         <div
           onClick={() => onChange(!checked)}

@@ -46,18 +46,15 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
         activeModules: activeModules.filter((m) => m !== id),
       });
     } else {
-      // 켜는 경우: 맨 앞에 추가
-      const newActiveModules = [id, ...activeModules];
-
-      // 정책: 4번째 정보를 켤 시 토스트 알림
-      if (newActiveModules.length === 4) {
+      // 켜는 경우: 이미 3개인 경우 추가 차단
+      if (activeModules.length >= 3) {
         set({
-          toastMessage:
-            "필요한 정보에 집중할 수 있도록 정보는 최대 3개 선택을 권장합니다.",
+          toastMessage: "필요한 정보는 최대 3개까지만 선택할 수 있습니다.",
         });
+        return;
       }
-
-      set({ activeModules: newActiveModules });
+      // 3개 미만인 경우만 추가
+      set({ activeModules: [id, ...activeModules] });
     }
   },
 

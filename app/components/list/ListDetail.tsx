@@ -44,17 +44,31 @@ const ListDetail = ({
     null,
   );
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const { isMapMode, setSelectedProperty, clearSelectedProperty } =
-    useMapModeStore();
+  const { setSelectedProperty, clearSelectedProperty } = useMapModeStore();
   const { toggleZzim } = usePropertyZzim();
 
   const isManualScrolling = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const tabsBoxRef = useRef<HTMLElement>(null);
+  const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
   const { data: apiResponse, isLoading } = useGetPropertyDetail(propertyId);
   const { data: curationResponse, isLoading: isAiLoading } =
     useCurate(propertyId);
   const detailData = apiResponse?.data;
+
+  // 활성 탭이 바뀔 때마다 탭바를 자동으로 스크롤하여 활성 탭을 왼쪽 처음에 맞춤
+  useEffect(() => {
+    const activeTabElement = tabRefs.current.get(activeTab);
+    if (activeTabElement && tabsBoxRef.current) {
+      const container = tabsBoxRef.current;
+      const scrollLeft = activeTabElement.offsetLeft;
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: "smooth",
+      });
+    }
+  }, [activeTab]);
 
   // 매물 정보를 불러오면 지도에 좌표 설정
   useEffect(() => {
@@ -96,7 +110,7 @@ const ListDetail = ({
         clearSelectedProperty();
       }
     };
-  }, [detailData, setSelectedProperty, clearSelectedProperty]);
+  }, [detailData, setSelectedProperty, clearSelectedProperty, propertyId]);
 
   // 스크롤 감지 및 탭 포커스 자동 전환
   useEffect(() => {
@@ -200,10 +214,17 @@ const ListDetail = ({
             <div className="h-4 bg-[#F4F4F4]" />
 
             {/* Tab Bar (Sticky) */}
-            <nav className="sticky top-0 z-40 flex w-full h-12 bg-white border-b border-[#E5E5E5] overflow-x-auto no-scrollbar flex-none">
+            <nav
+              ref={tabsBoxRef}
+              className="sticky top-0 z-40 flex w-full h-12 bg-white border-b border-[#E5E5E5] overflow-x-auto no-scrollbar flex-none"
+            >
               {sections.map((tab) => (
                 <button
                   key={tab.id}
+                  ref={(el) => {
+                    if (el) tabRefs.current.set(tab.id, el);
+                    else tabRefs.current.delete(tab.id);
+                  }}
                   onClick={() => scrollToSection(tab.id)}
                   className={`flex-none px-4 h-full text-[14px] font-medium transition-colors relative ${
                     activeTab === tab.id ? "text-[#000000]" : "text-[#9D9D9D]"

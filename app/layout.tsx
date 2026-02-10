@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased no-scrollbar">
+      <body className="antialiased no-scrollbar overflow-x-hidden">
         <Providers>
           <LayoutClient>{children}</LayoutClient>
         </Providers>

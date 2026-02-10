@@ -2,9 +2,11 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/app/lib/utils";
 import PriorityToggle from "../ui/PriorityToggle";
+import { RegionBadge } from "../ui/RegionBadge";
+import { AnimatePresence } from "framer-motion";
 
 const DISTRICTS = [
   "종로구",
@@ -159,16 +161,18 @@ const CurationInfo = () => {
             </span>
           </div>
           <div className="bg-gray-50 rounded-xl p-8 flex flex-col gap-8">
-            <div className="flex justify-between items-center h-4">
-              <div className="flex gap-3">
-                {selectedRegions.map((r) => (
-                  <span
-                    key={r}
-                    className="px-5 py-2 bg-white border border-main-400 text-main-500 rounded-full text-[16px] font-bold flex items-center gap-2"
-                  >
-                    {r}
-                  </span>
-                ))}
+            <div className="flex justify-between items-center">
+              <div className="flex flex-wrap gap-3">
+                <AnimatePresence>
+                  {selectedRegions.map((r) => (
+                    <RegionBadge
+                      key={r}
+                      name={r}
+                      size="sm"
+                      onRemove={() => toggleRegion(r)}
+                    />
+                  ))}
+                </AnimatePresence>
               </div>
               <button
                 onClick={() => setIsRegionOpen(!isRegionOpen)}

@@ -219,7 +219,7 @@ export const SignupForm = () => {
               setValue("termsService", val, { shouldValidate: true })
             }
             label={
-              <span>
+              <span className="text-[18px] font-medium text-[#222222]">
                 <strong className="text-[#2EA98C] mr-1">[필수]</strong>
                 디닷홈{" "}
                 <strong className="font-bold">개인 정보 처리 방침</strong>을
@@ -227,6 +227,7 @@ export const SignupForm = () => {
               </span>
             }
           />
+          <div className="border-b border-[#F0F0F0]"></div>
           <TermsCheckbox
             id="termsPrivacy"
             checked={termsPrivacy}
@@ -234,7 +235,7 @@ export const SignupForm = () => {
               setValue("termsPrivacy", val, { shouldValidate: true })
             }
             label={
-              <span>
+              <span className="text-[18px] font-medium text-[#222222]">
                 <strong className="text-[#2EA98C] mr-1">[필수]</strong>
                 디닷홈 <strong className="font-bold">약관</strong>을 읽고 이를
                 동의합니다.

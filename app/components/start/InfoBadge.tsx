@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 
 interface InfoBadgeProps {
@@ -25,12 +26,20 @@ export default function InfoBadge({
   width,
 }: InfoBadgeProps) {
   return (
-    <div
+    <motion.div
       className={cn(
-        "absolute flex items-center gap-[8px] px-[17px] py-px rounded-[30px] w-[138px] h-[44px] bg-white/60 border border-white/80 shadow-[0px_3px_10.5px_0px_rgba(104,191,166,0.36),0px_5px_9.6px_0px_rgba(30,154,119,0.1)] backdrop-blur-[5px] z-20",
+        "absolute flex items-center justify-center gap-[8px] px-[17px] py-px rounded-[30px] w-[138px] h-[44px] bg-white/60 border border-white/80 shadow-[0px_3px_10.5px_0px_rgba(104,191,166,0.36),0px_5px_9.6px_0px_rgba(30,154,119,0.1)] backdrop-blur-[5px] z-20",
         className,
       )}
       style={style}
+      animate={{
+        y: [0, -10, 0],
+      }}
+      transition={{
+        duration: 1.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
     >
       <div
         className="flex items-center justify-center shrink-0 w-[29px] h-[29px] rounded-[5px]"
@@ -49,6 +58,6 @@ export default function InfoBadge({
       <span className="text-[14px] font-semibold text-black tracking-[-0.1504px] whitespace-nowrap leading-[1.3]">
         {label}
       </span>
-    </div>
+    </motion.div>
   );
 }

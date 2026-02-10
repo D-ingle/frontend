@@ -109,7 +109,10 @@ export default function Navbar() {
         {mounted && user ? (
           <>
             {/* 찜한 목록 */}
-            <button className="font-semibold text-[#434343] leading-[1.1] text-[16px] hover:text-black transition-colors">
+            <button
+              onClick={() => router.push("/mypage?menu=liked")}
+              className="font-semibold text-[#434343] leading-[1.1] text-[16px] hover:text-black transition-colors"
+            >
               찜한 목록
             </button>
             <div className="bg-border-1 h-5.5 w-px" />

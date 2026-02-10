@@ -48,6 +48,7 @@ const ContactModal = ({
           <div className="px-8 pb-8 flex flex-col items-center">
             <p className="text-[16px] font-semibold text-[#555555] mb-5 text-center">
               {apartmentName ? `${apartmentName} ` : ""}중개사무소에 연락하여
+              <br />
               방문일을 예약하세요
             </p>
 
@@ -88,7 +89,11 @@ const ContactModal = ({
                     <Phone className="w-5 h-5 fill-current" />
                   </div>
                   <span className="text-[28px] font-bold text-[#2EA98C] tracking-tight">
-                    {realtorInfo?.phone || realtorInfo?.officePhone || "-"}
+                    {(
+                      realtorInfo?.phone ||
+                      realtorInfo?.officePhone ||
+                      "-"
+                    ).replace("-", "")}
                   </span>
                 </div>
 

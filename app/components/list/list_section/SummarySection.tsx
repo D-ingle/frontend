@@ -143,10 +143,10 @@ const SummarySection = ({
         </div>
 
         {/* Figma Design Indicator (Backdrop Blur + Arrows) */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-[10px] px-[10px] py-[6px] bg-[rgba(0,0,0,0.4)] backdrop-blur-[4px] border border-white/20 rounded-[30px] z-20">
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2.5 p-2.5 bg-black/20 backdrop-blur-[2px] border border-[#e4e4e4] rounded-[30px] z-20">
           <button
             onClick={() => paginate(-1)}
-            className="text-white hover:text-[#30CEA1] transition-colors p-1"
+            className="text-white hover:text-[#30CEA1] transition-colors"
           >
             <svg
               width="14"
@@ -162,13 +162,13 @@ const SummarySection = ({
             </svg>
           </button>
 
-          <span className="font-medium text-[12px] text-white select-none whitespace-nowrap min-w-[32px] text-center">
+          <span className="font-medium text-[12px] text-white select-none whitespace-nowrap text-center">
             {currentIndex + 1} / {imageUrls.length}
           </span>
 
           <button
             onClick={() => paginate(1)}
-            className="text-white hover:text-[#30CEA1] transition-colors p-1"
+            className="text-white hover:text-[#30CEA1] transition-colors"
           >
             <svg
               width="14"
@@ -204,24 +204,18 @@ const SummarySection = ({
           >
             {isLiked ? (
               <Image
-                src="/icons/feature/list/like.svg"
+                src="/icons/common/like.svg"
                 alt="Favorite"
                 width={24}
                 height={24}
               />
             ) : (
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#E5E5E5"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
+              <Image
+                src="/icons/common/unlike_border.svg"
+                alt="Favorite"
+                width={24}
+                height={24}
+              />
             )}
           </button>
         </div>

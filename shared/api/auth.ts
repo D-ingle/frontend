@@ -21,6 +21,7 @@ export interface LoginResponse {
       userName: string;
       propertyType: string;
       preferredConditions: number[];
+      onboardingStatus: boolean;
     };
   };
   error?: {

@@ -2,9 +2,26 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/app/store/userStore";
 
 export default function MainVisual() {
+  const { user } = useUserStore();
+  const router = useRouter();
+
+  const handleStart = () => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    if (user.onboardingStatus) {
+      router.push("/map");
+    } else {
+      router.push("/onboarding");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-between text-center z-30 h-170">
       {/* 로고 (디자인 좌표 반영) */}
@@ -32,12 +49,12 @@ export default function MainVisual() {
         </span>
       </div>
 
-      <Link
-        href="/onboarding"
+      <button
+        onClick={handleStart}
         className="w-[400px] h-[60px] flex items-center justify-center bg-[#063152] text-white text-[18px] font-extrabold rounded-[6px] transition-all hover:brightness-110 active:scale-[0.98] shadow-lg leading-[1.1]"
       >
         시작하기
-      </Link>
+      </button>
     </div>
   );
 }

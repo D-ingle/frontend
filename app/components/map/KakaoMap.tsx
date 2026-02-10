@@ -21,6 +21,7 @@ import {
   PopulationOverlay,
   NearbyNoiseOverlay,
   PoliceOverlay,
+  AccessibilityOverlay,
 } from "./MapOverlays";
 
 const CustomMarker = ({
@@ -109,6 +110,11 @@ const KakaoMap = () => {
     safetyPath,
     safetyCctvs,
     safetyLights,
+    accessibilitySubways,
+    accessibilityBuses,
+    selectedAccessibility,
+    setSelectedAccessibility,
+    clearSelectedAccessibility,
   } = useMapModeStore();
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
 
@@ -507,6 +513,56 @@ const KakaoMap = () => {
                 title="보안등"
               />
             ))}
+
+          {/* 지하철역 마커 표시 */}
+          {accessibilitySubways
+            .filter((subway) => subway.latitude && subway.longitude)
+            .map((subway, idx) => (
+              <MapMarker
+                key={`subway-${idx}-${subway.latitude}-${subway.longitude}`}
+                position={{ lat: subway.latitude!, lng: subway.longitude! }}
+                image={{
+                  src: "/map_marker/accessibility/subway_marker.svg",
+                  size: { width: 44, height: 44 },
+                }}
+                title={subway.name}
+                onClick={() => setSelectedAccessibility(subway)}
+              />
+            ))}
+
+          {/* 버스 정류장 마커 표시 */}
+          {accessibilityBuses
+            .filter((bus) => bus.latitude && bus.longitude)
+            .map((bus, idx) => (
+              <MapMarker
+                key={`bus-${idx}-${bus.latitude}-${bus.longitude}`}
+                position={{ lat: bus.latitude!, lng: bus.longitude! }}
+                image={{
+                  src: "/map_marker/accessibility/bus_marker.svg",
+                  size: { width: 44, height: 44 },
+                }}
+                title={bus.name}
+                onClick={() => setSelectedAccessibility(bus)}
+              />
+            ))}
+
+          {/* 접근성 정보 커스텀 오버레이 */}
+          {selectedAccessibility &&
+            selectedAccessibility.latitude &&
+            selectedAccessibility.longitude && (
+              <CustomOverlayMap
+                position={{
+                  lat: selectedAccessibility.latitude,
+                  lng: selectedAccessibility.longitude,
+                }}
+                yAnchor={1.2}
+              >
+                <AccessibilityOverlay
+                  item={selectedAccessibility}
+                  onClose={() => clearSelectedAccessibility()}
+                />
+              </CustomOverlayMap>
+            )}
         </>
       ) : (
         <>

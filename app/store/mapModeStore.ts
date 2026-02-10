@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { PropertyScore } from "@/shared/api/generated/model/propertyScore";
 import { FacilityItem } from "@/shared/api/generated/model/facilityItem";
 import { PointDTO } from "@/shared/api/generated/model/pointDTO";
+import { Subway } from "@/shared/api/generated/model/subway";
+import { Bus } from "@/shared/api/generated/model/bus";
 import { MapItem } from "../components/map/MapOverlays";
 import { NearbyNoiseItem } from "../types/nearby-noise";
 import { PoliceModalResponse } from "@/shared/api/generated/model/policeModalResponse";
@@ -86,6 +88,14 @@ interface MapModeState {
     lights: PointDTO[],
   ) => void;
   clearSafetyRoute: () => void;
+
+  accessibilitySubways: Subway[];
+  accessibilityBuses: Bus[];
+  selectedAccessibility: (Subway | Bus) | null;
+  setAccessibilityTraffic: (subways: Subway[], buses: Bus[]) => void;
+  setSelectedAccessibility: (item: (Subway | Bus) | null) => void;
+  clearAccessibilityTraffic: () => void;
+  clearSelectedAccessibility: () => void;
 }
 
 export const useMapModeStore = create<MapModeState>((set) => ({
@@ -159,4 +169,18 @@ export const useMapModeStore = create<MapModeState>((set) => ({
     set({ safetyPath: path, safetyCctvs: cctvs, safetyLights: lights }),
   clearSafetyRoute: () =>
     set({ safetyPath: [], safetyCctvs: [], safetyLights: [] }),
+
+  accessibilitySubways: [],
+  accessibilityBuses: [],
+  selectedAccessibility: null,
+  setAccessibilityTraffic: (subways, buses) =>
+    set({ accessibilitySubways: subways, accessibilityBuses: buses }),
+  setSelectedAccessibility: (item) => set({ selectedAccessibility: item }),
+  clearAccessibilityTraffic: () =>
+    set({
+      accessibilitySubways: [],
+      accessibilityBuses: [],
+      selectedAccessibility: null,
+    }),
+  clearSelectedAccessibility: () => set({ selectedAccessibility: null }),
 }));

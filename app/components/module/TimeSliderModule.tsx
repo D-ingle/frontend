@@ -1,16 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+
+import { useMapModeStore } from "@/app/store/mapModeStore";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 const TimeSliderModule = () => {
-  const [time, setTime] = useState(12); // Default to 12:00
+  const { currentTime, setCurrentTime, setDebouncedTime } = useMapModeStore();
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedTime(currentTime);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [currentTime, setDebouncedTime]);
 
   const formatTime = (t: number) => {
     const hours = Math.floor(t);
@@ -19,7 +31,7 @@ const TimeSliderModule = () => {
   };
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTime(parseFloat(e.target.value));
+    setCurrentTime(parseFloat(e.target.value));
   };
 
   return (
@@ -45,7 +57,7 @@ const TimeSliderModule = () => {
               />
             </div>
             <p className="font-bold text-[16px] text-[#063152] tracking-[-0.15px]">
-              {formatTime(time)}
+              {formatTime(currentTime)}
             </p>
           </div>
         </div>
@@ -81,11 +93,11 @@ const TimeSliderModule = () => {
               min="0"
               max="24"
               step="0.5"
-              value={time}
+              value={currentTime}
               onChange={handleSliderChange}
               style={{
                 // @ts-expect-error - Custom CSS property for dynamic thumb icon
-                "--thumb-icon": `url('/icons/module/time/${time >= 6 && time < 18 ? "sun.svg" : "moon.svg"}')`,
+                "--thumb-icon": `url('/icons/module/time/${currentTime >= 6 && currentTime < 18 ? "sun.svg" : "moon.svg"}')`,
               }}
               className="absolute inset-0 w-full h-[34px] appearance-none bg-transparent cursor-pointer outline-none z-10
                 [&::-webkit-slider-thumb]:appearance-none

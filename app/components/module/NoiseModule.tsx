@@ -28,6 +28,9 @@ const NoiseModule = () => {
     setDistrictAvgPopulation,
     setNearbyNoiseInfras,
     clearNearbyNoiseInfras,
+    clearSelectedNoise,
+    clearSelectedPopulation,
+    clearSelectedNearbyNoise,
   } = useMapModeStore();
   const isActive = activeModules.includes("noise");
   const score = selectedProperty?.propertyScores?.noiseScore || 0;
@@ -66,6 +69,7 @@ const NoiseModule = () => {
       }
     } else if (!isActive) {
       clearNoiseInfras();
+      clearSelectedNoise();
     }
   }, [
     isActive,
@@ -73,6 +77,7 @@ const NoiseModule = () => {
     setNoiseInfras,
     clearNoiseInfras,
     setDistrictAvgNoise,
+    clearSelectedNoise,
   ]);
 
   useEffect(() => {
@@ -85,6 +90,7 @@ const NoiseModule = () => {
       }
     } else if (!isActive) {
       clearPopulationInfras();
+      clearSelectedPopulation();
     }
   }, [
     isActive,
@@ -92,6 +98,7 @@ const NoiseModule = () => {
     setPopulationInfras,
     clearPopulationInfras,
     setDistrictAvgPopulation,
+    clearSelectedPopulation,
   ]);
 
   useEffect(() => {
@@ -100,8 +107,15 @@ const NoiseModule = () => {
       setNearbyNoiseInfras(data.items);
     } else if (!isActive) {
       clearNearbyNoiseInfras();
+      clearSelectedNearbyNoise();
     }
-  }, [isActive, nearbyNoiseData, setNearbyNoiseInfras, clearNearbyNoiseInfras]);
+  }, [
+    isActive,
+    nearbyNoiseData,
+    setNearbyNoiseInfras,
+    clearNearbyNoiseInfras,
+    clearSelectedNearbyNoise,
+  ]);
 
   const noiseInfo = smartPoleData?.data?.noise;
   const populationInfo = smartPoleData?.data?.population;

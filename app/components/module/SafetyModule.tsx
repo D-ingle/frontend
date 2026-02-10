@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useModuleStore } from "@/app/store/moduleStore";
 import { useMapModeStore } from "@/app/store/mapModeStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+
+import {
+  useGetSafetyModal,
+  useGetSafetyRoute,
+} from "@/shared/api/generated/safety-controller/safety-controller";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,10 +18,87 @@ function cn(...inputs: ClassValue[]) {
 
 const SafetyModule = () => {
   const { activeModules, toggleModule } = useModuleStore();
-  const { selectedProperty } = useMapModeStore();
+  const {
+    selectedProperty,
+    setPoliceInfras,
+    clearPoliceInfras,
+    clearSelectedPolice,
+    setSafetyRoute,
+    clearSafetyRoute,
+  } = useMapModeStore();
   const isActive = activeModules.includes("safety");
   const [isMainRoadMode, setIsMainRoadMode] = useState(false);
   const score = selectedProperty?.propertyScores?.safetyScore || 0;
+
+  // 지도 안전 모달 데이터 조회
+  const { data: safetyData, isLoading } = useGetSafetyModal(
+    selectedProperty?.id || 0,
+    {
+      query: {
+        enabled: isActive && !!selectedProperty?.id,
+      },
+    },
+  );
+
+  const safetyInfo = safetyData?.data;
+
+  // 지하철역 경로 및 Safety 요소 조회 API 연동
+  const { data: routeData } = useGetSafetyRoute(selectedProperty?.id || 0, {
+    query: {
+      enabled: isActive && !!selectedProperty?.id,
+    },
+  });
+
+  const routeInfo = routeData?.data;
+
+  // 경찰서 정보를 지도 마커 스토어에 동기화
+  useEffect(() => {
+    if (isActive && safetyInfo?.polices) {
+      setPoliceInfras(safetyInfo.polices);
+    } else {
+      clearPoliceInfras();
+      clearSelectedPolice();
+    }
+  }, [
+    isActive,
+    safetyInfo?.polices,
+    setPoliceInfras,
+    clearPoliceInfras,
+    clearSelectedPolice,
+  ]);
+
+  // 안전 경로 및 설비 정보를 지도 스토어에 동기화
+  useEffect(() => {
+    if (isActive && routeInfo) {
+      setSafetyRoute(
+        routeInfo.path?.points || [],
+        routeInfo.cctvs || [],
+        routeInfo.lights || [],
+      );
+    } else {
+      clearSafetyRoute();
+    }
+  }, [isActive, routeInfo, setSafetyRoute, clearSafetyRoute]);
+
+  // 안전 알림 메시지 생성 로직
+  const getAlertMessage = () => {
+    if (!safetyInfo) return null;
+    const { nearByCrimeZones, passedCrimeZone } = safetyInfo;
+
+    if (nearByCrimeZones && passedCrimeZone) {
+      return "주변 범죄 주의 구간을 지나갑니다.";
+    }
+    if (passedCrimeZone) {
+      return "범죄 주의 구간을 지나갑니다.";
+    }
+    if (nearByCrimeZones) {
+      return "범죄 주의 구간이 주변에 있습니다.";
+    }
+    return null;
+  };
+
+  const alertMessage = getAlertMessage();
+  const hasAlert = !!alertMessage;
 
   return (
     <div
@@ -89,83 +171,77 @@ const SafetyModule = () => {
             안전 알림
           </h3>
           <div className="bg-white border-[1.5px] border-[#F48787] rounded-lg p-4 py-5 flex flex-col gap-4">
-            {/* Warning Item */}
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-1">
-                <div className="w-[18px] h-[18px] flex items-center justify-center">
-                  <Image
-                    src="/icons/module/safety/warning.svg"
-                    width={13.5}
-                    height={13.5}
-                    alt="Warning"
-                  />
-                </div>
-                <p className="font-semibold text-[14px] text-black tracking-[-0.15px]">
-                  범죄주의 구간을 지나갑니다.
-                </p>
+            {isLoading ? (
+              <div className="flex justify-center p-2">
+                <div className="w-5 h-5 border-2 border-[#F48787] border-t-transparent rounded-full animate-spin" />
               </div>
-              <div className="pl-[22px]">
-                <p className="text-[12px] font-medium text-[#7B7B7B] tracking-[-0.15px] leading-[1.3] whitespace-pre-wrap">
-                  경로 상에 노인 범죄주의 구간을 지나는 곳이 존재합니다.
-                </p>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="h-0 relative w-full border-t border-[#E5E5E5]" />
-
-            {/* Stats Items */}
-            <div className="flex flex-col gap-3 w-full">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <div className="w-[18px] h-[18px] flex items-center justify-center">
-                      <Image
-                        src="/icons/module/safety/cctv.svg"
-                        width={15}
-                        height={15}
-                        alt="CCTV"
-                      />
+            ) : (
+              <>
+                {/* Warning Item */}
+                {hasAlert && (
+                  <>
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-1">
+                        <div className="w-[18px] h-[18px] flex items-center justify-center">
+                          <Image
+                            src="/icons/module/safety/warning.svg"
+                            width={13.5}
+                            height={13.5}
+                            alt="Warning"
+                          />
+                        </div>
+                        <p className="font-semibold text-[16px] text-black tracking-[-0.15px]">
+                          {alertMessage}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
-                    경로 구역 내 CCTV 개수
-                  </span>
-                </div>
-                <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                  24개
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <div className="w-[18px] h-[18px] flex items-center justify-center">
-                      <Image
-                        src="/icons/module/safety/lamp.svg"
-                        width={13.5}
-                        height={15}
-                        alt="Lamp"
-                      />
+                    {/* Divider */}
+                    <div className="h-0 relative w-full border-t border-[#E5E5E5]" />
+                  </>
+                )}
+
+                {/* Stats Items */}
+                <div className="flex flex-col gap-3 w-full">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <div className="w-[18px] h-[18px] flex items-center justify-center">
+                        <Image
+                          src="/icons/module/safety/cctv.svg"
+                          width={15}
+                          height={15}
+                          alt="CCTV"
+                        />
+                      </div>
+                      <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
+                        경로 구역 내 CCTV 개수
+                      </span>
                     </div>
+                    <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
+                      {safetyInfo?.pathCctvCount ?? 0}개
+                    </span>
                   </div>
-                  <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
-                    경로 구역 내 가로등 개수
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <div className="w-[18px] h-[18px] flex items-center justify-center">
+                        <Image
+                          src="/icons/module/safety/lamp.svg"
+                          width={13.5}
+                          height={15}
+                          alt="Lamp"
+                        />
+                      </div>
+                      <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
+                        경로 구역 내 가로등 개수
+                      </span>
+                    </div>
+                    <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
+                      {safetyInfo?.pathLightCount ?? 0}개
+                    </span>
+                  </div>
                 </div>
-                <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                  12개
-                </span>
-              </div>
-            </div>
+              </>
+            )}
           </div>
-
-          {/* Path Mode Toggle Button */}
-          <button
-            onClick={() => setIsMainRoadMode(!isMainRoadMode)}
-            className="w-full bg-[#F48787] text-white py-4 rounded-lg font-semibold text-[16px] tracking-[-0.15px] hover:bg-[#E05353] transition-colors"
-          >
-            {isMainRoadMode ? "기본 경로 확인하기" : "큰길 우선 경로 확인하기"}
-          </button>
         </div>
 
         {/* Nearby Police Stations */}
@@ -174,30 +250,36 @@ const SafetyModule = () => {
             인근 경찰서 위치
           </h3>
           <div className="bg-white border-[1.5px] border-[#F48787] rounded-lg p-4 py-5 flex flex-col gap-4">
-            {[
-              { name: "명동파출소", time: "도보 3분" },
-              { name: "서울 중부경찰서", time: "도보 15분" },
-              { name: "충무파출소", time: "도보 20분" },
-            ].map((station, idx) => (
-              <div key={idx} className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <Image
-                      src="/icons/module/safety/police.svg"
-                      width={13.5}
-                      height={16.359}
-                      alt="Police"
-                    />
+            {isLoading ? (
+              <div className="flex justify-center p-2">
+                <div className="w-5 h-5 border-2 border-[#F48787] border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : safetyInfo?.polices && safetyInfo.polices.length > 0 ? (
+              safetyInfo.polices.map((station, idx) => (
+                <div key={idx} className="flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    <div className="w-[18px] h-[18px] flex items-center justify-center">
+                      <Image
+                        src="/icons/module/safety/police.svg"
+                        width={13.5}
+                        height={16.359}
+                        alt="Police"
+                      />
+                    </div>
+                    <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
+                      {station.policeOfficeName}
+                    </span>
                   </div>
-                  <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
-                    {station.name}
+                  <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
+                    도보 {Math.round((station.durationTime || 0) / 60)}분
                   </span>
                 </div>
-                <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                  {station.time}
-                </span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-center text-gray-400 text-[14px]">
+                주변에 경찰서가 없습니다.
+              </p>
+            )}
           </div>
         </div>
       </div>

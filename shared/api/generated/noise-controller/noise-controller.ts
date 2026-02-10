@@ -280,7 +280,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
-    export const getSmartPole = (
+    /**
+ * 시간대별 소음, 유동인구를 제공합니다.
+ * @summary 시간대별 소음, 유동인구 API
+ */
+export const getSmartPole = (
     params: GetSmartPoleParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -320,6 +324,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type GetSmartPoleQueryResult = NonNullable<Awaited<ReturnType<typeof getSmartPole>>>
 export type GetSmartPoleQueryError = ErrorType<unknown>
 
+/**
+ * @summary 시간대별 소음, 유동인구 API
+ */
 export const useGetSmartPole = <TData = Awaited<ReturnType<typeof getSmartPole>>, TError = ErrorType<unknown>>(
  params: GetSmartPoleParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSmartPole>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
@@ -336,6 +343,10 @@ export const useGetSmartPole = <TData = Awaited<ReturnType<typeof getSmartPole>>
 
 
 
+/**
+ * 소음 종합 점수를 제공합니다.
+ * @summary 소음 종합 점수 API
+ */
 export const getNearbyNoise = (
     params: GetNearbyNoiseParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
@@ -376,6 +387,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type GetNearbyNoiseQueryResult = NonNullable<Awaited<ReturnType<typeof getNearbyNoise>>>
 export type GetNearbyNoiseQueryError = ErrorType<unknown>
 
+/**
+ * @summary 소음 종합 점수 API
+ */
 export const useGetNearbyNoise = <TData = Awaited<ReturnType<typeof getNearbyNoise>>, TError = ErrorType<unknown>>(
  params: GetNearbyNoiseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNearbyNoise>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 

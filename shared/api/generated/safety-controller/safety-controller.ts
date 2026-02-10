@@ -19,7 +19,8 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query'
 import type {
-  ResponseDTOSafetyModalResponse
+  ResponseDTOSafetyModalResponse,
+  ResponseDTOSafetyRouteResponse
 } from '.././model'
 import { customInstance } from '../../axios-instance';
 import type { ErrorType } from '../../axios-instance';
@@ -78,8 +79,70 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
       return useMutation(mutationOptions);
     }
     /**
- * 안전 모달을 조회합니다.
- * @summary 지도 안전 모달 조회 API (이거 아직 완성 아님)
+ * 도보 경로, 경로 내 CCTV, 보안등 위치, 범죄주의구간
+ * @summary 지하철역 경로 및 Safety 요소 조회 API
+ */
+export const getSafetyRoute = (
+    propertyId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTOSafetyRouteResponse>(
+      {url: `/api/v1/safety/${propertyId}/route`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetSafetyRouteQueryKey = (propertyId: number,) => {
+    return [`/api/v1/safety/${propertyId}/route`] as const;
+    }
+
+    
+export const getGetSafetyRouteQueryOptions = <TData = Awaited<ReturnType<typeof getSafetyRoute>>, TError = ErrorType<unknown>>(propertyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSafetyRoute>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSafetyRouteQueryKey(propertyId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSafetyRoute>>> = ({ signal }) => getSafetyRoute(propertyId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(propertyId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSafetyRoute>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSafetyRouteQueryResult = NonNullable<Awaited<ReturnType<typeof getSafetyRoute>>>
+export type GetSafetyRouteQueryError = ErrorType<unknown>
+
+/**
+ * @summary 지하철역 경로 및 Safety 요소 조회 API
+ */
+export const useGetSafetyRoute = <TData = Awaited<ReturnType<typeof getSafetyRoute>>, TError = ErrorType<unknown>>(
+ propertyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSafetyRoute>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetSafetyRouteQueryOptions(propertyId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * 범죄주의구간을 지나는지, 주변 범죄주의구간, 경로 내 cctv, 보안등 개수, 인근 경찰서 정보
+ * @summary 지도 안전 모달 조회 API
  */
 export const getSafetyModal = (
     propertyId: number,
@@ -121,7 +184,7 @@ export type GetSafetyModalQueryResult = NonNullable<Awaited<ReturnType<typeof ge
 export type GetSafetyModalQueryError = ErrorType<unknown>
 
 /**
- * @summary 지도 안전 모달 조회 API (이거 아직 완성 아님)
+ * @summary 지도 안전 모달 조회 API
  */
 export const useGetSafetyModal = <TData = Awaited<ReturnType<typeof getSafetyModal>>, TError = ErrorType<unknown>>(
  propertyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSafetyModal>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}

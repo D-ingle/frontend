@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useModuleStore } from "@/app/store/moduleStore";
 import { useMapModeStore } from "@/app/store/mapModeStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useGetTraffic } from "@/shared/api/generated/accessibility-controller/accessibility-controller";
+import { useGetTMapPrediction } from "@/shared/api/generated/t-map-controller/t-map-controller";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,9 +13,89 @@ function cn(...inputs: ClassValue[]) {
 
 const AccessibilityModule = () => {
   const { activeModules, toggleModule } = useModuleStore();
-  const { selectedProperty } = useMapModeStore();
+  const {
+    selectedProperty,
+    setAccessibilityTraffic,
+    clearAccessibilityTraffic,
+    clearSelectedAccessibility,
+    debouncedTime,
+  } = useMapModeStore();
   const isActive = activeModules.includes("accessibility");
-  const score = selectedProperty?.propertyScores?.accessibilityScore || 0;
+
+  // 편의성 종합 점수 API 연동
+  const { data: trafficData } = useGetTraffic(
+    { propertyId: selectedProperty?.id || 0 },
+    {
+      query: {
+        enabled: isActive && !!selectedProperty?.id,
+      },
+    },
+  );
+
+  // 주요 목적지 소요시간 API 연동 (T-Map Prediction)
+  const formatPredictionTime = (t: number) => {
+    const today = new Date(); // 현재 날짜 동적 적용
+    const hours = Math.floor(t);
+    const minutes = Math.round((t - hours) * 60);
+
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
+    const hh = hours.toString().padStart(2, "0");
+    const mm = minutes.toString().padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hh}:${mm}:00+0900`;
+  };
+
+  const { data: predictionData } = useGetTMapPrediction(
+    {
+      propertyId: selectedProperty?.id || 0,
+      predictionTime: formatPredictionTime(debouncedTime),
+    },
+    {
+      query: {
+        enabled: isActive && !!selectedProperty?.id,
+      },
+    },
+  );
+
+  const tmapInfo = predictionData?.data;
+  const carTimeMinutes = tmapInfo?.totalTime
+    ? Math.floor(tmapInfo.totalTime / 60)
+    : 0;
+  const carDistanceKm = tmapInfo?.totalDistance
+    ? (tmapInfo.totalDistance / 1000).toFixed(1)
+    : "0";
+
+  // 대중교통 시간 추정 (자동차 시간 기준 1.6배 + 대기시간 10분)
+  const transitTimeMinutes = carTimeMinutes
+    ? Math.floor(carTimeMinutes * 1.6 + 10)
+    : 0;
+
+  const trafficInfo = trafficData?.data;
+  const score =
+    trafficInfo?.accessibilityScore ??
+    selectedProperty?.propertyScores?.accessibilityScore ??
+    0;
+
+  // 교통 정보를 지도 스토어에 동기화
+  useEffect(() => {
+    if (isActive && trafficInfo) {
+      setAccessibilityTraffic(
+        trafficInfo.subways || [],
+        trafficInfo.buses || [],
+      );
+    } else {
+      clearAccessibilityTraffic();
+      clearSelectedAccessibility();
+    }
+  }, [
+    isActive,
+    trafficInfo,
+    setAccessibilityTraffic,
+    clearAccessibilityTraffic,
+    clearSelectedAccessibility,
+  ]);
 
   return (
     <div
@@ -82,9 +164,16 @@ const AccessibilityModule = () => {
       >
         {/* Estimated Commute Time */}
         <div className="flex flex-col gap-3">
-          <h3 className="font-semibold text-[16px] text-black tracking-[-0.15px]">
-            출퇴근 예상 시간
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-[16px] text-black tracking-[-0.15px]">
+              출퇴근 예상 시간
+            </h3>
+            {tmapInfo && (
+              <span className="text-[12px] text-[#7B7B7B] font-medium">
+                약 {carDistanceKm}km
+              </span>
+            )}
+          </div>
           <div className="flex gap-1.5 flex-1">
             {/* Transport Card */}
             <div className="flex-1 min-w-0 bg-white border-[1.5px] border-[#7CB7CD] rounded-lg p-3 pt-4 flex flex-col gap-10">
@@ -107,7 +196,7 @@ const AccessibilityModule = () => {
                 </span>
                 <div className="flex items-baseline">
                   <span className="font-semibold text-[24px] text-[#0192C8]">
-                    49
+                    {transitTimeMinutes || "-"}
                   </span>
                   <span className="font-semibold text-[24px] text-black">
                     분
@@ -137,7 +226,7 @@ const AccessibilityModule = () => {
                 </span>
                 <div className="flex items-baseline">
                   <span className="font-semibold text-[24px] text-[#0192C8]">
-                    27
+                    {carTimeMinutes || "-"}
                   </span>
                   <span className="font-semibold text-[24px] text-black">
                     분
@@ -154,55 +243,68 @@ const AccessibilityModule = () => {
             근처 지하철역 및 버스 정류장
           </h3>
           <div className="bg-white border-[1.5px] border-[#7CB7CD] rounded-lg p-4 py-5 flex flex-col gap-4">
-            {/* Subway Item */}
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <Image
-                      src="/icons/module/accessibility/train.svg"
-                      width={12}
-                      height={15}
-                      alt="Transit"
-                    />
+            {/* Subway List */}
+            {trafficInfo?.subways?.map((subway, idx) => (
+              <div key={`subway-${idx}`} className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    <div className="w-[18px] h-[18px] flex items-center justify-center">
+                      <Image
+                        src="/icons/module/accessibility/train.svg"
+                        width={12}
+                        height={15}
+                        alt="Subway"
+                      />
+                    </div>
+                    <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
+                      {subway.name}
+                    </span>
                   </div>
-                  <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
-                    4호선 명동역
+                  <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
+                    {subway.distance}m
                   </span>
                 </div>
-                <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                  100m
-                </span>
+                {/* 
+                  API 명세상 출구 정보 등 추가 설명 필드가 현재 없으므로, 
+                  기존의 가짜 텍스트 대신 깔끔하게 이름만 노출합니다.
+                */}
               </div>
-              <p className="pl-[22px] text-[12px] text-[#7B7B7B] tracking-[-0.15px] truncate">
-                에스컬레이터 : 3, 5, 6번 출구
-              </p>
-            </div>
+            ))}
 
-            {/* Bus Item */}
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <Image
-                      src="/icons/module/accessibility/bus.svg"
-                      width={15}
-                      height={15}
-                      alt="Bus"
-                    />
+            {/* Bus List */}
+            {trafficInfo?.buses?.map((bus, idx) => (
+              <div key={`bus-${idx}`} className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    <div className="w-[18px] h-[18px] flex items-center justify-center">
+                      <Image
+                        src="/icons/module/accessibility/bus.svg"
+                        width={15}
+                        height={15}
+                        alt="Bus"
+                      />
+                    </div>
+                    <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
+                      {bus.name}
+                    </span>
                   </div>
-                  <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
-                    남산 3호터널 입구
+                  <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
+                    {bus.distance}m
                   </span>
                 </div>
-                <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                  500m
-                </span>
+                {bus.busNumber && bus.busNumber.length > 0 && (
+                  <p className="pl-[22px] text-[12px] text-[#7B7B7B] tracking-[-0.15px] leading-tight">
+                    {bus.busNumber.join(", ")}
+                  </p>
+                )}
               </div>
-              <p className="pl-[22px] text-[12px] text-[#7B7B7B] tracking-[-0.15px] leading-tight">
-                101, 2034, 2939, 123, 403, 20439
+            ))}
+
+            {!trafficInfo?.subways?.length && !trafficInfo?.buses?.length && (
+              <p className="text-center text-[14px] text-[#7B7B7B] py-4">
+                주변 교통 정보가 없습니다.
               </p>
-            </div>
+            )}
           </div>
         </div>
       </div>

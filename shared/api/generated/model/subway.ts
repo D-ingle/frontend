@@ -5,11 +5,12 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
+import type { SubwayTrafficType } from './subwayTrafficType';
 
-export interface Item {
-  distanceMeter?: number;
-  id?: number;
+export interface Subway {
+  distance?: number;
   latitude?: number;
   longitude?: number;
-  population?: number;
+  name?: string;
+  trafficType?: SubwayTrafficType;
 }

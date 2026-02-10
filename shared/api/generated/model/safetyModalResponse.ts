@@ -8,6 +8,8 @@
 import type { PoliceModalResponse } from './policeModalResponse';
 
 export interface SafetyModalResponse {
+  nearbyCrimeZoneGeoJsons?: string[];
+  nearByCrimeZones?: boolean;
   passedCrimeZone?: boolean;
   pathCctvCount?: number;
   pathLightCount?: number;

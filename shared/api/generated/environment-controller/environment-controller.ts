@@ -80,7 +80,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
-    export const getEnvironmentTotal = (
+    /**
+ * 환경 종합 점수를 제공합니다.
+ * @summary 환경 종합 점수 API
+ */
+export const getEnvironmentTotal = (
     params: GetEnvironmentTotalParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -120,6 +124,9 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 export type GetEnvironmentTotalQueryResult = NonNullable<Awaited<ReturnType<typeof getEnvironmentTotal>>>
 export type GetEnvironmentTotalQueryError = ErrorType<unknown>
 
+/**
+ * @summary 환경 종합 점수 API
+ */
 export const useGetEnvironmentTotal = <TData = Awaited<ReturnType<typeof getEnvironmentTotal>>, TError = ErrorType<unknown>>(
  params: GetEnvironmentTotalParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnvironmentTotal>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 

@@ -28,6 +28,7 @@ interface ModuleState {
 
   toggleModule: (id: ModuleId) => void;
   resetModules: (ids?: ModuleId[]) => void;
+  resetToUserPreference: (preferredConditions: number[]) => void; // 사용자 선호도 기반 초기화
   setToastMessage: (message: string | null) => void;
   getDisplayOrder: () => ModuleId[]; // 렌더링 순서 계산 (활성 모듈 우선 + 미활성 모듈)
 }
@@ -59,6 +60,20 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
   },
 
   resetModules: (ids = []) => set({ activeModules: ids }),
+
+  resetToUserPreference: (preferredConditions) => {
+    const idMap: Record<number, ModuleId> = {
+      1: "noise",
+      2: "environment",
+      3: "safety",
+      4: "accessibility",
+      5: "convenience",
+    };
+    const mappedModules = preferredConditions
+      .map((id) => idMap[id])
+      .filter((m): m is ModuleId => !!m);
+    set({ activeModules: mappedModules });
+  },
 
   setToastMessage: (message) => set({ toastMessage: message }),
 

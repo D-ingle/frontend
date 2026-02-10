@@ -32,6 +32,10 @@ const PROPERTY_TYPE_MAP: Record<string, string> = {
 
 import { usePropertyStore } from "@/app/store/propertyStore";
 
+import { useSearchProperty } from "@/shared/api/generated/main-property-controller/main-property-controller";
+import { PropertySearchRequestDTODealType } from "@/shared/api/generated/model/propertySearchRequestDTODealType";
+import { PropertySearchRequestDTOPropertyType } from "@/shared/api/generated/model/propertySearchRequestDTOPropertyType";
+
 const List = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
@@ -40,7 +44,16 @@ const List = () => {
   const { activeModules, toggleModule } = useModuleStore();
   const { toggleZzim } = usePropertyZzim();
   const { addViewedId } = useRecentViewStore();
-  const { selectedPropertyType } = usePropertyStore();
+  const {
+    selectedPropertyType,
+    keyword,
+    selectedTypes,
+    depositRange,
+    monthlyRentRange,
+    salePriceRange,
+    spaceRange,
+  } = usePropertyStore();
+
   const { setPropertiesOnMap } = useMapModeStore();
 
   useEffect(() => {
@@ -57,23 +70,111 @@ const List = () => {
     if (hasMounted) {
       const propertyIdParam = searchParams.get("propertyId");
       if (propertyIdParam) {
-        setSelectedId(Number(propertyIdParam));
+        // Cascading render 방지를 위해 비동기 처리
+        setTimeout(() => {
+          setSelectedId(Number(propertyIdParam));
+        }, 0);
       }
     }
   }, [hasMounted, searchParams]);
 
-  const { data: apiResponse, isLoading } = useGetMainProperty(
+  // 필터가 하나라도 적용되었는지 확인 (주거 형태 필터 제외, 우선순위 바 활성화 포함)
+  const isFilterActive =
+    keyword.trim() !== "" ||
+    selectedTypes.length > 0 ||
+    spaceRange[0] !== 0 ||
+    spaceRange[1] !== 60 ||
+    activeModules.length > 0;
+
+  // 공통 ID 맵
+  const mIdMap: Record<ModuleId, number> = {
+    noise: 1,
+    environment: 2,
+    safety: 3,
+    accessibility: 4,
+    convenience: 5,
+  };
+
+  // 요청할 우선순위 조건 생성 (활성 모듈 우선 + 프로필 선호도 보완 + 최대 3개 제한)
+  const getSelectConditions = () => {
+    const activeIds = activeModules.map((m) => mIdMap[m]);
+    const preferredIds = user?.preferredConditions || [];
+    // 활성 모듈을 앞에 두고 중복 제거 후 최대 3개 추출
+    return Array.from(new Set([...activeIds, ...preferredIds])).slice(0, 3);
+  };
+
+  // 메인 매물 조회 (기본 추천)
+  const mainPropertyQuery = useGetMainProperty(
     {
-      select: user?.preferredConditions || [],
+      select: Array.from(new Set(user?.preferredConditions || [])).slice(0, 3),
       propertyType: selectedPropertyType,
       size: 30,
     },
     {
       query: {
-        enabled: !!user && hasMounted,
+        enabled: !!user && hasMounted && !isFilterActive,
       },
     },
   );
+
+  // 매물 검색 조회 (필터/키워드 적용 시)
+  const searchPropertyQuery = useSearchProperty(
+    {
+      requestDTO: {
+        keyword: keyword || undefined,
+        propertyType:
+          selectedPropertyType as PropertySearchRequestDTOPropertyType,
+        dealType: selectedTypes.includes("매매")
+          ? PropertySearchRequestDTODealType.SALE
+          : selectedTypes.includes("전세")
+            ? PropertySearchRequestDTODealType.LEASE
+            : selectedTypes.includes("월세")
+              ? PropertySearchRequestDTODealType.RENT
+              : undefined,
+        minDeposit: selectedTypes.some((t) => ["월세", "전세"].includes(t))
+          ? depositRange[0]
+          : undefined,
+        maxDeposit: selectedTypes.some((t) => ["월세", "전세"].includes(t))
+          ? depositRange[1] >= 100000
+            ? undefined
+            : depositRange[1]
+          : undefined,
+        minMonthlyRent: selectedTypes.includes("월세")
+          ? monthlyRentRange[0]
+          : undefined,
+        maxMonthlyRent: selectedTypes.includes("월세")
+          ? monthlyRentRange[1] >= 500
+            ? undefined
+            : monthlyRentRange[1]
+          : undefined,
+        minPrice: selectedTypes.includes("매매")
+          ? salePriceRange[0]
+          : undefined,
+        maxPrice: selectedTypes.includes("매매")
+          ? salePriceRange[1] >= 1000000
+            ? undefined
+            : salePriceRange[1]
+          : undefined,
+        minExclusiveArea: spaceRange[0] * 3.3058, // 평 -> m2 변환
+        maxExclusiveArea:
+          spaceRange[1] >= 60 ? undefined : spaceRange[1] * 3.3058,
+        selectConditions: getSelectConditions(),
+        size: 30,
+      },
+    },
+    {
+      query: {
+        enabled: !!user && hasMounted && isFilterActive,
+      },
+    },
+  );
+
+  const apiResponse = isFilterActive
+    ? searchPropertyQuery.data
+    : mainPropertyQuery.data;
+  const isLoading = isFilterActive
+    ? searchPropertyQuery.isLoading
+    : mainPropertyQuery.isLoading;
 
   // 현재 리스트의 매물들을 지도에 표시하기 위해 동기화
   useEffect(() => {
@@ -120,6 +221,7 @@ const List = () => {
         priceStr = `매매 ${formatNumberToKoreanPrice(deal.price || 0)}`;
       }
 
+      const conditions = item.conditions || [];
       return {
         id: item.propertyId || 0,
         rank: index + 1,
@@ -129,7 +231,8 @@ const List = () => {
         type: PROPERTY_TYPE_MAP[item.propertyType || ""] || "아파트",
         area: `${item.supplyArea || 0}/${item.exclusiveArea || 0}m²`,
         floor: `${item.floor || 0}/${item.totalFloor || 0}층`,
-        tags: (item.conditions || []).map((c) => CONDITION_MAP[c] || ""),
+        tags: conditions.map((c) => CONDITION_MAP[c] || ""),
+        conditionIds: conditions,
         isLiked: item.liked,
       };
     }) || [];
@@ -137,6 +240,20 @@ const List = () => {
   const handleReset = () => {
     // 모든 활성 모듈 해제
     activeModules.forEach((id) => toggleModule(id));
+  };
+
+  const handleTagClick = (conditionId: number) => {
+    const idMap: Record<number, ModuleId> = {
+      1: "noise",
+      2: "environment",
+      3: "safety",
+      4: "accessibility",
+      5: "convenience",
+    };
+    const moduleId = idMap[conditionId];
+    if (moduleId) {
+      toggleModule(moduleId);
+    }
   };
 
   // Hydration을 방지하기 위해 마운트 전에는 뼈대만 렌더링하거나 기본값을 렌더링
@@ -217,6 +334,7 @@ const List = () => {
                   setSelectedId(id);
                   addViewedId(id);
                 }}
+                onTagClick={handleTagClick}
                 onToggleZzim={toggleZzim}
               />
             ))

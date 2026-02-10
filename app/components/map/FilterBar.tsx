@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import TransactionTypeDropdown from "./dropdown/TransactionTypeDropdown";
-import ResidenceTypeDropdown from "./dropdown/ResidenceTypeDropdown";
 import SpaceDropdown from "./dropdown/SpaceDropdown";
 import { useEffect } from "react";
 import { useRef } from "react";
+
+import { usePropertyStore } from "../../store/propertyStore";
 
 /**
  * FilterBar Component
@@ -16,23 +17,21 @@ export default function FilterBar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [openFilter, setOpenFilter] = useState<string | null>(null);
 
-  //(거래 유형 드랍박스 상태값들)
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [depositRange, setDepositRange] = useState<[number, number]>([0, 0]); // in 10k KRW (만원)
-  const [monthlyRentRange, setMonthlyRentRange] = useState<[number, number]>([
-    0, 0,
-  ]);
-  const [salePriceRange, setSalePriceRange] = useState<[number, number]>([
-    0, 0,
-  ]);
-
-  //(주거 형태 드랍박스 상태값)
-  const [selectedResidenceTypes, setSelectedResidenceTypes] = useState<
-    string[]
-  >([]);
-
-  //(평수 드랍박스 상태값)
-  const [spaceRange, setSpaceRange] = useState<[number, number]>([0, 60]);
+  const {
+    keyword,
+    setKeyword,
+    selectedTypes,
+    setSelectedTypes,
+    depositRange,
+    setDepositRange,
+    monthlyRentRange,
+    setMonthlyRentRange,
+    salePriceRange,
+    setSalePriceRange,
+    spaceRange,
+    setSpaceRange,
+    resetFilters,
+  } = usePropertyStore();
 
   const toggleFilter = (filterName: string) => {
     setOpenFilter(openFilter === filterName ? null : filterName);
@@ -96,14 +95,6 @@ export default function FilterBar() {
   };
 
   /**
-   * 주거 형태 버튼 라벨 생성 함수
-   */
-  const getResidenceTypeLabel = () => {
-    if (selectedResidenceTypes.length === 0) return "주거 형태";
-    return selectedResidenceTypes.join(", ");
-  };
-
-  /**
    * 평수 버튼 라벨 생성 함수
    */
   const getSpaceLabel = () => {
@@ -119,23 +110,20 @@ export default function FilterBar() {
   };
 
   const handleReset = () => {
-    setSelectedTypes([]);
-    setDepositRange([0, 0]);
-    setMonthlyRentRange([0, 0]);
-    setSalePriceRange([0, 0]);
-    setSelectedResidenceTypes([]);
-    setSpaceRange([0, 60]);
+    resetFilters();
     setOpenFilter(null);
   };
 
   return (
     <div className="flex items-center gap-6 bg-white w-full h-20 px-5 py-4 border-b border-[#E4E4E4] mt-20">
       {/* 검색 입력 영역 */}
-      <div className="relative flex items-center w-[366px]">
+      <div className="relative flex items-center w-91.5">
         <input
           type="text"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
           placeholder="지역, 단지, 지하철역 등을 입력하세요"
-          className="w-[366px] h-12 pl-5 pr-12 bg-[#F8FAFB] border border-[#E4E4E4] rounded-lg text-[16px] text-[#707070] placeholder:text-[#C4C4C4] focus:outline-none focus:border-[#30CEA1] transition-colors"
+          className="w-91.5 h-12 pl-5 pr-12 bg-[#F8FAFB] border border-[#E4E4E4] rounded-lg text-[16px] text-[#707070] placeholder:text-[#C4C4C4] focus:outline-none focus:border-[#30CEA1] transition-colors"
         />
         <div className="absolute right-4 flex items-center justify-center pointer-events-none">
           <Image

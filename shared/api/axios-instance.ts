@@ -33,6 +33,28 @@ export const customInstance = <T>(
   options?: AxiosRequestConfig,
 ): Promise<T> => {
   const source = axios.CancelToken.source();
+
+  // GET 요청 시 파라미터 가공
+  if (config.method?.toLowerCase() === "get" && config.params) {
+    let flattenedParams = { ...config.params };
+
+    // 1. requestDTO 중첩 제거 (Flattening)
+    if (flattenedParams.requestDTO) {
+      const { requestDTO, ...rest } = flattenedParams;
+      flattenedParams = { ...rest, ...requestDTO };
+    }
+
+    // 2. 배열 직렬화 변경 (Comma-separated)
+    Object.keys(flattenedParams).forEach((key) => {
+      const value = flattenedParams[key];
+      if (Array.isArray(value)) {
+        flattenedParams[key] = value.join(",");
+      }
+    });
+
+    config.params = flattenedParams;
+  }
+
   const promise = AXIOS_INSTANCE({
     ...config,
     ...options,

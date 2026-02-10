@@ -10,19 +10,28 @@ import { logoutAction } from "@/app/login/actions";
 import { useRouter, usePathname } from "next/navigation";
 
 import { usePropertyStore } from "@/app/store/propertyStore";
+import { useModuleStore } from "@/app/store/moduleStore";
 import { GetMainPropertyPropertyType } from "@/shared/api/generated/model/getMainPropertyPropertyType";
 
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, clearUser } = useUserStore();
-  const { selectedPropertyType, setPropertyType, syncWithUserPreference } =
-    usePropertyStore();
+  const {
+    selectedPropertyType,
+    setPropertyType,
+    syncWithUserPreference,
+    resetFilters,
+  } = usePropertyStore();
+  const { resetToUserPreference } = useModuleStore();
   const [mounted, setMounted] = useState(false);
 
   // hydration 에러 방지
   useEffect(() => {
-    setMounted(true);
+    // Cascading render 방지를 위해 비동기 처리
+    setTimeout(() => {
+      setMounted(true);
+    }, 0);
   }, []);
 
   // 초기 유저 선호도 동기화
@@ -65,7 +74,13 @@ export default function Navbar() {
   ];
 
   const handleMenuClick = (type: GetMainPropertyPropertyType) => {
+    // 1. 주거 형태 변경
     setPropertyType(type);
+    // 2. 검색 필터 초기화
+    resetFilters();
+    // 3. 우선순위 모듈 초기화 (유저 선호도로 복구)
+    resetToUserPreference(user?.preferredConditions || []);
+    // 4. 지도 페이지로 이동
     router.push("/map");
   };
 

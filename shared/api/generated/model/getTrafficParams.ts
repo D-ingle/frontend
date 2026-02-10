@@ -6,10 +6,6 @@
  * OpenAPI spec version: v1.0.0
  */
 
-export interface Item {
-  distanceMeter?: number;
-  id?: number;
-  latitude?: number;
-  longitude?: number;
-  population?: number;
-}
+export type GetTrafficParams = {
+propertyId: number;
+};

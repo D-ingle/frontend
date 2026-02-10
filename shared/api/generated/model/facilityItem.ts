@@ -15,4 +15,5 @@ export interface FacilityItem {
   latitude?: number;
   longitude?: number;
   name?: string;
+  roadAddress?: string;
 }

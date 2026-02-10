@@ -5,11 +5,8 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
+import type { PointDTO } from './pointDTO';
 
-export interface Item {
-  distanceMeter?: number;
-  id?: number;
-  latitude?: number;
-  longitude?: number;
-  population?: number;
+export interface PathDTO {
+  points?: PointDTO[];
 }

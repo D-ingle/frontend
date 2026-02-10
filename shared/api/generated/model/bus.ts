@@ -5,11 +5,13 @@
  * Dingle API
  * OpenAPI spec version: v1.0.0
  */
+import type { BusTrafficType } from './busTrafficType';
 
-export interface Item {
-  distanceMeter?: number;
-  id?: number;
+export interface Bus {
+  busNumber?: string[];
+  distance?: number;
   latitude?: number;
   longitude?: number;
-  population?: number;
+  name?: string;
+  trafficType?: BusTrafficType;
 }

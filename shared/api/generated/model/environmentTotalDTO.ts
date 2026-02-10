@@ -7,6 +7,7 @@
  */
 import type { Item } from './item';
 import type { ParticulateMatter } from './particulateMatter';
+import type { Slope } from './slope';
 
 export interface EnvironmentTotalDTO {
   enabled?: boolean;
@@ -14,4 +15,5 @@ export interface EnvironmentTotalDTO {
   items?: Item[];
   particulateMatter?: ParticulateMatter;
   radiusMeters?: number;
+  slope?: Slope;
 }

@@ -9,4 +9,6 @@
 export interface DestinationDTO {
   destinationAddress?: string;
   destinationName?: string;
+  destLatitude?: number;
+  destLongitude?: number;
 }

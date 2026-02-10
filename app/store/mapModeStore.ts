@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { PropertyScore } from "@/shared/api/generated/model/propertyScore";
 import { FacilityItem } from "@/shared/api/generated/model/facilityItem";
-import { Item } from "@/shared/api/generated/model/item";
+import { MapItem } from "../components/map/MapOverlays";
 import { NearbyNoiseItem } from "../types/nearby-noise";
 
 interface SelectedProperty {
@@ -31,31 +31,31 @@ interface MapModeState {
   selectedInfra: FacilityItem | null;
   setSelectedInfra: (infra: FacilityItem | null) => void;
   clearSelectedInfra: () => void;
-  environmentInfras: Item[];
-  setEnvironmentInfras: (infras: Item[]) => void;
+  environmentInfras: MapItem[];
+  setEnvironmentInfras: (infras: MapItem[]) => void;
   clearEnvironmentInfras: () => void;
-  selectedEnvironment: Item | null;
-  setSelectedEnvironment: (item: Item | null) => void;
+  selectedEnvironment: MapItem | null;
+  setSelectedEnvironment: (item: MapItem | null) => void;
   clearSelectedEnvironment: () => void;
   currentTime: number;
   setCurrentTime: (time: number) => void;
   debouncedTime: number;
   setDebouncedTime: (time: number) => void;
-  noiseInfras: Item[];
-  setNoiseInfras: (infras: Item[]) => void;
+  noiseInfras: MapItem[];
+  setNoiseInfras: (infras: MapItem[]) => void;
   clearNoiseInfras: () => void;
-  populationInfras: Item[];
-  setPopulationInfras: (infras: Item[]) => void;
+  populationInfras: MapItem[];
+  setPopulationInfras: (infras: MapItem[]) => void;
   clearPopulationInfras: () => void;
   districtAvgNoise: number;
   setDistrictAvgNoise: (avg: number) => void;
   districtAvgPopulation: number;
   setDistrictAvgPopulation: (avg: number) => void;
-  selectedNoise: Item | null;
-  setSelectedNoise: (item: Item | null) => void;
+  selectedNoise: MapItem | null;
+  setSelectedNoise: (item: MapItem | null) => void;
   clearSelectedNoise: () => void;
-  selectedPopulation: Item | null;
-  setSelectedPopulation: (item: Item | null) => void;
+  selectedPopulation: MapItem | null;
+  setSelectedPopulation: (item: MapItem | null) => void;
   clearSelectedPopulation: () => void;
 
   // 소음 발생 예상 구간 정보
@@ -87,10 +87,11 @@ export const useMapModeStore = create<MapModeState>((set) => ({
     set({ selectedInfra: infra }),
   clearSelectedInfra: () => set({ selectedInfra: null }),
   environmentInfras: [],
-  setEnvironmentInfras: (infras: Item[]) => set({ environmentInfras: infras }),
+  setEnvironmentInfras: (infras: MapItem[]) =>
+    set({ environmentInfras: infras }),
   clearEnvironmentInfras: () => set({ environmentInfras: [] }),
   selectedEnvironment: null,
-  setSelectedEnvironment: (item: Item | null) =>
+  setSelectedEnvironment: (item: MapItem | null) =>
     set({ selectedEnvironment: item }),
   clearSelectedEnvironment: () => set({ selectedEnvironment: null }),
   currentTime: 12,
@@ -98,10 +99,10 @@ export const useMapModeStore = create<MapModeState>((set) => ({
   debouncedTime: 12,
   setDebouncedTime: (debouncedTime: number) => set({ debouncedTime }),
   noiseInfras: [],
-  setNoiseInfras: (infras: Item[]) => set({ noiseInfras: infras }),
+  setNoiseInfras: (infras: MapItem[]) => set({ noiseInfras: infras }),
   clearNoiseInfras: () => set({ noiseInfras: [] }),
   populationInfras: [],
-  setPopulationInfras: (infras: Item[]) => set({ populationInfras: infras }),
+  setPopulationInfras: (infras: MapItem[]) => set({ populationInfras: infras }),
   clearPopulationInfras: () => set({ populationInfras: [] }),
   districtAvgNoise: 0,
   setDistrictAvgNoise: (districtAvgNoise: number) => set({ districtAvgNoise }),
@@ -109,7 +110,7 @@ export const useMapModeStore = create<MapModeState>((set) => ({
   setDistrictAvgPopulation: (districtAvgPopulation: number) =>
     set({ districtAvgPopulation }),
   selectedNoise: null,
-  setSelectedNoise: (selectedNoise: Item | null) => set({ selectedNoise }),
+  setSelectedNoise: (selectedNoise: MapItem | null) => set({ selectedNoise }),
   clearSelectedNoise: () => set({ selectedNoise: null }),
   selectedPopulation: null,
   setSelectedPopulation: (item) => set({ selectedPopulation: item }),

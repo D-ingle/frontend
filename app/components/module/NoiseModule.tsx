@@ -7,6 +7,7 @@ import {
   useGetNearbyNoise,
 } from "@/shared/api/generated/noise-controller/noise-controller";
 import { NearbyNoiseData } from "@/app/types/nearby-noise";
+import { MapItem } from "@/app/components/map/MapOverlays";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -126,7 +127,7 @@ const NoiseModule = () => {
     .filter((item) => item.noiseType === "CONSTRUCTION")
     .sort((a, b) => a.distanceMeter - b.distanceMeter)[0];
 
-  const nearbyItems = [
+  const nearbyMapItems = [
     {
       name: "소방서",
       time: calculateWalkTime(nearestFireStation?.distanceMeter),
@@ -276,7 +277,7 @@ const NoiseModule = () => {
             {/* Divider */}
             <div className="h-px bg-[#E5E5E5] w-full" />
 
-            {/* Stats Items */}
+            {/* Stats MapItems */}
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
@@ -373,7 +374,7 @@ const NoiseModule = () => {
             )}
 
             {/* List of areas */}
-            {nearbyItems.map((item, idx) => (
+            {nearbyMapItems.map((item, idx) => (
               <div key={idx} className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1 flex-1 min-w-0">

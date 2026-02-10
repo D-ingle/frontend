@@ -6,10 +6,12 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { cn } from "@/app/lib/utils";
 import CompareTag, { TagType } from "./CompareTag";
+import AILoading from "../ui/AILoading";
 
 interface CurationData {
   summary: string;
   tags: TagType[];
+  isAiLoading?: boolean;
   scores: {
     소음: number;
     환경: number;
@@ -131,31 +133,37 @@ const CurationComparison = ({ data }: CurationComparisonProps) => {
                     AI 요약 리포트
                   </p>
                 </div>
-                <div className="font-['Pretendard_Variable:Medium',sans-serif] font-medium leading-[1.4] text-[16px] text-[#7b7b7b] uppercase">
-                  <ReactMarkdown
-                    rehypePlugins={[rehypeRaw]}
-                    components={{
-                      p: ({ children }) => (
-                        <p className="mb-2 last:mb-0">{children}</p>
-                      ),
-                      strong: ({ children }) => (
-                        <strong className="font-bold text-[#2EA98C]">
-                          {children}
-                        </strong>
-                      ),
-                      ul: ({ children }) => (
-                        <ul className="list-disc list-inside mb-2">
-                          {children}
-                        </ul>
-                      ),
-                      li: ({ children }) => (
-                        <li className="ml-1">{children}</li>
-                      ),
-                      div: ({ children }) => <div>{children}</div>,
-                    }}
-                  >
-                    {item.summary}
-                  </ReactMarkdown>
+                <div className="font-['Pretendard_Variable:Medium',sans-serif] font-medium leading-[1.4] text-[16px] text-[#7b7b7b] uppercase flex-1 flex flex-col items-center justify-center">
+                  {item.isAiLoading ? (
+                    <div className="scale-75 origin-center">
+                      <AILoading />
+                    </div>
+                  ) : (
+                    <ReactMarkdown
+                      rehypePlugins={[rehypeRaw]}
+                      components={{
+                        p: ({ children }) => (
+                          <p className="mb-2 last:mb-0">{children}</p>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="font-bold text-[#2EA98C]">
+                            {children}
+                          </strong>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="list-disc list-inside mb-2">
+                            {children}
+                          </ul>
+                        ),
+                        li: ({ children }) => (
+                          <li className="ml-1">{children}</li>
+                        ),
+                        div: ({ children }) => <div>{children}</div>,
+                      }}
+                    >
+                      {item.summary}
+                    </ReactMarkdown>
+                  )}
                 </div>
                 <div className="flex gap-[6px] mt-auto">
                   {item.tags.map((tag) => (

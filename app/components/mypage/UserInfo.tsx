@@ -106,27 +106,23 @@ const UserInfo = () => {
           { label: "편의", score: compareData?.convenienceScore || 0 },
         ];
 
-        // 점수 높은 순으로 상위 3개 추출
-        const top3Strengths = allScores
+        // 점수 높은 순으로 상위 5개 추출
+        const top5Strengths = allScores
           .sort((a, b) => b.score - a.score)
-          .slice(0, 3)
+          .slice(0, 5)
           .map((s) => s.label);
 
         // 사용자의 선호 조건 (한글 명칭으로 변환)
         const userPrefs =
           user?.preferredConditions?.map((c) => CONDITION_MAP[c]) || [];
 
-        // 매물의 강점(상위 3개)과 사용자의 선호 조건의 교집합 필터링
-        const personalizedTags = top3Strengths.filter((tag) =>
+        // 매물의 강점(상위 5개)과 사용자의 선호 조건의 교집합 필터링
+        const personalizedTags = top5Strengths.filter((tag) =>
           userPrefs.includes(tag),
         );
 
         // 주소에서 시/구 추출 (예: "서울시 중구")
-        const addressParts = compareData?.address?.split(" ") || [];
-        const district =
-          addressParts.length >= 2
-            ? `${addressParts[0]} ${addressParts[1]}`
-            : "";
+        const addressParts = compareData?.address;
 
         return {
           id: item.propertyId || 0,
@@ -137,7 +133,7 @@ const UserInfo = () => {
           area: `${item.supplyArea || 0}/${item.exclusiveArea || 0}m²`,
           floor: `${item.floor || 0}/${item.totalFloor || 0}층`,
           tags: personalizedTags,
-          district: district,
+          district: addressParts,
         };
       }) || []
     );

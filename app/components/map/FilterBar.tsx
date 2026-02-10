@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useRef } from "react";
 
 import { usePropertyStore } from "../../store/propertyStore";
+import { useDebounce } from "../../hooks/useDebounce";
 
 /**
  * FilterBar Component
@@ -32,6 +33,20 @@ export default function FilterBar() {
     setSpaceRange,
     resetFilters,
   } = usePropertyStore();
+
+  // 검색어 입력 처리를 위한 로컬 상태
+  const [inputValue, setInputValue] = useState(keyword);
+  const debouncedKeyword = useDebounce(inputValue, 200);
+
+  // 디바운스된 값이 변경될 때만 스토어 업데이트
+  useEffect(() => {
+    setKeyword(debouncedKeyword);
+  }, [debouncedKeyword, setKeyword]);
+
+  // 외부(예: 필터 초기화)에서 keyword가 변경될 때 로컬 상태 동기화
+  useEffect(() => {
+    setInputValue(keyword);
+  }, [keyword]);
 
   const toggleFilter = (filterName: string) => {
     setOpenFilter(openFilter === filterName ? null : filterName);
@@ -120,8 +135,8 @@ export default function FilterBar() {
       <div className="relative flex items-center w-91.5">
         <input
           type="text"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           placeholder="지역, 단지, 지하철역 등을 입력하세요"
           className="w-91.5 h-12 pl-5 pr-12 bg-[#F8FAFB] border border-[#E4E4E4] rounded-lg text-[16px] text-[#707070] placeholder:text-[#C4C4C4] focus:outline-none focus:border-[#30CEA1] transition-colors"
         />

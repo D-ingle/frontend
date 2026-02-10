@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Map,
   MapMarker,
@@ -53,7 +53,7 @@ const CustomMarker = ({
     : "/map_marker/clicked_marker.svg";
 
   return (
-    <CustomOverlayMap position={{ lat, lng }}>
+    <CustomOverlayMap position={{ lat, lng }} zIndex={isSelected ? 9999 : 0}>
       <div
         className="relative flex flex-col items-center justify-center transition-all duration-300"
         style={{
@@ -63,6 +63,7 @@ const CustomMarker = ({
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
+          zIndex: `${isSelected ? 9999 : 0}`,
         }}
       >
         <div className="flex flex-col items-center justify-center -mt-2">
@@ -127,7 +128,7 @@ const KakaoMap = () => {
     clearSelectedAccessibility,
   } = useMapModeStore();
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
-  const [zoomLevel, setZoomLevel] = useState(selectedProperty ? 2 : 3);
+  const [zoomLevel, setZoomLevel] = useState(selectedProperty ? 3 : 4);
 
   // 편의 시설 마커 아이콘 매핑
   const infraIconMap: Record<string, string> = {
@@ -162,34 +163,27 @@ const KakaoMap = () => {
   };
 
   // 기본 중심값: 구일역
-  const defaultCenter = { lat: 37.4971, lng: 126.8715 };
+  const defaultCenter = useMemo(() => ({ lat: 37.4971, lng: 126.8715 }), []);
 
-  // 선택된 매물이 있으면 해당 좌표를, 없으면 기본 좌표를 사용
-  const mapCenter = selectedProperty
-    ? { lat: selectedProperty.lat, lng: selectedProperty.lng }
-    : defaultCenter;
+  // 지도의 현재 중심 좌표를 상태로 관리 (Snap 방지)
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
 
   const [loading, error] = useKakaoLoader({
     appkey: process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY || "",
   });
 
-  // 매물이 선택되었을 때 오프셋 적용
+  // 매물이 선택되었을 때 부드럽게 이동 (panTo)
   useEffect(() => {
     if (map && selectedProperty) {
-      // 1. 먼저 해당 좌표로 중심 이동
       const moveLatLng = new kakao.maps.LatLng(
         selectedProperty.lat,
         selectedProperty.lng,
       );
-      map.setCenter(moveLatLng);
 
-      // 2. 일반 모드일 때만 우측 가시 영역 중앙으로 오게 하기 위해 왼쪽으로 -400px 패닝
-      // 종합데이터 모드(isMapMode = true)에서는 사이드바가 없으므로 정중앙 유지
-      if (!isMapMode) {
-        map.panBy(-400, 0);
-      }
+      // 해당 매물 위치로 부드럽게 이동
+      map.panTo(moveLatLng);
     }
-  }, [map, selectedProperty, isMapMode]);
+  }, [map, selectedProperty]);
 
   if (loading)
     return <div className="w-full h-full bg-gray-100 animate-pulse" />;
@@ -204,9 +198,18 @@ const KakaoMap = () => {
     <Map
       center={mapCenter}
       style={{ width: "100%", height: "100%" }}
-      level={selectedProperty ? 2 : 3}
+      level={selectedProperty ? 3 : 4}
       onCreate={setMap}
       onZoomChanged={(map) => setZoomLevel(map.getLevel())}
+      onCenterChanged={(map) => {
+        // 지도가 움직이는 동안 실시간으로 현재 중심 좌표를 상태에 동기화
+        // onIdle 대신 onCenterChanged를 사용하여 '스냅 현상'을 방지
+        const center = map.getCenter();
+        setMapCenter({
+          lat: center.getLat(),
+          lng: center.getLng(),
+        });
+      }}
       onClick={() => {
         clearSelectedInfra();
         clearSelectedEnvironment();
@@ -363,7 +366,7 @@ const KakaoMap = () => {
                   },
                 },
               }}
-              zIndex={999}
+              zIndex={9999}
             />
           )}
 
@@ -584,7 +587,7 @@ const KakaoMap = () => {
                   },
                   options: {
                     offset: {
-                      x: getScaledSize(16, zoomLevel),
+                      x: getScaledSize(24, zoomLevel),
                       y: getScaledSize(16, zoomLevel),
                     },
                   },
@@ -608,7 +611,7 @@ const KakaoMap = () => {
                   },
                   options: {
                     offset: {
-                      x: getScaledSize(16, zoomLevel),
+                      x: getScaledSize(-2, zoomLevel),
                       y: getScaledSize(16, zoomLevel),
                     },
                   },

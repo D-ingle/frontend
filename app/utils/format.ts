@@ -7,9 +7,9 @@ import type { DealInfo } from "@/shared/api/generated/model/dealInfo";
  */
 export const formatNumberToKoreanPrice = (price: number) => {
   if (price === 0) return "0";
-  const uk = Math.floor(price / 10000);
+  const uk = (price / 100000000).toFixed(1);
   const remaining = price % 10000;
-  if (uk > 0) {
+  if (Number(uk) > 0) {
     if (remaining > 0) {
       // Format remaining part with commas (e.g., 9,000)
       const formattedRemaining = remaining.toLocaleString();

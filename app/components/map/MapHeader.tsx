@@ -3,14 +3,29 @@
 import React from "react";
 import { X } from "lucide-react";
 import { useMapModeStore } from "../../store/mapModeStore";
+import { useRecentViewStore } from "../../store/recentViewStore";
 
 interface MapHeaderProps {
   title?: string;
 }
 
 const MapHeader = () => {
-  const { setMapMode, selectedProperty } = useMapModeStore();
+  const { setMapMode, selectedProperty, clearSelectedProperty, setSelectedId } =
+    useMapModeStore();
+  const { viewedIds } = useRecentViewStore();
+
   const title = selectedProperty?.title || "매물 위치";
+
+  const handleClose = () => {
+    setMapMode(false);
+    clearSelectedProperty();
+    setTimeout(() => {
+      const targetId = selectedProperty?.id || viewedIds[0];
+      if (targetId) {
+        setSelectedId(targetId);
+      }
+    }, 100); // 150ms 지연
+  };
 
   return (
     <div className="flex gap-3 items-center w-full px-5 pt-5 pointer-events-none">
@@ -26,7 +41,7 @@ const MapHeader = () => {
 
       {/* Close Button Box */}
       <button
-        onClick={() => setMapMode(false)}
+        onClick={handleClose}
         className="bg-white border-[1.5px] border-[#F5F5F5] flex items-center justify-center rounded-xl shadow-[0px_3px_5px_0px_rgba(0,0,0,0.1)] shrink-0 w-15 h-15 pointer-events-auto hover:bg-gray-50 transition-colors"
       >
         <X className="w-6 h-6 text-black" />

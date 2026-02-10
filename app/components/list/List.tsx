@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,7 +45,8 @@ const mIdMap: Record<ModuleId, number> = {
 };
 
 const List = () => {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const { selectedId, setSelectedId, clearSelectedProperty } =
+    useMapModeStore();
   const [hasMounted, setHasMounted] = useState(false);
 
   const { user } = useUserStore();
@@ -86,7 +87,7 @@ const List = () => {
         }, 0);
       }
     }
-  }, [hasMounted, searchParams]);
+  }, [hasMounted, searchParams, setSelectedId]);
 
   // 현재 활성화된 모듈이 사용자의 기본 선호도와 다른지 확인
   const isPriorityChanged = () => {
@@ -94,6 +95,32 @@ const List = () => {
     const preferredIds = [...(user?.preferredConditions || [])].sort();
     return JSON.stringify(activeIds) !== JSON.stringify(preferredIds);
   };
+
+  const firstRenderRef = useRef(true);
+
+  // 필터가 변경되면 상세창을 닫습니다. (주거 형태 포함)
+  useEffect(() => {
+    // 첫 렌더링(마운트) 시에는 URL 파라미터로 열릴 수도 있으므로 건너뜁니다.
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+
+    // Cascading render 방지를 위해 비동기 처리
+    setTimeout(() => {
+      clearSelectedProperty();
+    }, 0);
+  }, [
+    keyword,
+    selectedTypes,
+    depositRange,
+    monthlyRentRange,
+    salePriceRange,
+    spaceRange,
+    activeModules,
+    selectedPropertyType,
+    clearSelectedProperty,
+  ]);
 
   // 필터가 하나라도 적용되었는지 확인 (주거 형태 필터 제외, 우선순위 변경 포함)
   const isFilterActive =
@@ -105,13 +132,13 @@ const List = () => {
 
   // 요청할 우선순위 조건 생성 (검색 모드에서는 현재 활성화된 것만 전송)
   const getSelectConditions = () => {
-    return activeModules.map((m) => mIdMap[m]).slice(0, 3);
+    return activeModules.map((m) => mIdMap[m]).slice(0, 5);
   };
 
   // 메인 매물 조회 (기본 추천 - 선호도 기반)
   const mainPropertyQuery = useGetMainProperty(
     {
-      select: (user?.preferredConditions || []).slice(0, 3),
+      select: (user?.preferredConditions || []).slice(0, 5),
       propertyType: selectedPropertyType,
       size: 30,
     },

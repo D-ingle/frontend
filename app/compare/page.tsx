@@ -136,24 +136,25 @@ const ComparePageContent = () => {
       { label: "편의", score: compareInfo?.convenienceScore || 0 },
     ];
 
-    // 점수 높은 순으로 상위 3개 추출
-    const top3Strengths = allScores
+    // 점수 높은 순으로 상위 5개 추출
+    const top5Strengths = allScores
       .sort((a, b) => b.score - a.score)
-      .slice(0, 3)
+      .slice(0, 5)
       .map((s) => s.label);
 
     // 사용자의 선호 조건 (한글 명칭으로 변환)
     const userPrefs =
       user?.preferredConditions?.map((c) => CONDITION_MAP[c]) || [];
 
-    // 매물의 강점(상위 3개)과 사용자의 선호 조건의 교집합 필터링
-    const personalizedTags = top3Strengths.filter((tag) =>
+    // 매물의 강점(상위 5개)과 사용자의 선호 조건의 교집합 필터링
+    const personalizedTags = top5Strengths.filter((tag) =>
       userPrefs.includes(tag),
     ) as ("소음" | "안전" | "접근성" | "편의" | "환경")[];
 
     return {
-      summary: curationInfo?.description || "큐레이션 분석 중입니다...",
+      summary: curationInfo?.description || "분석 중...",
       tags: personalizedTags,
+      isAiLoading: curationQueries[index]?.isLoading,
       scores: {
         소음: compareInfo?.noiseScore || 0,
         환경: compareInfo?.environmentScore || 0,

@@ -21,8 +21,10 @@ interface SelectedProperty {
 interface MapModeState {
   isMapMode: boolean;
   setMapMode: (isMapMode: boolean) => void;
+  selectedId: number | null;
+  setSelectedId: (id: number | null) => void;
   selectedProperty: SelectedProperty | null;
-  setSelectedProperty: (property: SelectedProperty) => void;
+  setSelectedProperty: (property: SelectedProperty | null) => void;
   clearSelectedProperty: () => void;
   propertiesOnMap: (SelectedProperty & { id: number })[];
   setPropertiesOnMap: (
@@ -101,10 +103,13 @@ interface MapModeState {
 export const useMapModeStore = create<MapModeState>((set) => ({
   isMapMode: false,
   setMapMode: (isMapMode: boolean) => set({ isMapMode }),
+  selectedId: null,
+  setSelectedId: (id: number | null) => set({ selectedId: id }),
   selectedProperty: null,
-  setSelectedProperty: (selectedProperty: SelectedProperty) =>
-    set({ selectedProperty }),
-  clearSelectedProperty: () => set({ selectedProperty: null }),
+  setSelectedProperty: (selectedProperty: SelectedProperty | null) =>
+    set({ selectedProperty, selectedId: selectedProperty?.id || null }),
+  clearSelectedProperty: () =>
+    set({ selectedProperty: null, selectedId: null }),
   propertiesOnMap: [],
   setPropertiesOnMap: (properties: (SelectedProperty & { id: number })[]) =>
     set({ propertiesOnMap: properties }),

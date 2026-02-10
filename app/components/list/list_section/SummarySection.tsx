@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatPrice } from "@/app/utils/format";
+import { useModuleStore } from "@/app/store/moduleStore";
 import type { PropertyInfo } from "@/shared/api/generated/model/propertyInfo";
 import type { DealInfo } from "@/shared/api/generated/model/dealInfo";
 import type { PropertyImages } from "@/shared/api/generated/model/propertyImages";
@@ -39,9 +40,9 @@ const PROPERTY_TYPE_MAP: Record<string, string> = {
 const CONDITION_MAP: Record<number, string> = {
   1: "소음",
   2: "환경",
-  3: "편의",
+  3: "안전",
   4: "접근성",
-  5: "안전",
+  5: "편의",
 };
 
 const variants = {
@@ -70,11 +71,41 @@ const SummarySection = ({
   isLiked,
   onToggleZzim,
 }: SummarySectionProps) => {
+  const { activeModules } = useModuleStore();
+
+  const activeModuleNames = activeModules.map((mId) => {
+    switch (mId) {
+      case "noise":
+        return "소음";
+      case "environment":
+        return "환경";
+      case "safety":
+        return "안전";
+      case "accessibility":
+        return "접근성";
+      case "convenience":
+        return "편의";
+      default:
+        return "";
+    }
+  });
+
+  // 매물 데이터의 전체 조건 이름 리스트 (순서 유지)
+  const allConditionNames = (conditions || []).map((cId) => CONDITION_MAP[cId]);
+
+  // 상위 5개까지 노출
+  const displayConditionNames = allConditionNames.slice(0, 5);
+
+  // 상위 3개 중 사용자의 우선순위와 일치하는 것들 (활성화 대상)
+  const finalActiveNames = displayConditionNames.filter((name) =>
+    activeModuleNames.includes(name as any),
+  );
+
+  const priorityFactors = ["소음", "환경", "안전", "접근성", "편의"];
+
   const imageUrls = images?.propertyImageUrls || ["/images/mockup/item.png"];
   const [[page, direction], setPage] = useState([0, 0]);
   const currentIndex = Math.abs(page % imageUrls.length);
-
-  const priorityFactors = conditions?.map((a) => CONDITION_MAP[a]);
 
   const paginate = (newDirection: number) => {
     setPage([page + newDirection, newDirection]);
@@ -298,21 +329,23 @@ const SummarySection = ({
           <p className="text-[12px] text-gray-400 mb-5">
             컬러로 표시된 키워드는 유저 님의 관심사와 일치하는 키워드에요
           </p>
-          <div className="flex gap-2">
-            {priorityFactors?.map((a, i) => {
-              const isMatched = conditions?.some(
-                (cId) => CONDITION_MAP[cId] === a,
-              );
+          <div className="flex gap-1.5 flex-wrap">
+            {priorityFactors.map((a, i) => {
+              const isActive = finalActiveNames.includes(a);
               return (
                 <span
                   key={i}
-                  className={`px-3 py-1.5 text-[13px] rounded-full font-bold border 
-                    ${isMatched ? "opacity-100" : "opacity-30"}
-                    ${a === "소음" && "border-[#FBBA78] text-[#FBBA78] bg-[#FFFCF6]"}
-                    ${a === "환경" && "border-[#82AA82] text-[#82AA82] bg-[#F8FCF8]"}
-                    ${a === "편의" && "border-[#AB9FD5] text-[#AB9FD5] bg-[#FAF9FD]"}
-                    ${a === "안전" && "border-[#F48787] text-[#F48787] bg-[#FFF7F7]"}
-                    ${a === "접근성" && "border-[#7CB7CD] text-[#7CB7CD] bg-[#F7FCFE]"}`}
+                  className={`px-3 py-1.5 text-[13px] rounded-full font-bold border transition-colors
+                    ${
+                      isActive
+                        ? ""
+                        : "text-[#9D9D9D] border-[#D9D9D9] bg-[#F5F5F5]"
+                    }
+                    ${isActive && a === "소음" ? "border-[#FBBA78] text-[#FBBA78] bg-[#FFFCF6]" : ""}
+                    ${isActive && a === "환경" ? "border-[#82AA82] text-[#82AA82] bg-[#F8FCF8]" : ""}
+                    ${isActive && a === "편의" ? "border-[#AB9FD5] text-[#AB9FD5] bg-[#FAF9FD]" : ""}
+                    ${isActive && a === "안전" ? "border-[#F48787] text-[#F48787] bg-[#FFF7F7]" : ""}
+                    ${isActive && a === "접근성" ? "border-[#7CB7CD] text-[#7CB7CD] bg-[#F7FCFE]" : ""}`}
                 >
                   {a}
                 </span>

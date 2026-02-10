@@ -9,7 +9,6 @@ import DetailInfoSection from "./list_section/DetailInfoSection";
 import FacilitiesSection from "./list_section/FacilitiesSection";
 import SchoolSection from "./list_section/SchoolSection";
 import AgencySection from "./list_section/AgencySection";
-import ReviewSection from "./list_section/ReviewSection";
 import SchoolDetail from "./list_section/detail/SchoolDetail";
 import ContactModal from "./list_section/detail/ContactModal";
 import Image from "next/image";
@@ -28,8 +27,6 @@ const sections = [
   { id: "facilities", label: "옵션 및 부대시설" },
   { id: "school", label: "학군 정보" },
   { id: "agency", label: "중개사무소 정보" },
-
-  { id: "review", label: "후기 사진" },
 ];
 
 const ListDetail = ({
@@ -103,14 +100,7 @@ const ListDetail = ({
         });
       }
     }
-
-    return () => {
-      // 렌더링 사이클에 의존하지 않고 전역 스토어의 최신 상태를 직접 확인
-      if (!useMapModeStore.getState().isMapMode) {
-        clearSelectedProperty();
-      }
-    };
-  }, [detailData, setSelectedProperty, clearSelectedProperty, propertyId]);
+  }, [detailData, setSelectedProperty, propertyId]);
 
   // 스크롤 감지 및 탭 포커스 자동 전환
   useEffect(() => {
@@ -175,6 +165,18 @@ const ListDetail = ({
     }
   };
 
+  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    if (isManualScrolling.current) return;
+
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    // 바닥에 거의 도달했는지 확인 (오차 범위 10px)
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
+    if (isAtBottom) {
+      setActiveTab("agency");
+    }
+  };
+
   return (
     <main className="relative flex flex-col w-full h-full bg-white overflow-hidden">
       {/* Top Header (Fixed) */}
@@ -191,7 +193,10 @@ const ListDetail = ({
       </header>
 
       {/* Main Scrollable Content */}
-      <main className="scroll-container flex-1 overflow-y-auto no-scrollbar scroll-smooth">
+      <main
+        onScroll={handleScroll}
+        className="scroll-container flex-1 overflow-y-auto no-scrollbar scroll-smooth"
+      >
         {isLoading ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 py-20">
             <div className="w-10 h-10 border-4 border-[#30CEA1] border-t-transparent rounded-full animate-spin" />
@@ -275,14 +280,10 @@ const ListDetail = ({
               <AgencySection realtorInfo={detailData?.realtorInfo} />
             </div>
             <div className="h-4 bg-[#F4F4F4]" />
-
-            <div id="review">
-              <ReviewSection />
-            </div>
           </>
         )}
         {/* Footer padding */}
-        <div className="h-8" />
+        {/* <div className="h-8" /> */}
       </main>
 
       {/* Bottom Contact Bar (Fixed) */}

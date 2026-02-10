@@ -11,6 +11,7 @@ import { useRouter, usePathname } from "next/navigation";
 
 import { usePropertyStore } from "@/app/store/propertyStore";
 import { useModuleStore } from "@/app/store/moduleStore";
+import { useMapModeStore } from "@/app/store/mapModeStore";
 import { GetMainPropertyPropertyType } from "@/shared/api/generated/model/getMainPropertyPropertyType";
 
 export default function Navbar() {
@@ -24,6 +25,7 @@ export default function Navbar() {
     resetFilters,
   } = usePropertyStore();
   const { resetToUserPreference } = useModuleStore();
+  const { clearSelectedProperty } = useMapModeStore();
   const [mounted, setMounted] = useState(false);
 
   // hydration 에러 방지
@@ -80,7 +82,9 @@ export default function Navbar() {
     resetFilters();
     // 3. 우선순위 모듈 초기화 (유저 선호도로 복구)
     resetToUserPreference(user?.preferredConditions || []);
-    // 4. 지도 페이지로 이동
+    // 4. 선택된 매물 정보 초기화 (핀 제거)
+    clearSelectedProperty();
+    // 5. 지도 페이지로 이동
     router.push("/map");
   };
 

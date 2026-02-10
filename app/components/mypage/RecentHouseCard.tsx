@@ -26,7 +26,7 @@ const RecentHouseCard = ({
   area,
   floor,
   tags,
-  district = "서울시 중구",
+  district,
   onClick,
 }: RecentHouseCardProps) => {
   return (
@@ -46,7 +46,9 @@ const RecentHouseCard = ({
             height={16}
             className="brightness-0 invert"
           />
-          <p className="text-white text-[12px] font-medium font-sans">{area}</p>
+          <p className="text-white text-[12px] font-medium font-sans">
+            {district}
+          </p>
         </div>
       </div>
 
@@ -57,7 +59,7 @@ const RecentHouseCard = ({
         </p>
         <div className="flex flex-col gap-1 items-start w-full">
           <p className="text-[13px] text-[#707070] font-normal leading-[1.1] uppercase">
-            {name}
+            {name || "정보 없음"}
           </p>
           <div className="flex items-center w-full">
             <p className="text-[13px] text-[#707070] font-normal leading-[1.1] uppercase">

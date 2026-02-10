@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { useMapModeStore } from "../../../store/mapModeStore";
+import AILoading from "../../ui/AILoading";
 
 const CATEGORY_TOOLTIPS: Record<string, string> = {
   안전: "CCTV수, 범죄주의구간, 보안등, 경찰서 위치를 합산하여 산출한 점수입니다.",
@@ -98,9 +99,7 @@ const CurationSection = ({
         </div>
         <div className="text-[16px] leading-[1.6] text-[#434343]">
           {isAiLoading ? (
-            <span className="text-gray-400 animate-pulse">
-              AI가 매물을 분석하고 있습니다...
-            </span>
+            <AILoading />
           ) : aiSummary ? (
             <ReactMarkdown
               rehypePlugins={[rehypeRaw]}

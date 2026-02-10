@@ -36,12 +36,21 @@ import { useSearchProperty } from "@/shared/api/generated/main-property-controll
 import { PropertySearchRequestDTODealType } from "@/shared/api/generated/model/propertySearchRequestDTODealType";
 import { PropertySearchRequestDTOPropertyType } from "@/shared/api/generated/model/propertySearchRequestDTOPropertyType";
 
+const mIdMap: Record<ModuleId, number> = {
+  noise: 1,
+  environment: 2,
+  safety: 3,
+  accessibility: 4,
+  convenience: 5,
+};
+
 const List = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
 
   const { user } = useUserStore();
-  const { activeModules, toggleModule } = useModuleStore();
+  const { activeModules, toggleModule, resetToUserPreference } =
+    useModuleStore();
   const { toggleZzim } = usePropertyZzim();
   const { addViewedId } = useRecentViewStore();
   const {
@@ -52,6 +61,7 @@ const List = () => {
     monthlyRentRange,
     salePriceRange,
     spaceRange,
+    resetFilters,
   } = usePropertyStore();
 
   const { setPropertiesOnMap } = useMapModeStore();
@@ -78,35 +88,30 @@ const List = () => {
     }
   }, [hasMounted, searchParams]);
 
-  // 필터가 하나라도 적용되었는지 확인 (주거 형태 필터 제외, 우선순위 바 활성화 포함)
+  // 현재 활성화된 모듈이 사용자의 기본 선호도와 다른지 확인
+  const isPriorityChanged = () => {
+    const activeIds = activeModules.map((m) => mIdMap[m]).sort();
+    const preferredIds = [...(user?.preferredConditions || [])].sort();
+    return JSON.stringify(activeIds) !== JSON.stringify(preferredIds);
+  };
+
+  // 필터가 하나라도 적용되었는지 확인 (주거 형태 필터 제외, 우선순위 변경 포함)
   const isFilterActive =
     keyword.trim() !== "" ||
     selectedTypes.length > 0 ||
     spaceRange[0] !== 0 ||
     spaceRange[1] !== 60 ||
-    activeModules.length > 0;
+    isPriorityChanged();
 
-  // 공통 ID 맵
-  const mIdMap: Record<ModuleId, number> = {
-    noise: 1,
-    environment: 2,
-    safety: 3,
-    accessibility: 4,
-    convenience: 5,
-  };
-
-  // 요청할 우선순위 조건 생성 (활성 모듈 우선 + 프로필 선호도 보완 + 최대 3개 제한)
+  // 요청할 우선순위 조건 생성 (검색 모드에서는 현재 활성화된 것만 전송)
   const getSelectConditions = () => {
-    const activeIds = activeModules.map((m) => mIdMap[m]);
-    const preferredIds = user?.preferredConditions || [];
-    // 활성 모듈을 앞에 두고 중복 제거 후 최대 3개 추출
-    return Array.from(new Set([...activeIds, ...preferredIds])).slice(0, 3);
+    return activeModules.map((m) => mIdMap[m]).slice(0, 3);
   };
 
-  // 메인 매물 조회 (기본 추천)
+  // 메인 매물 조회 (기본 추천 - 선호도 기반)
   const mainPropertyQuery = useGetMainProperty(
     {
-      select: Array.from(new Set(user?.preferredConditions || [])).slice(0, 3),
+      select: (user?.preferredConditions || []).slice(0, 3),
       propertyType: selectedPropertyType,
       size: 30,
     },
@@ -238,8 +243,10 @@ const List = () => {
     }) || [];
 
   const handleReset = () => {
-    // 모든 활성 모듈 해제
-    activeModules.forEach((id) => toggleModule(id));
+    // 모든 검색 필터 초기화
+    resetFilters();
+    // 모듈 상태를 사용자의 원래 선호도로 복구
+    resetToUserPreference(user?.preferredConditions || []);
   };
 
   const handleTagClick = (conditionId: number) => {

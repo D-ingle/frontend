@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import { PropertyScore } from "@/shared/api/generated/model/propertyScore";
 import { FacilityItem } from "@/shared/api/generated/model/facilityItem";
+import { PointDTO } from "@/shared/api/generated/model/pointDTO";
 import { MapItem } from "../components/map/MapOverlays";
 import { NearbyNoiseItem } from "../types/nearby-noise";
+import { PoliceModalResponse } from "@/shared/api/generated/model/policeModalResponse";
 
 interface SelectedProperty {
   id: number;
@@ -65,6 +67,25 @@ interface MapModeState {
   selectedNearbyNoise: NearbyNoiseItem | null;
   setSelectedNearbyNoise: (item: NearbyNoiseItem) => void;
   clearSelectedNearbyNoise: () => void;
+
+  // 경찰서 정보
+  policeInfras: PoliceModalResponse[];
+  setPoliceInfras: (infras: PoliceModalResponse[]) => void;
+  clearPoliceInfras: () => void;
+  selectedPolice: PoliceModalResponse | null;
+  setSelectedPolice: (police: PoliceModalResponse | null) => void;
+  clearSelectedPolice: () => void;
+
+  // 안전 경로 및 설비 정보
+  safetyPath: PointDTO[];
+  safetyCctvs: PointDTO[];
+  safetyLights: PointDTO[];
+  setSafetyRoute: (
+    path: PointDTO[],
+    cctvs: PointDTO[],
+    lights: PointDTO[],
+  ) => void;
+  clearSafetyRoute: () => void;
 }
 
 export const useMapModeStore = create<MapModeState>((set) => ({
@@ -122,4 +143,20 @@ export const useMapModeStore = create<MapModeState>((set) => ({
   selectedNearbyNoise: null,
   setSelectedNearbyNoise: (item) => set({ selectedNearbyNoise: item }),
   clearSelectedNearbyNoise: () => set({ selectedNearbyNoise: null }),
+
+  policeInfras: [],
+  setPoliceInfras: (infras) => set({ policeInfras: infras }),
+  clearPoliceInfras: () => set({ policeInfras: [] }),
+  selectedPolice: null,
+  setSelectedPolice: (police) => set({ selectedPolice: police }),
+  clearSelectedPolice: () => set({ selectedPolice: null }),
+
+  // 안전 경로 및 설비 정보 초기값
+  safetyPath: [],
+  safetyCctvs: [],
+  safetyLights: [],
+  setSafetyRoute: (path, cctvs, lights) =>
+    set({ safetyPath: path, safetyCctvs: cctvs, safetyLights: lights }),
+  clearSafetyRoute: () =>
+    set({ safetyPath: [], safetyCctvs: [], safetyLights: [] }),
 }));

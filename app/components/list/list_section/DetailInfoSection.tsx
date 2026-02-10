@@ -70,9 +70,9 @@ const DetailInfoSection = ({
       <h3 className="text-[18px] font-bold text-[#000000] mb-6">상세 정보</h3>
 
       {/* Floor Plan Image */}
-      <div className="relative w-full aspect-401/300 bg-white border border-[#E5E5E5] rounded-xl mb-8 overflow-hidden flex items-center justify-center p-4">
+      <div className="relative w-full aspect-401/300 bg-white rounded-xl mb-8 overflow-hidden flex items-center justify-center p-4">
         <Image
-          src={floorImageUrl || "/images/mockup/placeholder.png"}
+          src={floorImageUrl || "/images/mockup/placeholder.svg"}
           alt="Floor Plan"
           fill
         />

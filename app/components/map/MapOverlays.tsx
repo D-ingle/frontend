@@ -1,6 +1,7 @@
 import React from "react";
 import { FacilityItem } from "@/shared/api/generated/model/facilityItem";
 import { NearbyNoiseItem } from "@/app/types/nearby-noise";
+import { PoliceModalResponse } from "@/shared/api/generated/model/policeModalResponse";
 
 export interface MapItem {
   natureType?: "WALK" | "PARK";
@@ -169,6 +170,27 @@ export const NearbyNoiseOverlay = ({
             </p>
           )}
         </div>
+      </div>
+    </div>
+  );
+};
+
+export const PoliceOverlay = ({
+  station,
+  onClose,
+}: {
+  station: PoliceModalResponse;
+  onClose: () => void;
+}) => {
+  return (
+    <div
+      className="bg-white border-[1.5px] border-[#E05353] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-40 cursor-pointer"
+      onClick={onClose}
+    >
+      <div className="bg-[#E05353] px-2.5 py-1.75 flex justify-between items-center whitespace-nowrap">
+        <p className="font-semibold text-[14px] text-white">
+          {station.policeOfficeName}
+        </p>
       </div>
     </div>
   );

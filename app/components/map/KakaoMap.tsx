@@ -5,6 +5,7 @@ import {
   Map,
   MapMarker,
   CustomOverlayMap,
+  Polyline,
   useKakaoLoader,
 } from "react-kakao-maps-sdk";
 import { useMapModeStore } from "../../store/mapModeStore";
@@ -19,6 +20,7 @@ import {
   NoiseOverlay,
   PopulationOverlay,
   NearbyNoiseOverlay,
+  PoliceOverlay,
 } from "./MapOverlays";
 
 const CustomMarker = ({
@@ -100,6 +102,13 @@ const KakaoMap = () => {
     selectedNearbyNoise,
     setSelectedNearbyNoise,
     clearSelectedNearbyNoise,
+    policeInfras,
+    selectedPolice,
+    setSelectedPolice,
+    clearSelectedPolice,
+    safetyPath,
+    safetyCctvs,
+    safetyLights,
   } = useMapModeStore();
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
 
@@ -178,6 +187,8 @@ const KakaoMap = () => {
         clearSelectedEnvironment();
         clearSelectedNoise();
         clearSelectedPopulation();
+        clearSelectedNearbyNoise();
+        clearSelectedPolice();
       }}
     >
       {isMapMode ? (
@@ -398,6 +409,104 @@ const KakaoMap = () => {
               />
             </CustomOverlayMap>
           )}
+
+          {/* 인근 경찰서 마커 */}
+          {policeInfras.map((station, idx) => (
+            <MapMarker
+              key={`police-${idx}-${station.latitude}`}
+              position={{
+                lat: station.latitude || 0,
+                lng: station.longitude || 0,
+              }}
+              image={{
+                src: "/map_marker/safety/police_marker.svg",
+                size: { width: 44, height: 44 },
+                options: {
+                  offset: { x: 22, y: 44 },
+                },
+              }}
+              title={station.policeOfficeName}
+              onClick={() => setSelectedPolice(station)}
+            />
+          ))}
+
+          {/* 경찰서 커스텀 오버레이 */}
+          {selectedPolice &&
+            selectedPolice.latitude &&
+            selectedPolice.longitude && (
+              <CustomOverlayMap
+                position={{
+                  lat: selectedPolice.latitude,
+                  lng: selectedPolice.longitude,
+                }}
+                yAnchor={1.2}
+              >
+                <PoliceOverlay
+                  station={selectedPolice}
+                  onClose={() => clearSelectedPolice()}
+                />
+              </CustomOverlayMap>
+            )}
+
+          {/* 안전 경로 표시 (Polyline) - 파란색 점선 디자인 */}
+          {safetyPath.length > 0 && (
+            <>
+              {/* 바깥쪽 파란색 메인 라인 */}
+              <Polyline
+                path={safetyPath.map((p) => ({
+                  lat: p.latitude || 0,
+                  lng: p.longitude || 0,
+                }))}
+                strokeWeight={10}
+                strokeColor="#2563EB"
+                strokeOpacity={0.7}
+                strokeStyle="solid"
+              />
+              {/* 가운데 흰색 점선 */}
+              <Polyline
+                path={safetyPath.map((p) => ({
+                  lat: p.latitude || 0,
+                  lng: p.longitude || 0,
+                }))}
+                strokeWeight={2}
+                strokeColor="#FFFFFF"
+                strokeOpacity={1}
+                strokeStyle="dash"
+              />
+            </>
+          )}
+
+          {/* CCTV 마커 표시 */}
+          {safetyCctvs
+            .filter((cctv) => cctv.latitude && cctv.longitude)
+            .map((cctv, idx) => (
+              <MapMarker
+                key={`cctv-${idx}-${cctv.latitude}-${cctv.longitude}`}
+                position={{ lat: cctv.latitude!, lng: cctv.longitude! }}
+                image={{
+                  src: "/map_marker/safety/cctv_marker.svg",
+                  size: { width: 32, height: 32 },
+                  options: { offset: { x: 16, y: 16 } },
+                }}
+                title="CCTV"
+              />
+            ))}
+
+          {/* 보안등 마커 표시 */}
+          {safetyLights
+            .filter((light) => light.latitude && light.longitude)
+            .map((light, idx) => (
+              <MapMarker
+                key={`light-${idx}-${light.latitude}-${light.longitude}`}
+                position={{ lat: light.latitude!, lng: light.longitude! }}
+                image={{
+                  src: "/map_marker/safety/light_marker.svg",
+                  size: { width: 32, height: 32 },
+                  options: { offset: { x: 16, y: 16 } },
+                }}
+                title="보안등"
+              />
+            ))}
         </>
       ) : (
         <>

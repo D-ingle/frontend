@@ -74,9 +74,9 @@ const SchoolSection = ({
           <span className="text-[12px] text-[#9D9D9D]">서울청구초통학구역</span>
         </div>
 
-        <div className="flex flex-col gap-8 px-1">
+        <div className="flex flex-col gap-6 px-1 ">
           {currentSchools.map((school, idx) => (
-            <div key={idx}>
+            <React.Fragment key={idx}>
               <SchoolItem
                 name={school.name}
                 type={school.type}
@@ -84,31 +84,28 @@ const SchoolSection = ({
                 onClick={() => onOpenSchoolDetail?.(school.name)}
               />
               {idx !== currentSchools.length - 1 && (
-                <div className="w-full h-px bg-[#F4F4F4] mt-4" />
+                <div className="w-full h-px bg-[#F4F4F4]" />
               )}
-            </div>
+            </React.Fragment>
           ))}
         </div>
       </div>
 
       {/* Exception School Section */}
       <div>
-        <div className="flex items-center px-3 py-2 bg-[#F8FAFB] rounded-lg mb-6 bg-">
+        <div className="flex items-center px-3 py-2 bg-[#F8FAFB] rounded-lg mb-6">
           <span className="text-[14px] font-bold text-navy">
             학군배정 예외학교
           </span>
         </div>
-        <div className="flex flex-col gap-8 px-1">
-          {/* Mocked for demonstration mirroring Figma */}
+        <div className="flex flex-col gap-6 px-1">
           <SchoolItem
             name="서울청구초등학교"
             type="공립"
             distance="902m"
             onClick={() => onOpenSchoolDetail?.("서울청구초등학교")}
           />
-
           <div className="w-full h-px bg-[#F4F4F4]" />
-
           <SchoolItem
             name="서울청구초등학교"
             type="사립"

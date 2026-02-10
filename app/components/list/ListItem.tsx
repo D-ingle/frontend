@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { Heart } from "lucide-react";
 
 interface ListItemProps {
   property: {
@@ -15,13 +14,20 @@ interface ListItemProps {
     area: string;
     floor: string;
     tags: string[];
+    conditionIds?: number[];
     isLiked?: boolean;
   };
   onClick: (id: number) => void;
+  onTagClick?: (conditionId: number) => void;
   onToggleZzim?: (id: number, isLiked: boolean) => void;
 }
 
-const ListItem = ({ property, onClick, onToggleZzim }: ListItemProps) => {
+const ListItem = ({
+  property,
+  onClick,
+  onTagClick,
+  onToggleZzim,
+}: ListItemProps) => {
   return (
     <div
       onClick={() => onClick(property.id)}
@@ -98,25 +104,34 @@ const ListItem = ({ property, onClick, onToggleZzim }: ListItemProps) => {
         </div>
 
         {/* Tags */}
-        <div className="flex gap-1.5 mb-1">
-          {property.tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className={`px-3 py-1 text-[12px] rounded-full font-bold border ${
-                tag === "소음"
-                  ? "border-[#FBBA78] text-[#FBBA78] bg-[#FFFCF6]"
-                  : tag === "접근성"
-                    ? "border-[#7CB7CD] text-[#7CB7CD] bg-[#F7FCFE]"
-                    : tag === "안전"
-                      ? "border-[#F48787] text-[#F48787] bg-[#FFF7F7]"
-                      : tag === "편의"
-                        ? "border-[#AB9FD5] text-[#AB9FD5] bg-[#FAF9FD]"
-                        : "border-[#82AA82] text-[#82AA82] bg-[#F8FCF8]"
-              }`}
-            >
-              {tag}
-            </span>
-          ))}
+        <div className="flex gap-1.5 mb-1 overflow-x-auto no-scrollbar">
+          {property.tags.map((tag, idx) => {
+            const conditionId = property.conditionIds?.[idx];
+            return (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  if (conditionId) {
+                    e.stopPropagation();
+                    onTagClick?.(conditionId);
+                  }
+                }}
+                className={`flex-none px-3 py-1 text-[12px] rounded-full font-bold border transition-colors hover:opacity-80 active:scale-95 ${
+                  tag === "소음"
+                    ? "border-[#FBBA78] text-[#FBBA78] bg-[#FFFCF6]"
+                    : tag === "접근성"
+                      ? "border-[#7CB7CD] text-[#7CB7CD] bg-[#F7FCFE]"
+                      : tag === "안전"
+                        ? "border-[#F48787] text-[#F48787] bg-[#FFF7F7]"
+                        : tag === "편의"
+                          ? "border-[#AB9FD5] text-[#AB9FD5] bg-[#FAF9FD]"
+                          : "border-[#82AA82] text-[#82AA82] bg-[#F8FCF8]"
+                }`}
+              >
+                {tag}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

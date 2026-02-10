@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import { useModuleStore } from "@/app/store/moduleStore";
+import { useMapModeStore } from "@/app/store/mapModeStore";
+import { useGetConvenienceInfra } from "@/shared/api/generated/infra-controller/infra-controller";
+import { useEffect } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -11,15 +14,68 @@ function cn(...inputs: ClassValue[]) {
 
 const ConvenienceModule = () => {
   const { activeModules, toggleModule } = useModuleStore();
+  const {
+    selectedProperty,
+    setConvenienceInfras,
+    clearConvenienceInfras,
+    clearSelectedInfra,
+  } = useMapModeStore();
   const isActive = activeModules.includes("convenience");
   const [selectedTime, setSelectedTime] = useState(5); // 5, 10, 20
+  const score = selectedProperty?.propertyScores?.convenienceScore || 0;
 
   // Checkbox states for the facilities
   const [checkedItems, setCheckedItems] = useState({
-    store: false,
+    store: true, // 기본값 true로 설정 (사용자 요청에 따라 마커가 찍혀야 하므로)
     market: true,
-    hospital: false,
+    hospital: true,
   });
+
+  // 편의 정보 데이터 호출
+  const infraTypes: string[] = [];
+  if (checkedItems.store) infraTypes.push("CONVENIENCE_STORE");
+  if (checkedItems.market) infraTypes.push("MARKET");
+  if (checkedItems.hospital) infraTypes.push("HOSPITAL");
+
+  const infraTypesJoined = infraTypes.length > 0 ? infraTypes.join(", ") : "";
+
+  const { data: infraData } = useGetConvenienceInfra(
+    {
+      request: {
+        propertyId: selectedProperty?.id,
+        walkMinutes: selectedTime,
+        infraTypes: (infraTypesJoined as any) || undefined,
+      },
+    } as any,
+    {
+      query: {
+        enabled: isActive && !!selectedProperty?.id,
+      },
+      request: {
+        params: {
+          propertyId: selectedProperty?.id,
+          walkMinutes: selectedTime,
+          infraTypes: infraTypesJoined || undefined,
+        },
+      },
+    },
+  );
+
+  // 데이터가 오면 스토어에 동기화
+  useEffect(() => {
+    if (isActive && infraData?.data?.facilities) {
+      setConvenienceInfras(infraData.data.facilities);
+    } else if (!isActive) {
+      clearConvenienceInfras();
+      clearSelectedInfra();
+    }
+  }, [
+    isActive,
+    infraData,
+    setConvenienceInfras,
+    clearConvenienceInfras,
+    clearSelectedInfra,
+  ]);
 
   const toggleItem = (key: keyof typeof checkedItems) => {
     setCheckedItems((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -65,7 +121,7 @@ const ConvenienceModule = () => {
               isActive ? "text-[#745BCD]" : "text-[#555555]",
             )}
           >
-            82점
+            {score}점
           </span>
         </div>
 

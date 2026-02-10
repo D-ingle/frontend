@@ -6,13 +6,21 @@
  * OpenAPI spec version: v1.0.0
  */
 import {
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query'
 import type {
   MutationFunction,
+  QueryFunction,
+  QueryKey,
   UseMutationOptions,
-  UseMutationResult
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
 } from '@tanstack/react-query'
+import type {
+  ResponseDTOSafetyModalResponse
+} from '.././model'
 import { customInstance } from '../../axios-instance';
 import type { ErrorType } from '../../axios-instance';
 
@@ -69,4 +77,65 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       return useMutation(mutationOptions);
     }
+    /**
+ * 안전 모달을 조회합니다.
+ * @summary 지도 안전 모달 조회 API (이거 아직 완성 아님)
+ */
+export const getSafetyModal = (
+    propertyId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ResponseDTOSafetyModalResponse>(
+      {url: `/api/v1/safety/${propertyId}/modal`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetSafetyModalQueryKey = (propertyId: number,) => {
+    return [`/api/v1/safety/${propertyId}/modal`] as const;
+    }
+
     
+export const getGetSafetyModalQueryOptions = <TData = Awaited<ReturnType<typeof getSafetyModal>>, TError = ErrorType<unknown>>(propertyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSafetyModal>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSafetyModalQueryKey(propertyId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSafetyModal>>> = ({ signal }) => getSafetyModal(propertyId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(propertyId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSafetyModal>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSafetyModalQueryResult = NonNullable<Awaited<ReturnType<typeof getSafetyModal>>>
+export type GetSafetyModalQueryError = ErrorType<unknown>
+
+/**
+ * @summary 지도 안전 모달 조회 API (이거 아직 완성 아님)
+ */
+export const useGetSafetyModal = <TData = Awaited<ReturnType<typeof getSafetyModal>>, TError = ErrorType<unknown>>(
+ propertyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSafetyModal>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetSafetyModalQueryOptions(propertyId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+

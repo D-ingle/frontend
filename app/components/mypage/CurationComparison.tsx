@@ -2,6 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import { cn } from "@/app/lib/utils";
 import CompareTag, { TagType } from "./CompareTag";
 
@@ -129,9 +131,32 @@ const CurationComparison = ({ data }: CurationComparisonProps) => {
                     AI 요약 리포트
                   </p>
                 </div>
-                <p className="font-['Pretendard_Variable:Medium',sans-serif] font-medium leading-[1.4] text-[16px] text-[#7b7b7b] uppercase whitespace-pre-wrap">
-                  {item.summary}
-                </p>
+                <div className="font-['Pretendard_Variable:Medium',sans-serif] font-medium leading-[1.4] text-[16px] text-[#7b7b7b] uppercase">
+                  <ReactMarkdown
+                    rehypePlugins={[rehypeRaw]}
+                    components={{
+                      p: ({ children }) => (
+                        <p className="mb-2 last:mb-0">{children}</p>
+                      ),
+                      strong: ({ children }) => (
+                        <strong className="font-bold text-[#2EA98C]">
+                          {children}
+                        </strong>
+                      ),
+                      ul: ({ children }) => (
+                        <ul className="list-disc list-inside mb-2">
+                          {children}
+                        </ul>
+                      ),
+                      li: ({ children }) => (
+                        <li className="ml-1">{children}</li>
+                      ),
+                      div: ({ children }) => <div>{children}</div>,
+                    }}
+                  >
+                    {item.summary}
+                  </ReactMarkdown>
+                </div>
                 <div className="flex gap-[6px] mt-auto">
                   {item.tags.map((tag) => (
                     <CompareTag key={tag} type={tag} />

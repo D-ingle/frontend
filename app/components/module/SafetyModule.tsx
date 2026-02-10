@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useModuleStore } from "@/app/store/moduleStore";
+import { useMapModeStore } from "@/app/store/mapModeStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -12,8 +13,10 @@ function cn(...inputs: ClassValue[]) {
 
 const SafetyModule = () => {
   const { activeModules, toggleModule } = useModuleStore();
+  const { selectedProperty } = useMapModeStore();
   const isActive = activeModules.includes("safety");
   const [isMainRoadMode, setIsMainRoadMode] = useState(false);
+  const score = selectedProperty?.propertyScores?.safetyScore || 0;
 
   return (
     <div
@@ -55,7 +58,7 @@ const SafetyModule = () => {
               isActive ? "text-[#E05353]" : "text-[#555555]",
             )}
           >
-            82점
+            {score}점
           </span>
         </div>
 
@@ -116,18 +119,14 @@ const SafetyModule = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
                   <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    {isMainRoadMode ? (
-                      <div className="w-2 h-2 bg-[#F48787] rounded-full shadow-[0_0_8px_#F48787]" />
-                    ) : (
-                      <div className="w-[18px] h-[18px] flex items-center justify-center">
-                        <Image
-                          src="/icons/module/safety/cctv.svg"
-                          width={15}
-                          height={15}
-                          alt="CCTV"
-                        />
-                      </div>
-                    )}
+                    <div className="w-[18px] h-[18px] flex items-center justify-center">
+                      <Image
+                        src="/icons/module/safety/cctv.svg"
+                        width={15}
+                        height={15}
+                        alt="CCTV"
+                      />
+                    </div>
                   </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     경로 구역 내 CCTV 개수
@@ -140,18 +139,14 @@ const SafetyModule = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
                   <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    {isMainRoadMode ? (
-                      <div className="w-2 h-2 bg-[#F48787] rounded-full shadow-[0_0_8px_#F48787]" />
-                    ) : (
-                      <div className="w-[18px] h-[18px] flex items-center justify-center">
-                        <Image
-                          src="/icons/module/safety/lamp.svg"
-                          width={13.5}
-                          height={15}
-                          alt="Lamp"
-                        />
-                      </div>
-                    )}
+                    <div className="w-[18px] h-[18px] flex items-center justify-center">
+                      <Image
+                        src="/icons/module/safety/lamp.svg"
+                        width={13.5}
+                        height={15}
+                        alt="Lamp"
+                      />
+                    </div>
                   </div>
                   <span className="font-semibold text-[14px] text-black tracking-[-0.15px]">
                     경로 구역 내 가로등 개수
@@ -188,11 +183,7 @@ const SafetyModule = () => {
                 <div className="flex items-center gap-1">
                   <div className="w-[18px] h-[18px] flex items-center justify-center">
                     <Image
-                      src={
-                        isMainRoadMode
-                          ? "/icons/module/safety/police.svg"
-                          : "/icons/module/safety/police.svg"
-                      } // Using available icon, figma showed a star/shield version for one
+                      src="/icons/module/safety/police.svg"
                       width={13.5}
                       height={16.359}
                       alt="Police"

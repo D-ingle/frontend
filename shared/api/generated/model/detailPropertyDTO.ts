@@ -10,6 +10,7 @@ import type { Facility } from './facility';
 import type { PropertyImages } from './propertyImages';
 import type { Option } from './option';
 import type { PropertyInfo } from './propertyInfo';
+import type { PropertyScore } from './propertyScore';
 import type { RealtorInfo } from './realtorInfo';
 
 export interface DetailPropertyDTO {
@@ -19,5 +20,6 @@ export interface DetailPropertyDTO {
   images?: PropertyImages;
   option?: Option;
   propertyInfo?: PropertyInfo;
+  propertyScore?: PropertyScore;
   realtorInfo?: RealtorInfo;
 }

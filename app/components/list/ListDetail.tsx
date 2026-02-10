@@ -20,6 +20,7 @@ import { useCurate } from "@/shared/api/generated/personalized-curation-controll
 
 import { useMapModeStore } from "@/app/store/mapModeStore";
 import { usePropertyZzim } from "@/app/hooks/usePropertyZzim";
+import { formatNumberToKoreanPrice } from "@/app/utils/format";
 
 const sections = [
   { id: "curation", label: "맞춤 큐레이션 정보" },
@@ -48,29 +49,68 @@ const ListDetail = ({
 
   const isManualScrolling = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const tabsBoxRef = useRef<HTMLElement>(null);
+  const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
   const { data: apiResponse, isLoading } = useGetPropertyDetail(propertyId);
   const { data: curationResponse, isLoading: isAiLoading } =
     useCurate(propertyId);
   const detailData = apiResponse?.data;
 
+  // 활성 탭이 바뀔 때마다 탭바를 자동으로 스크롤하여 활성 탭을 왼쪽 처음에 맞춤
+  useEffect(() => {
+    const activeTabElement = tabRefs.current.get(activeTab);
+    if (activeTabElement && tabsBoxRef.current) {
+      const container = tabsBoxRef.current;
+      const scrollLeft = activeTabElement.offsetLeft;
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: "smooth",
+      });
+    }
+  }, [activeTab]);
+
   // 매물 정보를 불러오면 지도에 좌표 설정
   useEffect(() => {
     if (detailData?.propertyInfo) {
       const { latitude, longitude, apartmentName } = detailData.propertyInfo;
+      const deal = detailData.deal;
+      let priceStr = "";
+      let dealLabel = "";
+
+      if (deal) {
+        if (deal.dealType === "RENT") {
+          priceStr = `${deal.deposit}/${deal.monthlyRent}`;
+          dealLabel = "월세";
+        } else if (deal.dealType === "LEASE") {
+          priceStr = formatNumberToKoreanPrice(deal.price || 0);
+          dealLabel = "전세";
+        } else if (deal.dealType === "SALE") {
+          priceStr = formatNumberToKoreanPrice(deal.price || 0);
+          dealLabel = "매매";
+        }
+      }
+
       if (latitude && longitude) {
         setSelectedProperty({
+          id: propertyId,
           lat: latitude,
           lng: longitude,
           title: apartmentName || "매물 위치",
+          price: priceStr,
+          dealType: dealLabel,
+          propertyScores: detailData.propertyScore,
         });
       }
     }
 
     return () => {
-      clearSelectedProperty();
+      // 렌더링 사이클에 의존하지 않고 전역 스토어의 최신 상태를 직접 확인
+      if (!useMapModeStore.getState().isMapMode) {
+        clearSelectedProperty();
+      }
     };
-  }, [detailData, setSelectedProperty, clearSelectedProperty]);
+  }, [detailData, setSelectedProperty, clearSelectedProperty, propertyId]);
 
   // 스크롤 감지 및 탭 포커스 자동 전환
   useEffect(() => {
@@ -174,10 +214,17 @@ const ListDetail = ({
             <div className="h-4 bg-[#F4F4F4]" />
 
             {/* Tab Bar (Sticky) */}
-            <nav className="sticky top-0 z-40 flex w-full h-12 bg-white border-b border-[#E5E5E5] overflow-x-auto no-scrollbar flex-none">
+            <nav
+              ref={tabsBoxRef}
+              className="sticky top-0 z-40 flex w-full h-12 bg-white border-b border-[#E5E5E5] overflow-x-auto no-scrollbar flex-none"
+            >
               {sections.map((tab) => (
                 <button
                   key={tab.id}
+                  ref={(el) => {
+                    if (el) tabRefs.current.set(tab.id, el);
+                    else tabRefs.current.delete(tab.id);
+                  }}
                   onClick={() => scrollToSection(tab.id)}
                   className={`flex-none px-4 h-full text-[14px] font-medium transition-colors relative ${
                     activeTab === tab.id ? "text-[#000000]" : "text-[#9D9D9D]"

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { ChevronLeft } from "lucide-react";
 import { OnboardingProgress } from "../OnboardingProgress";
-import { RegionBadge } from "./RegionBadge";
+import { RegionBadge } from "@/app/components/ui/RegionBadge";
 import SeoulMap from "@/app/components/onboarding/step2/SeoulMap";
 import { AnimatePresence } from "framer-motion";
 import { cn } from "@/app/lib/utils";

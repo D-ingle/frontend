@@ -20,43 +20,58 @@ import { Toast } from "../components/ui/Toast";
 const MapPage = () => {
   const { isMapMode } = useMapModeStore();
   const { user } = useUserStore();
-  const {
-    activeModules,
-    toggleModule,
-    toastMessage,
-    setToastMessage,
-    getDisplayOrder,
-  } = useModuleStore();
+  const { resetModules, toastMessage, setToastMessage, getDisplayOrder } =
+    useModuleStore();
 
   const initialActivatedRef = useRef(false);
+  const listInitialActivatedRef = useRef(false);
 
-  // 초기 진입 시 온보딩 우선순위 활성화 로직
+  // 초기 진입 및 모드 전환 시 우선순위 활성화 로직
   useEffect(() => {
-    if (
-      user?.preferredConditions &&
-      user.preferredConditions.length > 0 &&
-      !initialActivatedRef.current &&
-      activeModules.length === 0
-    ) {
-      const idMap: Record<number, ModuleId> = {
-        1: "noise",
-        2: "environment",
-        3: "safety",
-        4: "accessibility",
-        5: "convenience",
-      };
+    if (!user?.preferredConditions || user.preferredConditions.length === 0)
+      return;
 
-      // 온보딩에서 선택한 우선순위들을 활성화 (최대 3개 권장이나 온보딩 데이터 전체 반영)
-      user.preferredConditions.forEach((priorityId) => {
-        const moduleId = idMap[priorityId];
-        if (moduleId && !activeModules.includes(moduleId)) {
-          toggleModule(moduleId);
+    const idMap: Record<number, ModuleId> = {
+      1: "noise",
+      2: "environment",
+      3: "safety",
+      4: "accessibility",
+      5: "convenience",
+    };
+
+    if (isMapMode) {
+      // 종합데이터 모드 진입 시: 첫 번째 우선순위 모듈만 활성화
+      if (!initialActivatedRef.current) {
+        const firstPriorityId = user.preferredConditions[0];
+        const moduleId = idMap[firstPriorityId];
+
+        if (moduleId) {
+          resetModules([moduleId]);
         }
-      });
+        initialActivatedRef.current = true;
+      }
 
-      initialActivatedRef.current = true;
+      // 리스트 뷰 초기화 플래그 리셋 (다시 돌아갈 때 다시 켜지도록)
+      if (listInitialActivatedRef.current) {
+        listInitialActivatedRef.current = false;
+      }
+    } else {
+      // 리스트 뷰 (초기 혹은 복귀): 온보딩 모든 우선순위 활성화
+      if (!listInitialActivatedRef.current) {
+        const preferredModuleIds = user.preferredConditions
+          .map((id) => idMap[id])
+          .filter(Boolean) as ModuleId[];
+
+        resetModules(preferredModuleIds);
+        listInitialActivatedRef.current = true;
+      }
+
+      // 종합데이터 모드 초기화 플래그 리셋
+      if (initialActivatedRef.current) {
+        initialActivatedRef.current = false;
+      }
     }
-  }, [user, activeModules, toggleModule]);
+  }, [isMapMode, user, resetModules]);
 
   const renderModule = (id: ModuleId) => {
     switch (id) {

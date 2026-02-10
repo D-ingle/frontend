@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useModuleStore } from "@/app/store/moduleStore";
+import { useMapModeStore } from "@/app/store/mapModeStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -10,7 +11,9 @@ function cn(...inputs: ClassValue[]) {
 
 const AccessibilityModule = () => {
   const { activeModules, toggleModule } = useModuleStore();
+  const { selectedProperty } = useMapModeStore();
   const isActive = activeModules.includes("accessibility");
+  const score = selectedProperty?.propertyScores?.accessibilityScore || 0;
 
   return (
     <div
@@ -52,7 +55,7 @@ const AccessibilityModule = () => {
               isActive ? "text-[#0192C8]" : "text-[#555555]",
             )}
           >
-            82점
+            {score}점
           </span>
         </div>
 

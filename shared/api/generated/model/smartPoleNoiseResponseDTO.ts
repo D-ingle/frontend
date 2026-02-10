@@ -10,5 +10,7 @@ import type { Item } from './item';
 export interface SmartPoleNoiseResponseDTO {
   avgNoise?: number;
   count?: number;
+  districtAvgNoise?: number;
   items?: Item[];
+  overCount?: number;
 }

@@ -7,8 +7,10 @@
  */
 
 export interface Item {
-  distanceMeter?: number;
+  natureType?: "WALK" | "PARK";
+  distanceMeters?: number;
   id?: number;
+  name?: string;
   latitude?: number;
   longitude?: number;
   population?: number;

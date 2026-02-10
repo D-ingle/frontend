@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CompareSidebar from "../components/mypage/CompareSidebar";
 import CompareMain from "../components/mypage/CompareMain";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import { getCurateQueryOptions } from "@/shared/api/generated/personalized-curat
 import { useQueries } from "@tanstack/react-query";
 import { DealInfoDealType } from "@/shared/api/generated/model/dealInfoDealType";
 import { formatNumberToKoreanPrice } from "@/app/utils/format";
+import { useUserStore } from "@/app/store/userStore";
 
 import { Suspense } from "react";
 
@@ -19,8 +20,17 @@ import { Suspense } from "react";
 // ... House interface was here ...
 // ... MOCK_HOUSES, MOCK_CURATION, MOCK_BASIC_INFO were here ...
 
+const CONDITION_MAP: Record<number, string> = {
+  1: "소음",
+  2: "환경",
+  3: "안전",
+  4: "접근성",
+  5: "편의",
+};
+
 const ComparePageContent = () => {
   const router = useRouter();
+  const { user } = useUserStore();
   const searchParams = useSearchParams();
   const idsParam = searchParams.get("ids");
   const initialIds = idsParam ? idsParam.split(",") : [];
@@ -116,15 +126,33 @@ const ComparePageContent = () => {
     );
     const curationInfo = curationQueries[index]?.data?.data;
 
+    // 점수 정보를 배열로 변환하여 정렬
+    const allScores = [
+      { label: "소음", score: compareInfo?.noiseScore || 0 },
+      { label: "환경", score: compareInfo?.environmentScore || 0 },
+      { label: "안전", score: compareInfo?.safetyScore || 0 },
+      { label: "접근성", score: compareInfo?.accessibilityScore || 0 },
+      { label: "편의", score: compareInfo?.convenienceScore || 0 },
+    ];
+
+    // 점수 높은 순으로 상위 3개 추출
+    const top3Strengths = allScores
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+      .map((s) => s.label);
+
+    // 사용자의 선호 조건 (한글 명칭으로 변환)
+    const userPrefs =
+      user?.preferredConditions?.map((c) => CONDITION_MAP[c]) || [];
+
+    // 매물의 강점(상위 3개)과 사용자의 선호 조건의 교집합 필터링
+    const personalizedTags = top3Strengths.filter((tag) =>
+      userPrefs.includes(tag),
+    ) as ("소음" | "안전" | "접근성" | "편의" | "환경")[];
+
     return {
       summary: curationInfo?.description || "큐레이션 분석 중입니다...",
-      tags: ["안전", "편의"] as (
-        | "소음"
-        | "안전"
-        | "접근성"
-        | "편의"
-        | "환경"
-      )[], // 백엔드에서 제공하지 않으므로 기본태그
+      tags: personalizedTags,
       scores: {
         소음: compareInfo?.noiseScore || 0,
         환경: compareInfo?.environmentScore || 0,

@@ -41,10 +41,15 @@ const LoginPage = () => {
           username: res.user.username,
           preferredType: res.user.preferredType,
           preferredConditions: res.user.preferredConditions,
+          onboardingStatus: res.user.onboardingStatus,
         });
 
-        // 로그인 성공 시 메인 또는 지도 페이지로 이동
-        router.push("/map");
+        // 온보딩 상태에 따른 리다이렉션
+        if (res.user.onboardingStatus) {
+          router.push("/map");
+        } else {
+          router.push("/onboarding");
+        }
         router.refresh();
       } else {
         alert(res.message);

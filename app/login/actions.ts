@@ -47,6 +47,7 @@ export async function loginAction(data: LoginFormValues) {
         username: response.data.user.userName,
         preferredType: response.data.user.propertyType,
         preferredConditions: response.data.user.preferredConditions,
+        onboardingStatus: response.data.user.onboardingStatus,
       },
     };
   } catch (error: unknown) {

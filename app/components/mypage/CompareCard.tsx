@@ -46,6 +46,7 @@ const CompareCard = ({
       <div
         onClick={() => onRemove?.(id)}
         className="absolute -top-[20px] -right-[23px] bg-[#30cea1] size-[40px] rounded-full flex items-center justify-center cursor-pointer z-10 shadow-sm transition-transform hover:scale-110"
+        data-pdf-exclude="true"
       >
         <svg
           width="16"

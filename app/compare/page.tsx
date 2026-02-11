@@ -124,7 +124,11 @@ const ComparePageContent = () => {
       name: item.apartmentName || "정보 없음",
       area: `면적 ${item.supplyArea || 0}/${item.exclusiveArea || 0}m²`,
       floor: `층수 ${item.floor || 0}/${item.totalFloor || 0}층`,
-      image: item.imageUrl || "/images/mockup/item.png",
+      image:
+        (item.imageUrl && item.imageUrl.trim() !== "" ? item.imageUrl : null) ||
+        (item.propertyType === "APT"
+          ? "/images/mockup/apt.svg"
+          : "/images/mockup/oneroom.svg"),
       location: compareItem?.address || "정보 없음",
       type: item.propertyType
         ? PROPERTY_TYPE_MAP[item.propertyType]
@@ -215,7 +219,7 @@ const ComparePageContent = () => {
       <CompareSidebar
         selectedIds={selectedIds}
         onToggle={toggleSelection}
-        userName="딩글"
+        userName="김민지"
       />
       <div className="flex-1 relative overflow-hidden">
         {isLoading ? (

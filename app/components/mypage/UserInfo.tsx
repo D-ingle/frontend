@@ -126,7 +126,13 @@ const UserInfo = () => {
 
         return {
           id: item.propertyId || 0,
-          image: item.imageUrl || "/images/mockup/item.png",
+          image:
+            (item.imageUrl && item.imageUrl.trim() !== ""
+              ? item.imageUrl
+              : null) ||
+            (item.propertyType === "APT"
+              ? "/images/mockup/apt.svg"
+              : "/images/mockup/oneroom.svg"),
           price: priceStr,
           name: item.apartmentName || "",
           type: item.propertyType || "아파트",
@@ -183,12 +189,6 @@ const UserInfo = () => {
   // 목데이터 (피그마 기반)
   const priorities = [
     {
-      badge: "bg-[#F48787]",
-      label: "안전",
-      icon: "/icons/priority/ativate/safety.svg",
-      color: "bg-[#FFD9D9]",
-    },
-    {
       badge: "bg-[#7CB7CD]",
       label: "접근성",
       icon: "/icons/priority/ativate/accessibility.svg",
@@ -199,6 +199,12 @@ const UserInfo = () => {
       label: "편의",
       icon: "/icons/priority/ativate/convenience.svg",
       color: "bg-[#E5E0F7]",
+    },
+    {
+      badge: "bg-[#F48787]",
+      label: "안전",
+      icon: "/icons/priority/ativate/safety.svg",
+      color: "bg-[#FFD9D9]",
     },
   ];
 
@@ -214,13 +220,10 @@ const UserInfo = () => {
           {/* User Profile Card */}
           <div className="flex-1 bg-white border border-border-1 rounded-xl p-7.5 flex flex-col gap-3">
             <h3 className="text-[22px] font-bold leading-normal">
-              <span className="text-main-500">
-                {user?.username || "김딩글"}
-              </span>{" "}
-              님
+              <span className="text-main-500">김민지</span> 님
             </h3>
             <p className="text-gray-800 text-[16px] font-medium opacity-80 leading-normal">
-              Ddingle@ditonic.io
+              minji00@gmail.com
             </p>
           </div>
 
@@ -311,10 +314,10 @@ const UserInfo = () => {
                 />
 
                 <span className="px-3 py-1.5 bg-[#DEFAF2] border border-main-400 text-main-400 rounded-md text-[14px] font-medium">
-                  오피스텔
+                  원룸
                 </span>
               </div>
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className="flex flex-wrap gap-1 mt-2">
                 <Image
                   src="/icons/common/location.svg"
                   alt=""
@@ -322,13 +325,13 @@ const UserInfo = () => {
                   height={30}
                 />
                 <span className="px-3 py-1.5 bg-[#DEFAF2] border border-main-400 text-main-400 rounded-full text-[14px] font-medium">
-                  강남구
+                  구로구
                 </span>
                 <span className="px-3 py-1.5 bg-[#DEFAF2] border border-main-400 text-main-400 rounded-full text-[14px] font-medium">
-                  관악구
+                  양천구
                 </span>
                 <span className="px-3 py-1.5 bg-[#DEFAF2] border border-main-400 text-main-400 rounded-full text-[14px] font-medium">
-                  송파구
+                  영등포구
                 </span>
               </div>
             </div>
@@ -384,8 +387,7 @@ const UserInfo = () => {
       <div className="flex flex-col gap-10">
         <div className="flex justify-between items-baseline">
           <h3 className="text-[22px] font-bold text-gray-800 leading-[1.3]">
-            <span className="text-main-400">{user?.username || "김딩글"}</span>{" "}
-            님이 최근에 본 집
+            <span className="text-main-400">김민지</span> 님이 최근에 본 집
           </h3>
           <button className="text-[14px] text-gray-400 hover:text-gray-500 flex items-center gap-1 font-medium">
             전체보기 <span>›</span>

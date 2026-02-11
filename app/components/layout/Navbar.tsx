@@ -139,8 +139,7 @@ export default function Navbar() {
               href="/mypage"
               className="font-semibold text-[#434343] text-[16px]"
             >
-              <span className="text-[#30CEA1]">{user.username}</span> 님
-              안녕하세요!
+              <span className="text-[#30CEA1]">김민지</span> 님 안녕하세요!
             </Link>
             <div className="bg-border-1 h-5.5 w-px" />
             <button

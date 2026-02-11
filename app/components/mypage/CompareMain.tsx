@@ -121,7 +121,6 @@ const CompareMain = ({
           <div
             className={cn(
               "bg-[#f8fafb] flex flex-col gap-[60px] px-[60px] py-[60px] rounded-t-[12px] transition-all duration-500",
-              !isUnlocked && "blur-[16px] pointer-events-none scale-[0.98]",
             )}
           >
             {/* Section 2: Curation */}
@@ -146,12 +145,6 @@ const CompareMain = ({
               <BasicInfoComparison data={basicInfo} />
             </section>
           </div>
-
-          {!isUnlocked && (
-            <div className="absolute inset-0 z-0 flex items-start justify-center pt-[50px] bg-white/10 backdrop-blur-[2px]">
-              <CompareModal onUnlock={onUnlock} />
-            </div>
-          )}
         </div>
       </div>
     </div>

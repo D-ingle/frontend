@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import CompareCard from "./CompareCard";
 import CurationComparison from "./CurationComparison";
 import BasicInfoComparison from "./BasicInfoComparison";
@@ -16,6 +16,7 @@ interface House {
   floor: string;
   image: string;
   location: string;
+  type: string;
 }
 
 interface CurationData {
@@ -62,62 +63,35 @@ const CompareMain = ({
   const titles = activeHouses.map((h) => h.name.replace("아파트 ", ""));
 
   return (
-    <div className="flex-1 bg-white flex flex-col min-h-screen w-[1220px] ml-10">
-      {/* Main Header */}
-      <div className="py-[26px] flex flex-col gap-[32px] bg-white z-10">
-        <div className="flex items-center justify-between">
-          {/* Dynamic Title: House A vs House B */}
-          <div className="content-stretch flex gap-[8px] items-center leading-[0] text-ellipsis whitespace-nowrap">
-            {titles.length > 0 ? (
-              titles.map((title, i) => (
-                <React.Fragment key={i}>
-                  <p className="font-['Pretendard_Variable:ExtraBold',sans-serif] font-extrabold justify-center opacity-90 text-[28px] text-[#262626]">
-                    {title}
-                  </p>
-                  {i !== titles.length - 1 && (
-                    <p className="font-['Pretendard_Variable:SemiBold',sans-serif] font-semibold justify-center opacity-90 text-[24px] text-[#7b7b7b]">
-                      vs
-                    </p>
-                  )}
-                </React.Fragment>
-              ))
-            ) : (
-              <p className="font-['Pretendard_Variable:ExtraBold',sans-serif] font-extrabold justify-center opacity-90 text-[16px] text-[#7b7b7b]">
-                비교하고 싶은 매물을 클릭해 보세요
-              </p>
-            )}
-          </div>
-
-          {/* PDF Button */}
-          <div className="bg-[#f8fafb] border border-[#8298a8] border-solid content-stretch flex gap-[10px] items-center justify-center px-[20px] py-[12px] rounded-[8px] cursor-pointer hover:bg-gray-50 transition-colors">
-            <div className="relative shrink-0 size-[20px] mb-1">
-              <Image
-                src="/icons/common/export.svg"
-                alt="PDF"
-                width={20}
-                height={20}
-              />
-            </div>
-            <p className="font-['Pretendard_Variable:Bold',sans-serif] font-bold leading-[1.5] relative shrink-0 text-[#063152] text-[16px] uppercase">
-              PDF 리포트 내보내기
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <div className="flex-1 bg-white flex flex-col min-h-screen w-[1220px] ml-10 mt-10">
       {/* Main Content Areas inside a Blue Background Container for sections */}
       <div className="flex-1 flex flex-col gap-[8px] w-full">
         {/* Each major block is a styled section */}
 
         {/* Section 1: Property Cards */}
         <section className="bg-[#F8FAFB] px-[60px] py-[40px] flex flex-col gap-[28px]">
-          <div className="content-stretch flex gap-[16px] items-center relative shrink-0">
-            <p className="font-['Pretendard_Variable:ExtraBold',sans-serif] font-extrabold leading-[1.1] opacity-90 text-[#191919] text-[28px]">
-              내 매물 비교하기
-            </p>
-            <p className="font-['Pretendard_Variable:Medium',sans-serif] font-medium leading-[1.1] opacity-90 text-[16px] text-[#7b7b7b]">
-              최대 3개까지 관심 매물을 비교할 수 있어요
-            </p>
+          <div className="content-stretch flex justify-between items-center relative shrink-0 w-full">
+            <div className="flex flex-row items-center gap-4">
+              <p className="font-['Pretendard_Variable:ExtraBold',sans-serif] font-extrabold leading-[1.1] opacity-90 text-[#191919] text-[28px]">
+                내 매물 비교하기
+              </p>
+              <p className="font-['Pretendard_Variable:Medium',sans-serif] font-medium leading-[1.1] opacity-90 text-[16px] text-[#7b7b7b]">
+                최대 3개까지 관심 매물을 비교할 수 있어요
+              </p>
+            </div>
+            <div className="bg-[#f8fafb] border border-[#8298a8] border-solid content-stretch flex gap-[10px] items-center justify-center px-[20px] py-[12px] rounded-[8px] cursor-pointer hover:bg-gray-50 transition-colors">
+              <div className="relative shrink-0 size-[20px] mb-1">
+                <Image
+                  src="/icons/common/export.svg"
+                  alt="PDF"
+                  width={20}
+                  height={20}
+                />
+              </div>
+              <p className="font-['Pretendard_Variable:Bold',sans-serif] font-bold leading-[1.5] relative shrink-0 text-[#063152] text-[16px] uppercase ml-auto">
+                PDF 리포트 내보내기
+              </p>
+            </div>
           </div>
           <div className="h-px bg-[#D9D9D9] w-full shrink-0" />
           <div className="content-stretch flex gap-[35px] items-end relative shrink-0 pt-[20px]">
@@ -132,6 +106,7 @@ const CompareMain = ({
                   area: "",
                   image: "",
                   location: "",
+                  type: "",
                   isEmpty: true,
                 })}
                 isEmpty={!selectedHouses[i]}
@@ -173,7 +148,7 @@ const CompareMain = ({
           </div>
 
           {!isUnlocked && (
-            <div className="absolute inset-0 z-50 flex items-start justify-center pt-[100px] bg-white/10 backdrop-blur-[2px]">
+            <div className="absolute inset-0 z-0 flex items-start justify-center pt-[50px] bg-white/10 backdrop-blur-[2px]">
               <CompareModal onUnlock={onUnlock} />
             </div>
           )}

@@ -28,6 +28,13 @@ const CONDITION_MAP: Record<number, string> = {
   5: "편의",
 };
 
+const PROPERTY_TYPE_MAP: Record<string, string> = {
+  ONE_ROOM: "원룸",
+  APT: "아파트",
+  VILLA: "빌라",
+  OFFICETEL: "오피스텔",
+};
+
 const ComparePageContent = () => {
   const router = useRouter();
   const { user } = useUserStore();
@@ -37,6 +44,11 @@ const ComparePageContent = () => {
 
   const [selectedIds, setSelectedIds] = useState<string[]>(initialIds);
   const [isUnlocked, setIsUnlocked] = useState(false);
+
+  // 비교 대상(selectedIds)이 변경될 때마다 잠금 상태 초기화
+  React.useEffect(() => {
+    setIsUnlocked(false);
+  }, [selectedIds]);
 
   // 2. 상단 카드용 기본 정보 (RecentView API 재사용)
   const { data: recentViewResponse, isLoading: isRecentLoading } =
@@ -113,7 +125,10 @@ const ComparePageContent = () => {
       area: `면적 ${item.supplyArea || 0}/${item.exclusiveArea || 0}m²`,
       floor: `층수 ${item.floor || 0}/${item.totalFloor || 0}층`,
       image: item.imageUrl || "/images/mockup/item.png",
-      location: compareItem?.address || "ggdd", // CompareList에 주소가 있음
+      location: compareItem?.address || "정보 없음",
+      type: item.propertyType
+        ? PROPERTY_TYPE_MAP[item.propertyType]
+        : "정보 없음",
     };
   });
 

@@ -13,6 +13,7 @@ interface CompareCardProps {
   area: string;
   image: string;
   location: string;
+  type: string;
   isEmpty?: boolean;
   onRemove?: (id: string) => void;
 }
@@ -25,6 +26,7 @@ const CompareCard = ({
   area,
   image,
   location,
+  type,
   isEmpty = false,
   onRemove,
 }: CompareCardProps) => {
@@ -88,7 +90,7 @@ const CompareCard = ({
         <div className="flex flex-col gap-[4px] text-[16px] text-[#707070] uppercase">
           <div className="flex gap-[4px] items-center leading-[1.1] truncate w-full">
             <p className="font-['Pretendard_Variable:SemiBold',sans-serif] font-semibold relative shrink-0">
-              아파트
+              {type}
             </p>
             <p className="font-['Pretendard_Variable:Regular',sans-serif] font-normal relative shrink-0 truncate">
               {name.replace("아파트 ", "")}

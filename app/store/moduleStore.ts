@@ -47,14 +47,14 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
         activeModules: activeModules.filter((m) => m !== id),
       });
     } else {
-      // 켜는 경우: 이미 5개인 경우 추가 차단
-      if (activeModules.length >= 5) {
+      // 켜는 경우: 이미 3개인 경우 추가 차단
+      if (activeModules.length >= 3) {
         set({
-          toastMessage: "필요한 정보는 최대 5개까지만 선택할 수 있습니다.",
+          toastMessage: "필요한 정보는 최대 3개까지만 선택할 수 있습니다.",
         });
         return;
       }
-      // 5개 미만인 경우만 추가
+      // 3개 미만인 경우만 추가
       set({ activeModules: [id, ...activeModules] });
     }
   },

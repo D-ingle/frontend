@@ -53,7 +53,9 @@ export default function MainVisual() {
         onClick={handleStart}
         className="w-[400px] h-[60px] flex items-center justify-center bg-[#063152] text-white text-[18px] font-extrabold rounded-[6px] transition-all hover:brightness-110 active:scale-[0.98] shadow-lg leading-[1.1]"
       >
-        시작하기
+        {user?.onboardingStatus
+          ? "맞춤 매물 확인하기"
+          : "나만의 조건으로 집 찾기"}
       </button>
     </div>
   );

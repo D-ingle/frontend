@@ -24,6 +24,48 @@ import {
   AccessibilityOverlay,
 } from "./MapOverlays";
 
+const MOCK_PROPERTIES = Array.from({ length: 40 }, (_, i) => {
+  // 인덱스 i를 기반으로 한 결정론적(Deterministic) 유사 랜덤 함수
+  const seededRandom = (seed: number) => {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  };
+
+  const isMonth = i % 2 === 0;
+  const dealType = isMonth ? "월세" : "전세";
+  let price = "";
+
+  if (isMonth) {
+    const depositSeed = seededRandom(i * 1.5);
+    const rentSeed = seededRandom(i * 2.5);
+    const deposit = (Math.floor(depositSeed * 10) + 1) * 500;
+    const rent = Math.floor(rentSeed * 5 + 4) * 5;
+    price = `${deposit}/${rent}`;
+  } else {
+    const jeonseSeed = seededRandom(i * 3.5);
+    const jeonse = Math.floor(jeonseSeed * 15 + 5) * 1000;
+    if (jeonse >= 10000) {
+      const eok = Math.floor(jeonse / 10000);
+      const remainder = jeonse % 10000;
+      price = `${eok}억${remainder > 0 ? " " + remainder : ""}`;
+    } else {
+      price = `${jeonse}`;
+    }
+  }
+
+  const latSeed = seededRandom(i * 4.5);
+  const lngSeed = seededRandom(i * 5.5);
+
+  return {
+    id: 9999 + i,
+    lat: 37.4971 + (latSeed - 0.5) * 0.015,
+    lng: 126.8715 + (lngSeed - 0.5) * 0.035,
+    dealType,
+    price,
+    title: `임의 매물 ${i + 1}`,
+  };
+});
+
 const CustomMarker = ({
   lat,
   lng,
@@ -44,6 +86,13 @@ const CustomMarker = ({
     if (level === 3) return size * 1.2;
     if (level === 4) return size * 1.0;
     return size * 0.8;
+  };
+
+  const getScaledFontSize = (base: number, level: number) => {
+    if (level <= 2) return base * 1.5;
+    if (level === 3) return base * 1.2;
+    if (level === 4) return base * 1.0; // 줌아웃 시 글자 크기 축소
+    return base * 0.8; // 더 멀리서 볼 때 더 축소
   };
 
   const baseSize = isSelected ? 80 : 70;
@@ -68,16 +117,14 @@ const CustomMarker = ({
       >
         <div className="flex flex-col items-center justify-center -mt-2">
           <span
-            className={cn(
-              "text-[10px] font-bold leading-none mb-0.5 text-white",
-            )}
+            className={cn("font-bold leading-none mb-0.5 text-white")}
+            style={{ fontSize: `${getScaledFontSize(10, zoomLevel)}px` }}
           >
             {dealType}
           </span>
           <span
-            className={cn(
-              "text-[12px] font-extrabold leading-tight text-white",
-            )}
+            className={cn("font-extrabold leading-tight text-white")}
+            style={{ fontSize: `${getScaledFontSize(12, zoomLevel)}px` }}
           >
             {price}
           </span>
@@ -262,6 +309,7 @@ const KakaoMap = () => {
                   lng: selectedInfra.longitude,
                 }}
                 yAnchor={1.2}
+                zIndex={10000}
               >
                 <FacilityOverlay
                   infra={selectedInfra}
@@ -309,6 +357,7 @@ const KakaoMap = () => {
                   lng: selectedEnvironment.longitude,
                 }}
                 yAnchor={1.2}
+                zIndex={10000}
               >
                 <EnvironmentOverlay
                   item={selectedEnvironment}
@@ -404,6 +453,7 @@ const KakaoMap = () => {
                 }}
                 xAnchor={0.5}
                 yAnchor={0.5}
+                zIndex={10000}
               >
                 <NoiseOverlay
                   item={selectedNoise}
@@ -448,6 +498,7 @@ const KakaoMap = () => {
                 }}
                 xAnchor={0.5}
                 yAnchor={0.5}
+                zIndex={10000}
               >
                 <PopulationOverlay
                   item={selectedPopulation}
@@ -492,6 +543,7 @@ const KakaoMap = () => {
               }}
               xAnchor={0.5}
               yAnchor={1.2}
+              zIndex={10000}
             >
               <NearbyNoiseOverlay
                 item={selectedNearbyNoise}
@@ -536,6 +588,7 @@ const KakaoMap = () => {
                   lng: selectedPolice.longitude,
                 }}
                 yAnchor={1.2}
+                zIndex={10000}
               >
                 <PoliceOverlay
                   station={selectedPolice}
@@ -680,6 +733,7 @@ const KakaoMap = () => {
                   lng: selectedAccessibility.longitude,
                 }}
                 yAnchor={1.2}
+                zIndex={10000}
               >
                 <AccessibilityOverlay
                   item={selectedAccessibility}
@@ -690,8 +744,8 @@ const KakaoMap = () => {
         </>
       ) : (
         <>
-          {/* 일반 모드: 리스트상의 모든 매물 렌더링 */}
-          {propertiesOnMap.map((prop) => {
+          {/* 일반 모드: 리스트상의 모든 매물 렌더링 + 임의 매물 20개 */}
+          {[...propertiesOnMap, ...MOCK_PROPERTIES].map((prop) => {
             const isSelected =
               selectedProperty?.lat === prop.lat &&
               selectedProperty?.lng === prop.lng;

@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { formatPrice } from "@/app/utils/format";
 import { useModuleStore } from "@/app/store/moduleStore";
 import type { PropertyInfo } from "@/shared/api/generated/model/propertyInfo";
 import type { DealInfo } from "@/shared/api/generated/model/dealInfo";
 import type { PropertyImages } from "@/shared/api/generated/model/propertyImages";
+import { cn } from "@/app/lib/utils";
 
 interface SummarySectionProps {
   propertyId?: number;
@@ -98,20 +99,39 @@ const SummarySection = ({
 
   // 상위 3개 중 사용자의 우선순위와 일치하는 것들 (활성화 대상)
   const finalActiveNames = displayConditionNames.filter((name) =>
-    activeModuleNames.includes(name as any),
+    activeModuleNames.includes((name || "") as any),
   );
 
   const priorityFactors = ["소음", "환경", "안전", "접근성", "편의"];
 
-  const imageUrls = images?.propertyImageUrls || ["/images/mockup/item.png"];
+  const hasImages =
+    images?.propertyImageUrls &&
+    images.propertyImageUrls.filter((url) => url && url.trim() !== "").length >
+      0;
+
+  const placeholderImage =
+    propertyInfo?.propertyType === "ONE_ROOM"
+      ? "/images/mockup/oneroom.svg"
+      : "/images/mockup/apt.svg";
+
+  const imageUrls: string[] = hasImages
+    ? (images.propertyImageUrls as string[])
+    : [placeholderImage];
+
   const [[page, direction], setPage] = useState([0, 0]);
-  const currentIndex = Math.abs(page % imageUrls.length);
+  const currentIndex = Math.abs(page % (imageUrls.length || 1));
 
   const paginate = (newDirection: number) => {
+    if (!hasImages) return; // 이미지가 없으면 페이지 전환 불가
     setPage([page + newDirection, newDirection]);
   };
 
-  const handleDragEnd = (event: any, info: any) => {
+  const handleDragEnd = (
+    event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo,
+  ) => {
+    if (!hasImages) return; // 이미지가 없으면 드래그(스와이프) 불가
+
     const swipeThreshold = 50;
     if (info.offset.x < -swipeThreshold) {
       paginate(1);
@@ -141,16 +161,23 @@ const SummarySection = ({
               opacity: { duration: 0.2 },
             }}
             className="absolute inset-0 w-full h-full"
-            drag="x"
+            drag={hasImages ? "x" : false} // 이미지가 있을 때만 드래그 허용
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
             onDragEnd={handleDragEnd}
           >
             <Image
               src={imageUrls[currentIndex]}
-              alt={`Property Image ${currentIndex + 1}`}
+              alt={
+                hasImages
+                  ? `Property Image ${currentIndex + 1}`
+                  : "Property Placeholder"
+              }
               fill
-              className="object-cover cursor-grab active:cursor-grabbing"
+              className={cn(
+                "object-cover",
+                hasImages && "cursor-grab active:cursor-grabbing",
+              )}
               draggable={false}
               priority
             />
@@ -158,63 +185,67 @@ const SummarySection = ({
         </AnimatePresence>
 
         {/* Preloading adjacent images (Hidden) */}
-        <div className="hidden">
-          <Image
-            src={imageUrls[prevIndex]}
-            alt="preload"
-            width={1}
-            height={1}
-          />
-          <Image
-            src={imageUrls[nextIndex]}
-            alt="preload"
-            width={1}
-            height={1}
-          />
-        </div>
+        {hasImages && (
+          <div className="hidden">
+            <Image
+              src={imageUrls[prevIndex]}
+              alt="preload"
+              width={1}
+              height={1}
+            />
+            <Image
+              src={imageUrls[nextIndex]}
+              alt="preload"
+              width={1}
+              height={1}
+            />
+          </div>
+        )}
 
-        {/* Figma Design Indicator (Backdrop Blur + Arrows) */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2.5 p-2.5 bg-black/20 backdrop-blur-[2px] border border-[#e4e4e4] rounded-[30px] z-20">
-          <button
-            onClick={() => paginate(-1)}
-            className="text-white hover:text-[#30CEA1] transition-colors"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+        {/* Figma Design Indicator (Backdrop Blur + Arrows) - Only show if multiple images exist */}
+        {hasImages && imageUrls.length > 1 && (
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2.5 p-2.5 bg-black/20 backdrop-blur-[2px] border border-[#e4e4e4] rounded-[30px] z-20">
+            <button
+              onClick={() => paginate(-1)}
+              className="text-white hover:text-[#30CEA1] transition-colors"
             >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
 
-          <span className="font-medium text-[12px] text-white select-none whitespace-nowrap text-center">
-            {currentIndex + 1} / {imageUrls.length}
-          </span>
+            <span className="font-medium text-[12px] text-white select-none whitespace-nowrap text-center">
+              {currentIndex + 1} / {imageUrls.length}
+            </span>
 
-          <button
-            onClick={() => paginate(1)}
-            className="text-white hover:text-[#30CEA1] transition-colors"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <button
+              onClick={() => paginate(1)}
+              className="text-white hover:text-[#30CEA1] transition-colors"
             >
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        </div>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Basic Info Section */}

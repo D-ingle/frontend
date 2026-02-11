@@ -132,13 +132,13 @@ const List = () => {
 
   // 요청할 우선순위 조건 생성 (검색 모드에서는 현재 활성화된 것만 전송)
   const getSelectConditions = () => {
-    return activeModules.map((m) => mIdMap[m]).slice(0, 5);
+    return activeModules.map((m) => mIdMap[m]).slice(0, 3);
   };
 
   // 메인 매물 조회 (기본 추천 - 선호도 기반)
   const mainPropertyQuery = useGetMainProperty(
     {
-      select: (user?.preferredConditions || []).slice(0, 5),
+      select: (user?.preferredConditions || []).slice(0, 3),
       propertyType: selectedPropertyType,
       size: 30,
     },
@@ -257,7 +257,13 @@ const List = () => {
       return {
         id: item.propertyId || 0,
         rank: index + 1,
-        image: item.imageUrl || "/images/mockup/item.png",
+        image:
+          (item.imageUrl && item.imageUrl.trim() !== ""
+            ? item.imageUrl
+            : null) ||
+          (item.propertyType === "APT"
+            ? "/images/mockup/apt.svg"
+            : "/images/mockup/oneroom.svg"),
         price: priceStr,
         name: item.apartmentName || "",
         type: PROPERTY_TYPE_MAP[item.propertyType || ""] || "아파트",

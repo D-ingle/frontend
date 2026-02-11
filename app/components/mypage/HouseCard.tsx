@@ -41,39 +41,11 @@ const HouseCard = ({
       )}
     >
       {/* Selection UI for Liked Houses */}
-      {variant === "checkbox" && (
-        <div
-          className={cn(
-            "absolute top-17 left-5 w-5 h-5 flex items-center justify-center rounded-sm border transition-colors",
-            isSelected
-              ? "bg-main-400 border-main-400"
-              : "bg-white border-gray-300",
-          )}
-        >
-          {isSelected && (
-            <svg
-              width="12"
-              height="9"
-              viewBox="0 0 12 9"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M1 4L4.5 7.5L11 1"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          )}
-        </div>
-      )}
 
       {/* House Image */}
       <div
         className={cn(
           "w-30 h-30 shrink-0 relative rounded-md overflow-hidden bg-gray-100",
-          variant === "checkbox" && "ml-8",
         )}
       >
         <Image src={image} alt={name} fill className="object-cover" />
@@ -97,6 +69,34 @@ const HouseCard = ({
       {variant === "navigation" && (
         <div className="w-10 h-10 flex items-center justify-center rounded-full border border-main-400 text-main-400">
           <ChevronRight size={24} />
+        </div>
+      )}
+
+      {variant === "checkbox" && (
+        <div
+          className={cn(
+            "absolute top-16 right-5 w-7 h-7 flex items-center justify-center rounded-sm border transition-colors",
+            isSelected
+              ? "bg-main-400 border-main-400"
+              : "bg-white border-gray-300",
+          )}
+        >
+          {isSelected && (
+            <svg
+              width="12"
+              height="9"
+              viewBox="0 0 12 9"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 4L4.5 7.5L11 1"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          )}
         </div>
       )}
     </div>

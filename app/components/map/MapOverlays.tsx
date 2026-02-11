@@ -25,13 +25,11 @@ export const FacilityOverlay = ({
 }) => {
   return (
     <div
-      className="bg-[#FAF9FD] border border-[#745BCD] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden w-50 cursor-pointer"
+      className="bg-[#FAF9FD] border border-[#745BCD] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-40 w-fit cursor-pointer"
       onClick={onClose}
     >
-      <div className="bg-[#745BCD] px-2.5 py-1.75 flex justify-between items-center">
-        <p className="font-semibold text-[14px] text-white truncate">
-          {infra.name}
-        </p>
+      <div className="bg-[#745BCD] px-2.5 py-1.75 flex justify-between items-center whitespace-nowrap">
+        <p className="font-semibold text-[14px] text-white">{infra.name}</p>
       </div>
       <div className="bg-[#FFFCF6] px-2.5 py-2">
         <p className="font-medium text-[12px] text-[#06302C] leading-tight break-words">
@@ -51,13 +49,11 @@ export const EnvironmentOverlay = ({
 }) => {
   return (
     <div
-      className="bg-[#F7FAF7] border border-[#29AD29] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden w-45 cursor-pointer"
+      className="bg-[#F7FAF7] border border-[#29AD29] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-40 w-fit cursor-pointer"
       onClick={onClose}
     >
-      <div className="bg-[#29AD29] px-2.5 py-1.75 flex justify-between items-center">
-        <p className="font-semibold text-[14px] text-white truncate">
-          {item.name}
-        </p>
+      <div className="bg-[#29AD29] px-2.5 py-1.75 flex justify-between items-center whitespace-nowrap">
+        <p className="font-semibold text-[14px] text-white">{item.name}</p>
       </div>
       <div className="bg-white px-2.5 py-2 flex gap-1">
         <p className="font-bold text-[12px] text-[#06302C] leading-tight break-words">
@@ -83,7 +79,7 @@ export const NoiseOverlay = ({
 }) => {
   return (
     <div
-      className="bg-[#FFF9F2] border border-[#EA8B2B] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-45 cursor-pointer"
+      className="bg-[#FFF9F2] border border-[#EA8B2B] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-40 w-fit cursor-pointer"
       onClick={onClose}
     >
       <div className="bg-[#EA8B2B] px-2.5 py-1.75 flex justify-between items-center whitespace-nowrap">
@@ -115,7 +111,7 @@ export const PopulationOverlay = ({
 }) => {
   return (
     <div
-      className="bg-[#F0F7FF] border border-[#EA8B2B] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-45 cursor-pointer"
+      className="bg-[#F0F7FF] border border-[#EA8B2B] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-40 w-fit cursor-pointer"
       onClick={onClose}
     >
       <div className="bg-[#EA8B2B] px-2.5 py-1.75 flex justify-between items-center whitespace-nowrap">
@@ -148,7 +144,7 @@ export const NearbyNoiseOverlay = ({
 
   return (
     <div
-      className="bg-white border rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-45 cursor-pointer"
+      className="bg-white border rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-40 w-fit cursor-pointer"
       style={{ borderColor: headerColor }}
       onClick={onClose}
     >
@@ -186,7 +182,7 @@ export const PoliceOverlay = ({
 }) => {
   return (
     <div
-      className="bg-white border-[1.5px] border-[#E05353] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-40 cursor-pointer"
+      className="bg-white border-[1.5px] border-[#E05353] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-32 w-fit cursor-pointer"
       onClick={onClose}
     >
       <div className="bg-[#E05353] px-2.5 py-1.75 flex justify-between items-center whitespace-nowrap">
@@ -208,7 +204,7 @@ export const AccessibilityOverlay = ({
 }) => {
   return (
     <div
-      className="bg-white border-[1.5px] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-40 cursor-pointer"
+      className="bg-white border-[1.5px] rounded-sm shadow-[0px_4px_4px_0px_rgba(0,0,0,0.15)] overflow-hidden min-w-32 w-fit cursor-pointer"
       style={{ borderColor: color }}
       onClick={onClose}
     >

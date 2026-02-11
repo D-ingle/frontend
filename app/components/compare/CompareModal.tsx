@@ -10,7 +10,7 @@ interface CompareModalProps {
 
 const CompareModal = ({ onUnlock, remainingPasses = 3 }: CompareModalProps) => {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full">
+    <div className="flex flex-col items-center w-full h-full">
       <div className="bg-white flex flex-col items-center px-[99px] py-[40px] rounded-[12px] shadow-[0px_4px_12.2px_0px_rgba(0,0,0,0.15)] max-w-[540px] w-full">
         {/* Lock Icon */}
         <div className="flex flex-col items-center gap-[18px] mb-[40px]">

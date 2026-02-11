@@ -35,6 +35,17 @@ const PROPERTY_TYPE_MAP: Record<string, string> = {
   OFFICETEL: "오피스텔",
 };
 
+const ORIENTATION_MAP: Record<string, string> = {
+  SOUTH: "남향",
+  NORTH: "북향",
+  WEST: "서향",
+  EAST: "동향",
+  SOUTH_EAST: "남동향",
+  SOUTH_WEST: "남서향",
+  NORTH_EAST: "북동향",
+  NORTH_WEST: "북서향",
+};
+
 const ComparePageContent = () => {
   const router = useRouter();
   const { user } = useUserStore();
@@ -197,11 +208,16 @@ const ComparePageContent = () => {
     return {
       건물명: recentInfo.apartmentName || "",
       주소: compareInfo?.address || "정보 없음",
-      매물형태: "아파트", // PropertyListDTO lacks this formatted
+      매물형태: recentInfo.propertyType
+        ? PROPERTY_TYPE_MAP[recentInfo.propertyType] || "정보 없음"
+        : "정보 없음",
       면적: `${recentInfo.supplyArea || 0}m²/${recentInfo.exclusiveArea || 0}m²`,
       층수: `${recentInfo.floor || 0}층`,
       배당층_총층수: `${recentInfo.floor || 0}층 / ${recentInfo.totalFloor || 0}층`,
-      방향: compareInfo?.orientation || "정보 없음",
+      방향: compareInfo?.orientation
+        ? ORIENTATION_MAP[compareInfo.orientation.toUpperCase()] ||
+          compareInfo.orientation
+        : "정보 없음",
       주차: compareInfo?.parkingRatio
         ? `세대당 ${compareInfo.parkingRatio}대`
         : "정보 없음",

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CompareCard from "./CompareCard";
 import CurationComparison from "./CurationComparison";
 import BasicInfoComparison from "./BasicInfoComparison";
@@ -9,6 +9,7 @@ import CompareModal from "../compare/CompareModal";
 import { cn } from "@/app/lib/utils";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import { Toast } from "../ui/Toast";
 
 interface House {
   id: string;
@@ -62,6 +63,7 @@ const CompareMain = ({
   onUnlock,
 }: CompareMainProps) => {
   const reportRef = useRef<HTMLDivElement>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleDownloadPDF = async () => {
     if (!reportRef.current) return;
@@ -167,6 +169,7 @@ const CompareMain = ({
       pdf.save(
         `D-ingle_비교리포트_${new Date().toISOString().slice(0, 10)}.pdf`,
       );
+      setToastMessage("PDF 다운로드를 성공했습니다.");
     } catch (error) {
       console.error("PDF export error:", error);
     }
@@ -271,6 +274,12 @@ const CompareMain = ({
           </div>
         </div>
       </div>
+      {/* Toast Message */}
+      <Toast
+        message={toastMessage}
+        onClose={() => setToastMessage(null)}
+        variant="success"
+      />
     </div>
   );
 };

@@ -12,20 +12,19 @@ interface House {
   area: string;
   floor: string;
   image: string;
+  type: string;
 }
+
+const PROPERTY_TYPE_MAP: Record<string, string> = {
+  ONE_ROOM: "원룸",
+  APT: "아파트",
+  VILLA: "빌라",
+  OFFICETEL: "오피스텔",
+};
 
 import { useLikeList } from "@/shared/api/generated/property-controller/property-controller";
 import { formatNumberToKoreanPrice } from "@/app/utils/format";
 import { DealInfoDealType } from "@/shared/api/generated/model/dealInfoDealType";
-
-interface House {
-  id: string;
-  price: string;
-  name: string;
-  area: string;
-  floor: string;
-  image: string;
-}
 
 interface CompareSidebarProps {
   selectedIds: string[];
@@ -66,6 +65,9 @@ const CompareSidebar = ({
           (item.propertyType === "APT"
             ? "/images/mockup/apt.svg"
             : "/images/mockup/oneroom.svg"),
+        type: item.propertyType
+          ? PROPERTY_TYPE_MAP[item.propertyType] || "정보 없음"
+          : "정보 없음",
       };
     }) || [];
 

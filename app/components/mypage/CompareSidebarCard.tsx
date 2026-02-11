@@ -11,6 +11,7 @@ interface CompareSidebarCardProps {
   area: string;
   floor: string;
   image: string;
+  type: string;
   isSelected: boolean;
   onToggle: (id: string) => void;
 }
@@ -22,6 +23,7 @@ const CompareSidebarCard = ({
   area,
   floor,
   image,
+  type,
   isSelected,
   onToggle,
 }: CompareSidebarCardProps) => {
@@ -48,10 +50,10 @@ const CompareSidebarCard = ({
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 text-[13px] text-[#707070]">
           <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-full">
             <p className="font-['Pretendard_Variable:SemiBold',sans-serif] font-semibold relative shrink-0">
-              아파트
+              {type}
             </p>
             <p className="font-['Pretendard_Variable:Regular',sans-serif] font-normal relative shrink-0 truncate">
-              {name.replace("아파트 ", "")}
+              {name.replace(`${type} `, "")}
             </p>
           </div>
           <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-full">

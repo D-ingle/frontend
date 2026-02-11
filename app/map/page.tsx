@@ -123,12 +123,6 @@ const MapPage = () => {
                 {getDisplayOrder().map((id) => renderModule(id))}
               </div>
 
-              {/* Toast Notification */}
-              <Toast
-                message={toastMessage}
-                onClose={() => setToastMessage(null)}
-              />
-
               {/* Favorite Places Module (Top-Left Side) */}
               <div className="absolute top-4 left-5 pointer-events-none">
                 <FavoritePlacesModule />
@@ -166,6 +160,9 @@ const MapPage = () => {
           )}
         </div>
       </div>
+
+      {/* Toast Notification (Z-index 100 for global visibility) */}
+      <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
     </div>
   );
 };

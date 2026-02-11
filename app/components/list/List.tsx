@@ -132,13 +132,13 @@ const List = () => {
 
   // 요청할 우선순위 조건 생성 (검색 모드에서는 현재 활성화된 것만 전송)
   const getSelectConditions = () => {
-    return activeModules.map((m) => mIdMap[m]).slice(0, 3);
+    return activeModules.map((m) => mIdMap[m]).slice(0, 5);
   };
 
   // 메인 매물 조회 (기본 추천 - 선호도 기반)
   const mainPropertyQuery = useGetMainProperty(
     {
-      select: (user?.preferredConditions || []).slice(0, 3),
+      select: (user?.preferredConditions || []).slice(0, 5),
       propertyType: selectedPropertyType,
       size: 30,
     },
@@ -316,7 +316,7 @@ const List = () => {
               />
               <h2 className="text-[24px] font-bold text-[#000000]">
                 <span className="bg-linear-to-r from-[#30CEA1] to-[#2EA98C] bg-clip-text text-transparent">
-                  {username || "딩글"}
+                  김민지
                 </span>{" "}
                 님의 우선순위
               </h2>

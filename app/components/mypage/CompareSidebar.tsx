@@ -59,7 +59,13 @@ const CompareSidebar = ({
         name: item.apartmentName || "",
         area: `면적 ${item.supplyArea || 0}/${item.exclusiveArea || 0}m²`,
         floor: `층수 ${item.floor || 0}/${item.totalFloor || 0}층`,
-        image: item.imageUrl || "/images/mockup/item.png",
+        image:
+          (item.imageUrl && item.imageUrl.trim() !== ""
+            ? item.imageUrl
+            : null) ||
+          (item.propertyType === "APT"
+            ? "/images/mockup/apt.svg"
+            : "/images/mockup/oneroom.svg"),
       };
     }) || [];
 

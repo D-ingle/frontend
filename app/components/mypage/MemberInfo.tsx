@@ -10,7 +10,7 @@ const MemberInfo = () => {
     {
       key: "username",
       label: "이름",
-      value: user?.username || "김딩글",
+      value: "김민지",
       editable: false,
     },
     { key: "id", label: "아이디", value: "Ddingle", editable: false },

@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useModuleStore } from "@/app/store/moduleStore";
 import { useMapModeStore } from "@/app/store/mapModeStore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { PointDTO } from "@/shared/api/generated/model/pointDTO";
 
 import {
   useGetSafetyModal,
@@ -27,7 +28,6 @@ const SafetyModule = () => {
     clearSafetyRoute,
   } = useMapModeStore();
   const isActive = activeModules.includes("safety");
-  const [isMainRoadMode, setIsMainRoadMode] = useState(false);
   const score = selectedProperty?.propertyScores?.safetyScore || 0;
 
   // 지도 안전 모달 데이터 조회
@@ -67,14 +67,25 @@ const SafetyModule = () => {
     clearSelectedPolice,
   ]);
 
+  // 좌표 기반 중복 제거 유틸리티
+  const deduplicatePoints = (points: PointDTO[] | undefined | null) => {
+    if (!points) return [];
+    const seen = new Set<string>();
+    return points.filter((p) => {
+      const key = `${p.latitude}_${p.longitude}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  };
+
   // 안전 경로 및 설비 정보를 지도 스토어에 동기화
   useEffect(() => {
     if (isActive && routeInfo) {
-      setSafetyRoute(
-        routeInfo.path?.points || [],
-        routeInfo.cctvs || [],
-        routeInfo.lights || [],
-      );
+      const uniqueCctvs = deduplicatePoints(routeInfo.cctvs);
+      const uniqueLights = deduplicatePoints(routeInfo.lights);
+
+      setSafetyRoute(routeInfo.path?.points || [], uniqueCctvs, uniqueLights);
     } else {
       clearSafetyRoute();
     }
@@ -99,6 +110,10 @@ const SafetyModule = () => {
 
   const alertMessage = getAlertMessage();
   const hasAlert = !!alertMessage;
+
+  // 중복 제거된 개수 계산
+  const uniqueCctvCount = deduplicatePoints(routeInfo?.cctvs).length;
+  const uniqueLightCount = deduplicatePoints(routeInfo?.lights).length;
 
   return (
     <div
@@ -217,7 +232,7 @@ const SafetyModule = () => {
                       </span>
                     </div>
                     <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                      {safetyInfo?.pathCctvCount ?? 0}개
+                      {uniqueCctvCount}개
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -235,7 +250,7 @@ const SafetyModule = () => {
                       </span>
                     </div>
                     <span className="font-semibold text-[14px] text-[#7B7B7B] tracking-[-0.15px]">
-                      {safetyInfo?.pathLightCount ?? 0}개
+                      {uniqueLightCount}개
                     </span>
                   </div>
                 </div>
